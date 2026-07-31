@@ -2,10 +2,7 @@ import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles.css'
 
-const MESSAGE = [
-  'Welcome to come see me.',
-  '假如你每日卖十扇笼炊饼，你从明日为始，只做五扇笼出去卖；每日迟出早归，不要和人吃酒。',
-].join('\n')
+const MESSAGE = 'Welcome to come see me.'
 
 function App() {
   const [visibleText, setVisibleText] = useState('')
