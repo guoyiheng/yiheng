@@ -1,0 +1,70 @@
+:root {
+  font-family: 'Courier New', Courier, monospace;
+  color: #24211d;
+  background: #f2eee7;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.page {
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  padding: 1.5rem;
+}
+
+.type-line {
+  display: flex;
+  align-items: flex-end;
+  width: min(100%, 62rem);
+  margin: 0;
+  color: #24211d;
+  font-size: clamp(1.05rem, 2.4vw, 1.55rem);
+  font-weight: 400;
+  letter-spacing: 0.015em;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.1em;
+  height: 1.22em;
+  margin-left: 0.16em;
+  background: currentColor;
+  animation: blink 1s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
