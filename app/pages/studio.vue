@@ -85,8 +85,7 @@ async function startPrintStudio() {
 
   const rawLines = customBody.value.split('\n')
   
-  for (let i = 0; i < rawLines.length; i++) {
-    const line = rawLines[i]
+  for (const line of rawLines) {
     let lineBuffer = ''
     
     for (let j = 0; j < line.length; j++) {
