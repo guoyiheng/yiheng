@@ -117,6 +117,9 @@ const themeOptions = [
       ]"
       :aria-labelledby="props.titleId"
     >
+      <!-- 顶端出纸后卷曲弧度与阴影 -->
+      <div class="paper-curl-top" aria-hidden="true" />
+
       <!-- 打印头横向扫动 beam -->
       <div v-if="localIsPrinting || isPrinting" class="printhead-scanner" aria-hidden="true" />
 

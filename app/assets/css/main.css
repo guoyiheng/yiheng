@@ -132,6 +132,48 @@ button {
   content: "";
 }
 
+/* 顶端出纸后卷曲样式 (Paper Roll Curl & 3D Bend Shadow) */
+.paper-curl-top {
+  position: absolute;
+  top: 0;
+  left: -2px;
+  right: -2px;
+  height: 1.6rem;
+  z-index: 15;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(233, 226, 210, 0.95) 0%, rgba(244, 240, 229, 0.4) 60%, transparent 100%);
+  border-bottom: 1px solid rgba(35, 35, 31, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.paper-curl-top::before {
+  content: "";
+  position: absolute;
+  top: -0.6rem;
+  left: 0;
+  right: 0;
+  height: 0.8rem;
+  background: inherit;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.08);
+  transform: perspective(600px) rotateX(-20deg);
+}
+
+.paper-curl-top::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 5%;
+  right: 5%;
+  height: 6px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.12) 0%, transparent 80%);
+}
+
+.paper.theme-dark .paper-curl-top {
+  background: linear-gradient(180deg, rgba(22, 28, 25, 0.95) 0%, rgba(22, 28, 25, 0.4) 60%, transparent 100%);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
 .paper.is-printing {
   animation: paper-feed 900ms var(--ease-print) both;
 }
