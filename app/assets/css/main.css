@@ -1,31 +1,14 @@
-@import "tailwindcss";
-@import "@nuxt/ui";
-
-@theme static {
-  --color-terracotta-50: #fbf4f1;
-  --color-terracotta-100: #f6e5df;
-  --color-terracotta-200: #edc9bb;
-  --color-terracotta-300: #dfa48e;
-  --color-terracotta-400: #cf7b5d;
-  --color-terracotta-500: #bc6040;
-  --color-terracotta-600: #a64c32;
-  --color-terracotta-700: #873d2c;
-  --color-terracotta-800: #6e352a;
-  --color-terracotta-900: #5b3027;
-  --color-terracotta-950: #321711;
-}
-
 :root {
-  --paper: #f4f0e5;
-  --paper-deep: #e9e2d2;
-  --ink: #23231f;
-  --ink-soft: #68655b;
-  --accent: #ad5137;
-  --printer: #26352f;
-  --printer-deep: #17211d;
-  --printer-key: #d5d0c2;
-  --ease-print: cubic-bezier(0.16, 1, 0.3, 1);
-  --ui-radius: 0.125rem;
+  --canvas: #e7e5df;
+  --paper: #f7f5ee;
+  --ink: #242522;
+  --muted: #777970;
+  --printer: #282a28;
+  --printer-edge: #171817;
+  --screen: #151a16;
+  --screen-ink: #b8c07f;
+  --accent: #b8523b;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -34,1360 +17,290 @@
   box-sizing: border-box;
 }
 
-html {
+html,
+body,
+#__nuxt {
   min-width: 320px;
-  scroll-behavior: smooth;
-  scroll-padding-bottom: 10rem;
+  min-height: 100%;
+  margin: 0;
 }
 
 body {
-  min-width: 320px;
   min-height: 100svh;
-  margin: 0;
-  overflow-x: hidden;
+  overflow: hidden;
   color: var(--ink);
-  background: #a9ad9f;
+  background: var(--canvas);
   font-family: "Noto Serif SC", "Songti SC", serif;
 }
 
-::selection {
-  color: var(--paper);
-  background: var(--accent);
-}
-
-a,
-button {
+button,
+a {
   -webkit-tap-highlight-color: transparent;
 }
 
-.blog-shell {
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.site-shell {
   position: relative;
   min-height: 100svh;
   isolation: isolate;
 }
 
-.blog-shell::before,
-.blog-shell::after {
-  position: fixed;
-  inset-block: 0;
-  z-index: -1;
-  width: 1px;
-  background: rgb(38 53 47 / 13%);
-  content: "";
+.receipt-stage {
+  display: flex;
+  min-height: 100svh;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 2rem 1rem 9.8rem;
+  perspective: 900px;
 }
 
-.blog-shell::before {
-  left: 8vw;
-}
-
-.blog-shell::after {
-  right: 8vw;
-}
-
-.ambient-label {
-  position: fixed;
-  top: 50%;
-  left: 2.2rem;
-  z-index: -1;
-  color: rgb(38 53 47 / 50%);
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  writing-mode: vertical-rl;
-  transform: translateY(-50%) rotate(180deg);
-}
-
-.paper-track {
-  width: min(100% - 2rem, 48rem);
-  margin-inline: auto;
-  padding-block: clamp(1.25rem, 4vw, 3rem) 14rem;
-  perspective: 1200px;
-}
-
-.paper {
+.receipt {
   position: relative;
-  min-height: 78rem;
-  padding: clamp(2rem, 7vw, 4.75rem) clamp(1.5rem, 8vw, 5rem) 3rem;
-  overflow: hidden;
-  background-color: var(--paper);
-  border-inline: 1px solid rgb(35 35 31 / 12%);
-  box-shadow: 0 0 0 1px rgb(35 35 31 / 5%), 0 1rem 3rem rgb(23 33 29 / 18%);
+  width: min(24rem, calc(100vw - 2rem));
+  min-height: 27rem;
+  padding: 2.25rem 2rem 2.6rem;
+  background: var(--paper);
+  box-shadow: 0 1.2rem 2.5rem rgb(36 37 34 / 14%);
+  clip-path: polygon(0 1.5%, 2% 0, 4% 1.5%, 6% 0, 8% 1.5%, 10% 0, 12% 1.5%, 14% 0, 16% 1.5%, 18% 0, 20% 1.5%, 22% 0, 24% 1.5%, 26% 0, 28% 1.5%, 30% 0, 32% 1.5%, 34% 0, 36% 1.5%, 38% 0, 40% 1.5%, 42% 0, 44% 1.5%, 46% 0, 48% 1.5%, 50% 0, 52% 1.5%, 54% 0, 56% 1.5%, 58% 0, 60% 1.5%, 62% 0, 64% 1.5%, 66% 0, 68% 1.5%, 70% 0, 72% 1.5%, 74% 0, 76% 1.5%, 78% 0, 80% 1.5%, 82% 0, 84% 1.5%, 86% 0, 88% 1.5%, 90% 0, 92% 1.5%, 94% 0, 96% 1.5%, 98% 0, 100% 1.5%, 100% 100%, 0 100%);
+  transform: rotateX(0.8deg) rotateZ(-0.15deg);
   transform-origin: center bottom;
 }
 
-.paper::before {
+.receipt::after {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.35;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");
-  content: "";
-}
-
-.paper::after {
-  position: absolute;
-  inset: 1rem 0 auto;
-  height: 1px;
-  background: rgb(35 35 31 / 9%);
-  content: "";
-}
-
-/* 顶端撕纸锯齿边与卷曲 (Sawtooth Serrated Edge & Roll Curl) */
-.paper-curl-top {
-  position: absolute;
-  top: -12px;
-  left: -2px;
-  right: -2px;
-  height: 2.6rem;
-  z-index: 15;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(215, 207, 188, 0.98) 0%, rgba(244, 240, 229, 0.7) 50%, transparent 100%);
-  border-bottom: 1px dashed rgba(35, 35, 31, 0.15);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-/* 锯齿撕口纹路 */
-.serrated-edge-top {
-  position: absolute;
-  top: -8px;
-  left: 0;
-  right: 0;
-  height: 10px;
-  background-size: 16px 10px;
-  background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, var(--paper) 5px, var(--paper) 10px),
-                    repeating-linear-gradient(-45deg, transparent, transparent 5px, var(--paper) 5px, var(--paper) 10px);
-}
-
-.paper-curl-top::before {
-  content: "";
-  position: absolute;
-  top: -0.8rem;
-  left: 0;
-  right: 0;
-  height: 1.1rem;
-  background: inherit;
-  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  box-shadow: inset 0 -4px 10px rgba(0, 0, 0, 0.14);
-  transform: perspective(700px) rotateX(-26deg);
-}
-
-.paper-curl-top::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 2%;
-  right: 2%;
-  height: 10px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.2) 0%, transparent 80%);
-}
-
-.paper.theme-dark .paper-curl-top {
-  background: linear-gradient(180deg, rgba(15, 20, 18, 0.95) 0%, rgba(22, 28, 25, 0.5) 50%, transparent 100%);
-  border-bottom-color: rgba(255, 255, 255, 0.12);
-}
-
-.paper.is-printing {
-  animation: paper-feed-upward 1250ms var(--ease-print) both;
-}
-
-@keyframes paper-feed-upward {
-  0% {
-    opacity: 0.1;
-    transform: translateY(85vh) scale(0.95) rotateX(15deg);
-  }
-  35% {
-    opacity: 0.85;
-  }
-  80% {
-    transform: translateY(-6px) scale(1.002) rotateX(-1deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1) rotateX(0deg);
-  }
-}
-
-.paper.is-printing .print-line {
-  animation: ink-set 520ms var(--ease-print) both;
-  animation-delay: calc(480ms + var(--print-order) * 120ms);
-}
-
-/* 纸张主题风格 */
-.paper.theme-vintage {
-  background-color: var(--paper);
-  color: var(--ink);
-}
-
-.paper.theme-tractor {
-  background-color: #f1f8f3;
-  background-image: 
-    linear-gradient(90deg, rgba(70, 140, 95, 0.04) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(70, 140, 95, 0.04) 1px, transparent 1px);
-  background-size: 16px 16px;
-  color: #1a3323;
-  border-inline: 2px dashed rgba(70, 140, 95, 0.25);
-}
-
-.paper.theme-thermal {
-  background-color: #faf9f6;
-  font-family: "IBM Plex Mono", monospace;
-  color: #111;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.paper.theme-dark {
-  background-color: #161c19;
-  color: #e2ede7;
-  border-color: #2b3933;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-}
-
-.paper.theme-dark .lead,
-.paper.theme-dark .post-meta,
-.paper.theme-dark .paper-registration {
-  color: #9cb3a7;
-}
-
-/* 针打连卷两侧定位孔 (Tractor Feed Strip) */
-.tractor-strip {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1.6rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.tractor-strip-left {
-  left: 0.3rem;
-}
-
-.tractor-strip-right {
-  right: 0.3rem;
-}
-
-.tractor-hole {
-  width: 0.5rem;
-  height: 0.5rem;
+  inset: auto 4% 0;
+  height: 0.75rem;
+  border-bottom: 1px solid rgb(36 37 34 / 10%);
   border-radius: 50%;
-  background: #a9ad9f;
-  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.3);
+  content: "";
 }
 
-.paper.theme-dark .tractor-hole {
-  background: #0d1210;
+.receipt.is-printing {
+  animation: print-receipt 780ms var(--ease-out) both;
 }
 
-/* 扫描打字头激光与针尖动画 */
-.printhead-scanner {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 4px;
-  z-index: 10;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(173, 81, 55, 0.8), rgba(245, 158, 11, 0.9), transparent);
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.8), 0 0 2px rgba(173, 81, 55, 1);
-  animation: printhead-sweep 800ms linear infinite alternate;
-}
-
-@keyframes printhead-sweep {
-  0% {
-    top: 5%;
-    opacity: 0.8;
-    transform: scaleX(0.7);
-  }
-  50% {
-    top: 50%;
-    opacity: 1;
-    transform: scaleX(1);
-  }
-  100% {
-    top: 95%;
-    opacity: 0.6;
-    transform: scaleX(0.8);
-  }
-}
-
-/* 纸张撕下 (Tear Off) 视觉与动画 */
-.paper.is-torn {
-  animation: tear-away 700ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes tear-away {
-  0% {
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  40% {
-    transform: translateY(2rem) rotate(-2deg);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateY(12rem) rotate(-8deg) scale(0.92);
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-
-/* 撕纸被移除后的悬浮恢复栏 */
-.torn-paper-notice {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 2rem;
-  background: rgba(244, 240, 229, 0.6);
-  backdrop-filter: blur(8px);
-  border: 2px dashed var(--accent);
-  border-radius: 0.5rem;
-  text-align: center;
-  gap: 1rem;
-  margin-block: 4rem;
-}
-
-/* 纸张悬浮快捷控制栏 (Floating Paper Toolbar) */
-.paper-floating-bar {
-  position: sticky;
-  top: 1rem;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  margin-bottom: 1.5rem;
-  background: rgba(38, 53, 47, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 9999px;
-  color: #e5e7eb;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  width: fit-content;
-  margin-inline: auto;
-  transition: all 0.2s ease;
-}
-
-.paper-floating-bar:hover {
-  background: rgba(38, 53, 47, 0.95);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-}
-
-.floating-group {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.floating-divider {
-  width: 1px;
-  height: 1.2rem;
-  background: rgba(255, 255, 255, 0.2);
-  margin-inline: 0.25rem;
-}
-
-.paper-registration,
-.edition,
-.eyebrow,
-.press-mark,
-.rule,
-.section-heading p,
-.post-meta,
-.post-index,
-.note-date,
-.note-stamp,
-.paper-footer {
+.receipt-meta,
+.receipt-footer,
+.receipt-content > p,
+.construction-mark {
   font-family: "IBM Plex Mono", monospace;
 }
 
-.paper-registration {
+.receipt-meta,
+.receipt-footer {
   display: flex;
   justify-content: space-between;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  color: var(--ink-soft);
-  font-size: 0.58rem;
+  color: var(--muted);
+  font-size: 0.61rem;
   letter-spacing: 0.08em;
 }
 
-.masthead-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 2px solid var(--ink);
-  padding-top: 0.7rem;
+.receipt-rule {
+  margin: 1.35rem 0;
+  border-top: 1px dashed rgb(36 37 34 / 28%);
 }
 
-.edition {
-  font-size: 0.68rem;
-  letter-spacing: 0.12em;
-}
-
-.press-mark {
+.receipt-content {
   display: grid;
-  width: 2.45rem;
-  aspect-ratio: 1;
-  place-items: center;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  font-size: 0.72rem;
-  font-weight: 600;
-  transform: rotate(3deg);
+  min-height: 17rem;
+  place-content: center;
+  text-align: center;
 }
 
-.eyebrow {
-  margin: clamp(2.25rem, 4vw, 3.5rem) 0 0.85rem;
-  color: var(--accent);
-  font-size: 0.64rem;
+.receipt-content > p {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.58rem;
   letter-spacing: 0.18em;
 }
 
-h1,
-h2,
-h3,
-p {
-  margin-top: 0;
-}
-
-h1 {
-  max-width: 10ch;
-  margin-bottom: 1.7rem;
-  font-size: clamp(3rem, 8vw, 4.8rem);
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.08;
-}
-
-.lead {
-  max-width: 36rem;
-  margin-bottom: 0;
-  color: #4f4d45;
-  font-size: clamp(0.96rem, 2.4vw, 1.12rem);
-  line-height: 2;
-}
-
-.rule {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-block: clamp(4rem, 9vw, 7rem) clamp(3.5rem, 8vw, 5.5rem);
-  color: var(--ink-soft);
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-}
-
-.rule-line {
-  flex: 1;
-  border-top: 1px dashed rgb(35 35 31 / 36%);
-}
-
-.paper-section {
-  scroll-margin-top: 2rem;
-}
-
-.section-heading {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 1rem;
-  align-items: end;
-  margin-bottom: 1.4rem;
-}
-
-.section-heading p {
-  margin-bottom: 0.35rem;
-  color: var(--accent);
-  font-size: 0.6rem;
-  letter-spacing: 0.09em;
-}
-
-.section-heading h2,
-.note-section h2 {
-  margin-bottom: 0;
-  font-size: clamp(1.8rem, 5vw, 2.65rem);
+.receipt h1 {
+  margin: 0;
+  font-size: clamp(2.25rem, 10vw, 3.6rem);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.2;
 }
 
-.post-list {
-  border-top: 1px solid var(--ink);
+.construction-mark {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 2.4rem;
+  color: var(--muted);
 }
 
-.post-item {
-  display: grid;
-  grid-template-columns: 2rem 1fr 1.25rem;
-  gap: 0.8rem;
-  align-items: start;
-  padding-block: 1.4rem;
-  color: inherit;
-  border-bottom: 1px solid rgb(35 35 31 / 22%);
-  text-decoration: none;
-  transition: color 180ms var(--ease-print), transform 180ms var(--ease-print);
-}
-
-.post-index {
-  padding-top: 0.18rem;
+.construction-mark span {
   color: var(--accent);
-  font-size: 0.6rem;
+  letter-spacing: 0.2em;
 }
 
-.post-meta {
-  display: flex;
-  gap: 0.8rem;
-  margin-bottom: 0.55rem;
-  color: var(--ink-soft);
-  font-size: 0.58rem;
-  letter-spacing: 0.05em;
-}
-
-.post-meta span::before {
-  margin-right: 0.8rem;
-  content: "/";
-}
-
-.post-copy h3 {
-  margin-bottom: 0.35rem;
-  font-size: clamp(1.05rem, 3vw, 1.3rem);
+.construction-mark strong {
+  font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.4;
-}
-
-.post-copy p {
-  margin-bottom: 0;
-  color: var(--ink-soft);
-  font-size: 0.8rem;
-  line-height: 1.7;
-}
-
-.post-arrow {
-  width: 1rem;
-  height: 1rem;
-  margin-top: 1.6rem;
-  color: var(--ink-soft);
-  transition: transform 180ms var(--ease-print);
-}
-
-.note-section {
-  display: grid;
-  grid-template-columns: 4.25rem 1fr;
-  gap: clamp(1.4rem, 4vw, 2.6rem);
-  margin-block: clamp(5rem, 11vw, 8rem);
-  padding: clamp(1.5rem, 5vw, 2.5rem) 0;
-  border-block: 1px dashed rgb(35 35 31 / 32%);
-  scroll-margin-top: 2rem;
-}
-
-.note-stamp {
-  display: grid;
-  width: 3.8rem;
-  height: 3.8rem;
-  place-items: center;
-  align-self: start;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  font-size: 0.62rem;
-  line-height: 1.35;
-  text-align: center;
-  transform: rotate(-3deg);
-}
-
-.note-date {
-  margin-bottom: 0.45rem;
-  color: var(--ink-soft);
-  font-size: 0.58rem;
-}
-
-.note-section blockquote {
-  margin: 1.3rem 0 0;
-  color: #4f4d45;
-  font-size: clamp(0.9rem, 2.5vw, 1.02rem);
-  line-height: 1.9;
-}
-
-.paper-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-top: 1rem;
-  color: var(--ink-soft);
-  border-top: 2px solid var(--ink);
-  font-size: 0.56rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
 .printer {
   position: fixed;
-  inset: auto 0 0;
-  z-index: 20;
-  color: var(--printer-key);
+  inset: auto 50% 0;
+  z-index: 10;
+  width: min(42rem, 100%);
+  padding: 1rem clamp(1rem, 4vw, 2rem) max(0.9rem, env(safe-area-inset-bottom));
+  color: #dedfd9;
   background: var(--printer);
-  border-top: 1px solid rgb(244 240 229 / 13%);
-  box-shadow: 0 -0.8rem 2rem rgb(23 33 29 / 28%);
-}
-
-.paper-slot {
-  position: relative;
-  height: 1.35rem;
-  background: var(--printer-deep);
-  border-bottom: 1px solid rgb(244 240 229 / 10%);
-}
-
-.paper-slot::after {
-  position: absolute;
-  inset: 0 auto auto 50%;
-  width: min(45rem, calc(100% - 2.5rem));
-  height: 0.35rem;
-  background: #0e1512;
-  content: "";
+  border: 1px solid #3b3d3a;
+  border-bottom: 0;
+  border-radius: 1.15rem 1.15rem 0 0;
+  box-shadow: 0 -0.75rem 2rem rgb(36 37 34 / 16%), inset 0 1px 0 rgb(255 255 255 / 6%);
   transform: translateX(-50%);
 }
 
-.paper-slot span {
+.printer-slot {
   position: absolute;
-  top: 0.6rem;
+  top: -0.36rem;
   left: 50%;
-  width: min(43rem, calc(100% - 4rem));
-  height: 1px;
-  background: rgb(244 240 229 / 12%);
+  width: min(26rem, calc(100% - 2rem));
+  height: 0.72rem;
+  background: var(--printer-edge);
+  border: 1px solid #101110;
+  border-radius: 999px;
+  box-shadow: inset 0 2px 3px rgb(0 0 0 / 42%);
   transform: translateX(-50%);
 }
 
-.printer-panel {
-  display: grid;
-  grid-template-columns: 10rem 1fr 2.75rem;
-  align-items: center;
-  width: min(100% - 2rem, 72rem);
-  min-height: 5.8rem;
-  margin-inline: auto;
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.printer-brand {
+.printer-console {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  font-family: "IBM Plex Mono", monospace;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
 }
 
-.printer-brand strong,
-.printer-brand small {
-  display: block;
-  letter-spacing: 0.08em;
-}
-
-.printer-brand strong {
-  font-size: 0.7rem;
-  font-weight: 600;
-}
-
-.printer-brand small {
-  margin-top: 0.15rem;
-  color: rgb(213 208 194 / 55%);
-  font-size: 0.45rem;
+.printer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 7.5rem;
+  padding: 0.48rem 0.62rem;
+  color: var(--screen-ink);
+  background: var(--screen);
+  border: 1px solid #0f120f;
+  box-shadow: inset 0 0 0 2px rgb(184 192 127 / 4%);
+  font: 0.58rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.1em;
 }
 
 .status-light {
-  width: 0.45rem;
+  width: 0.38rem;
   aspect-ratio: 1;
-  background: #b9c46a;
+  background: var(--screen-ink);
   border-radius: 50%;
-  box-shadow: 0 0 0 2px rgb(185 196 106 / 12%);
+  box-shadow: 0 0 0.45rem rgb(184 192 127 / 44%);
 }
 
-.printer-nav {
-  display: flex;
-  justify-content: center;
-  gap: 0.25rem;
+.print-button {
+  min-width: 4.5rem;
+  min-height: 2.15rem;
+  color: #ebe8de;
+  background: var(--accent);
+  border: 1px solid #773425;
+  border-radius: 0.28rem;
+  box-shadow: 0 3px 0 #703224;
+  font: 0.58rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transform: translateY(-1px);
 }
 
-.nav-key,
-.reprint-key {
-  color: var(--printer-key) !important;
+.print-button:active {
+  box-shadow: 0 1px 0 #703224;
+  transform: translateY(1px);
 }
 
-.nav-key {
-  min-width: 4.7rem;
-  justify-content: center;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0;
+.menu {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid rgb(222 223 217 / 12%);
 }
 
-.nav-key:hover,
-.nav-key:focus-visible,
-.reprint-key:hover,
-.reprint-key:focus-visible {
-  color: var(--paper) !important;
-  background: rgb(244 240 229 / 9%) !important;
+.menu-link {
+  position: relative;
+  display: grid;
+  min-height: 2.35rem;
+  place-items: center;
+  color: #aeb0a9;
+  font-size: 0.75rem;
+  text-decoration: none;
+  transition: color 160ms ease-out;
 }
 
-.nav-key:first-child {
-  color: #d98767 !important;
+.menu-link::after {
+  position: absolute;
+  inset: auto 28% 0.2rem;
+  height: 1px;
+  background: var(--accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.35);
+  transition: opacity 160ms ease-out, transform 160ms var(--ease-out);
 }
 
-.reprint-key {
-  width: 2.75rem;
-  height: 2.75rem;
-  justify-content: center;
-  border: 1px solid rgb(213 208 194 / 24%);
+.menu-link:hover,
+.menu-link.is-active {
+  color: #f2f0e8;
 }
 
-@keyframes paper-feed {
+.menu-link.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+@keyframes print-receipt {
   from {
-    opacity: 0.72;
-    transform: translateY(42svh) rotateX(-2deg);
+    opacity: 0.35;
+    transform: translateY(54svh) rotateX(5deg) rotateZ(-0.15deg);
   }
   to {
     opacity: 1;
-    transform: translateY(0) rotateX(0);
+    transform: translateY(0) rotateX(0.8deg) rotateZ(-0.15deg);
   }
 }
 
-@keyframes ink-set {
-  from {
-    opacity: 0;
-    transform: translateY(0.7rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .post-item:hover {
-    color: var(--accent);
-    transform: translateX(0.25rem);
+@media (max-width: 36rem) {
+  .receipt-stage {
+    padding-bottom: 9.25rem;
   }
 
-  .post-item:hover .post-arrow {
-    transform: translate(0.15rem, -0.15rem);
-  }
-}
-
-@media (max-width: 47.99rem) {
-  .ambient-label,
-  .printer-brand {
-    display: none;
+  .receipt {
+    min-height: 25rem;
+    padding: 2rem 1.5rem 2.2rem;
   }
 
-  .paper-track {
-    width: min(100% - 1rem, 42rem);
-    padding-top: 0.5rem;
-    padding-bottom: 10.5rem;
+  .receipt-content {
+    min-height: 15.5rem;
   }
 
-  .paper {
-    min-height: 70rem;
+  .printer {
+    border-inline: 0;
+    border-radius: 0.8rem 0.8rem 0 0;
   }
 
-  .printer-panel {
-    grid-template-columns: 1fr 2.75rem;
-    width: min(100% - 1rem, 34rem);
-    min-height: 4.8rem;
-  }
-
-  .printer-nav {
-    justify-content: flex-start;
-    gap: 0;
-  }
-
-  .nav-key {
-    min-width: 0;
-    flex: 1;
-    min-height: 2.75rem;
-    padding-inline: 0.35rem;
-  }
-}
-
-@media (max-width: 31rem) {
-  .desktop-break {
-    display: none;
-  }
-
-  .paper {
-    padding-inline: 1.25rem;
-  }
-
-  .section-heading {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-  }
-
-  .post-item {
-    grid-template-columns: 1.5rem 1fr 1rem;
-    gap: 0.55rem;
-  }
-
-  .post-copy p {
-    display: none;
-  }
-
-  .note-section {
-    grid-template-columns: 1fr;
-  }
-
-  .paper-footer {
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
-  .nav-key {
-    flex-direction: column;
-    gap: 0.15rem;
-    font-size: 0.58rem;
+  .menu-link {
+    font-size: 0.68rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
-    animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* Shared paper pages */
-.paper {
-  transform-style: preserve-3d;
-  border-radius: 1.2rem 0.8rem 0.6rem 1rem / 0.3rem 0.5rem 0.25rem 0.45rem;
-  clip-path: polygon(0.25% 0, 99.65% 0.15%, 100% 17%, 99.65% 35%, 100% 53%, 99.7% 71%, 100% 100%, 0.25% 99.9%, 0 76%, 0.3% 57%, 0 37%, 0.25% 18%);
-}
-
-.paper-bend {
-  position: absolute;
-  inset: 0.75rem 2.5% auto;
-  z-index: 1;
-  height: 1rem;
-  pointer-events: none;
-  border-top: 1px solid rgb(35 35 31 / 10%);
-  border-radius: 50%;
-  transform: rotate(-0.15deg);
-}
-
-.paper-bend span {
-  display: block;
-  width: 91%;
-  height: 100%;
-  margin: 0 auto;
-  border-top: 1px solid rgb(35 35 31 / 5%);
-  border-radius: 50%;
-}
-
-.paper.is-printing {
-  animation: paper-feed-v2 1100ms var(--ease-print) both;
-}
-
-.paper.is-printing .print-line {
-  animation: ink-set 520ms var(--ease-print) both;
-  animation-delay: calc(380ms + var(--print-order) * 105ms);
-}
-
-.page-title {
-  max-width: none;
-}
-
-.archive-header .lead {
-  max-width: 31rem;
-}
-
-.archive-list,
-.memo-list,
-.profile-copy,
-.principle-list,
-.contact-slip {
-  position: relative;
-  z-index: 1;
-}
-
-.archive-list {
-  border-top: 2px solid var(--ink);
-}
-
-.archive-item {
-  display: grid;
-  grid-template-columns: 2.8rem 1fr;
-  gap: 1rem;
-  padding: 1.4rem 0;
-  border-bottom: 1px solid rgb(35 35 31 / 22%);
-}
-
-.archive-number {
-  color: var(--accent);
-  font: 0.66rem/1.4 "IBM Plex Mono", monospace;
-}
-
-.archive-copy h2 {
-  margin: 0 0 0.35rem;
-  font-size: clamp(1.08rem, 3vw, 1.4rem);
-  font-weight: 500;
-  line-height: 1.38;
-}
-
-.archive-copy p,
-.profile-copy p,
-.principle-item p {
-  margin: 0;
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  line-height: 1.75;
-}
-
-.memo-list {
-  border-top: 1px solid var(--ink);
-}
-
-.memo-item {
-  display: grid;
-  grid-template-columns: 4.2rem 1fr;
-  gap: 1.5rem;
-  padding: 1.65rem 0;
-  border-bottom: 1px dashed rgb(35 35 31 / 31%);
-}
-
-.memo-stamp {
-  display: grid;
-  width: 3.55rem;
-  height: 3.55rem;
-  place-items: center;
-  color: var(--accent);
-  border: 1px solid var(--accent);
-  font: 0.58rem/1.35 "IBM Plex Mono", monospace;
-  text-align: center;
-  transform: rotate(-2.5deg);
-}
-
-.memo-item time,
-.section-kicker,
-.contact-slip,
-.empty-feed,
-.paper-stub > p:first-child {
-  color: var(--accent);
-  font: 0.6rem/1.5 "IBM Plex Mono", monospace;
-  letter-spacing: 0.1em;
-}
-
-.memo-item p {
-  max-width: 29rem;
-  margin: 0.5rem 0 0;
-  font-size: 1.03rem;
-  line-height: 1.9;
-}
-
-.profile-copy {
-  padding: 0 0 2.5rem;
-  border-bottom: 1px dashed rgb(35 35 31 / 34%);
-}
-
-.profile-copy h2 {
-  margin: 0 0 1rem;
-  font-size: clamp(1.7rem, 5vw, 2.5rem);
-  font-weight: 500;
-}
-
-.profile-copy > p:last-child {
-  max-width: 34rem;
-  font-size: 1.03rem;
-  line-height: 2;
-}
-
-.principle-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 2.5rem;
-}
-
-.principle-item {
-  padding-top: 0.75rem;
-  border-top: 2px solid var(--ink);
-}
-
-.principle-item > span {
-  color: var(--accent);
-  font: 0.6rem/1.5 "IBM Plex Mono", monospace;
-}
-
-.principle-item h2 {
-  margin: 1.8rem 0 0.45rem;
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-
-.contact-slip {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 0.8rem;
-  align-items: center;
-  margin-top: 3.5rem;
-  padding: 0.9rem 0;
-  color: var(--ink-soft);
-  border-block: 1px dashed rgb(35 35 31 / 34%);
-}
-
-.contact-slip strong {
-  color: var(--ink);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* Fixed bottom retro printer machine body */
-.printer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  color: var(--printer-key);
-  background: transparent;
-  border-top: 0;
-  box-shadow: 0 -1rem 3rem rgba(15, 23, 20, 0.45);
-}
-
-.printer-topdeck {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.25rem;
-  background: #c9c2ae;
-  border-top: 1px solid rgb(255 255 255 / 22%);
-  border-bottom: 1px solid rgb(23 33 29 / 25%);
-  box-shadow: inset 0 -0.35rem 0 rgb(23 33 29 / 8%);
-}
-
-.paper-slot {
-  position: relative;
-  width: min(48rem, calc(100% - 5rem));
-  height: 0.85rem;
-  background: #101714;
-  border: 1px solid rgb(23 33 29 / 36%);
-  box-shadow: inset 0 0 0 0.2rem #1c2722, 0 1px 0 rgb(255 255 255 / 23%);
-}
-
-.paper-slot::after { content: none; }
-
-.paper-slot .feed-channel {
-  inset: 0.32rem 0.8rem auto;
-  width: auto;
-  transform: none;
-}
-
-.paper-slot .feed-roller {
-  left: auto;
-  transform: none;
-}
-
-.feed-channel {
-  position: absolute;
-  inset: 0.32rem 0.8rem auto;
-  height: 1px;
-  background: rgb(244 240 229 / 22%);
-}
-
-.feed-roller {
-  position: absolute;
-  top: 0.12rem;
-  width: 0.4rem;
-  height: 0.4rem;
-  background: #b3a991;
-  border: 1px solid #665e50;
-  border-radius: 50%;
-}
-
-.paper-slot .feed-roller-left { left: 0.35rem; }
-.paper-slot .feed-roller-right { right: 0.35rem; }
-
-.roller-knob {
-  position: absolute;
-  top: 0.38rem;
-  width: 1.1rem;
-  height: 1.1rem;
-  background: #8e8877;
-  border: 2px solid #5b5549;
-  border-radius: 50%;
-  box-shadow: inset 0.18rem 0.12rem 0 rgb(255 255 255 / 16%);
-}
-
-.roller-knob::after {
-  position: absolute;
-  inset: 0.25rem;
-  border: 1px solid #5b5549;
-  border-radius: 50%;
-  content: "";
-}
-
-.roller-knob-left { left: max(0.75rem, calc(50% - 27rem)); }
-.roller-knob-right { right: max(0.75rem, calc(50% - 27rem)); }
-
-.printer-body {
-  background: var(--printer);
-  border-top: 1px solid rgb(244 240 229 / 14%);
-}
-
-.printer-panel {
-  display: grid;
-  grid-template-columns: 11rem 1fr 12rem;
-  align-items: center;
-  width: min(100% - 2rem, 76rem);
-  min-height: 6.5rem;
-  margin-inline: auto;
-  padding: 0.8rem 0 max(0.8rem, env(safe-area-inset-bottom));
-}
-
-.printer-brand {
-  gap: 0.65rem;
-  font-family: "IBM Plex Mono", monospace;
-}
-
-.printer-brand strong { font-size: 0.68rem; }
-.printer-brand small { font-size: 0.43rem; }
-
-.status-light {
-  width: 0.5rem;
-  background: #b9c46a;
-  box-shadow: 0 0 0 3px rgb(185 196 106 / 12%), 0 0 0.55rem rgb(185 196 106 / 42%);
-}
-
-.status-light.is-printing {
-  background: #f59e0b;
-  box-shadow: 0 0 10px #f59e0b;
-  animation: light-pulse 400ms infinite alternate;
-}
-
-@keyframes light-pulse {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
-}
-
-.status-light.is-error {
-  background: #d46d4b;
-  box-shadow: 0 0 0 3px rgb(212 109 75 / 12%), 0 0 0.55rem rgb(212 109 75 / 42%);
-}
-
-.printer-nav {
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
-  padding: 0.3rem;
-  background: var(--printer-deep);
-  border: 1px solid rgb(213 208 194 / 12%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%);
-}
-
-.nav-key {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: 0.7rem 1rem;
-  column-gap: 0.38rem;
-  align-items: center;
-  min-width: 5.2rem;
-  min-height: 3.2rem;
-  padding: 0.45rem 0.6rem 0.32rem;
-  color: #45453d !important;
-  background: #d7d1c1;
-  border: 1px solid #aaa392;
-  border-radius: 0.18rem;
-  box-shadow: 0 3px 0 #77705f, 0 4px 0 rgb(12 18 15 / 35%);
-  font: 0.65rem/1 "IBM Plex Mono", monospace;
-  text-decoration: none;
-  transform: translateY(-1px);
-  transition: transform 100ms ease-out, box-shadow 100ms ease-out, background 160ms ease-out;
-}
-
-.nav-key:hover,
-.nav-key:focus-visible {
-  color: #2e332d !important;
-  background: #e4dece !important;
-}
-
-.nav-key:active,
-.nav-key.is-active {
-  color: var(--paper) !important;
-  background: var(--accent) !important;
-  border-color: #7f3827;
-  box-shadow: 0 1px 0 #5f2b20, 0 2px 0 rgb(12 18 15 / 35%);
-  transform: translateY(2px);
-}
-
-.key-code {
-  grid-row: 1 / 3;
-  color: rgb(69 69 61 / 54%);
-  font-size: 0.52rem;
-}
-
-.is-active .key-code { color: rgb(244 240 229 / 66%); }
-.key-icon { width: 0.85rem; height: 0.85rem; }
-
-.printer-controls {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.65rem;
-  align-items: center;
-  padding-left: 0.8rem;
-}
-
-.printer-display {
-  display: grid;
-  gap: 0.13rem;
-  min-width: 7.8rem;
-  padding: 0.43rem 0.55rem;
-  color: #b9c46a;
-  background: #111914;
-  border: 1px solid rgb(185 196 106 / 30%);
-  box-shadow: inset 0 0 0 2px rgb(185 196 106 / 5%);
-  font: 0.48rem/1.2 "IBM Plex Mono", monospace;
-  letter-spacing: 0.06em;
-}
-
-.printer-display strong { font-size: 0.56rem; font-weight: 500; }
-.printer-display.is-error { color: #d78060; border-color: rgb(212 109 75 / 40%); }
-
-.reprint-key {
-  width: 2.85rem;
-  height: 2.85rem;
-  justify-content: center;
-  color: var(--printer-key) !important;
-  border: 1px solid rgb(213 208 194 / 27%);
-  border-radius: 50%;
-  transition: transform 160ms var(--ease-print), background 160ms ease-out;
-}
-
-.reprint-key:hover,
-.reprint-key:focus-visible {
-  color: var(--paper) !important;
-  background: rgb(244 240 229 / 11%) !important;
-  transform: rotate(35deg);
-}
-
-.reprint-key:disabled { opacity: 0.35; }
-
-@keyframes paper-feed-v2 {
-  from {
-    opacity: 0.64;
-    transform: translateY(72svh) rotateX(8deg) rotateY(-1.5deg) rotateZ(-0.7deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) rotateX(0.8deg) rotateY(-0.35deg) rotateZ(-0.12deg);
-  }
-}
-
-/* Empty printer state */
-.error-stage {
-  position: relative;
-  min-height: 100svh;
-  overflow: hidden;
-}
-
-.empty-feed {
-  position: absolute;
-  top: 23%;
-  left: 50%;
-  display: grid;
-  gap: 0.9rem;
-  justify-items: center;
-  color: rgb(38 53 47 / 48%);
-  transform: translateX(-50%);
-}
-
-.empty-feed-line {
-  display: block;
-  width: 8rem;
-  border-top: 1px dashed rgb(38 53 47 / 40%);
-}
-
-.paper-stub {
-  position: absolute;
-  bottom: 8.5rem;
-  left: 50%;
-  width: min(23rem, calc(100% - 2rem));
-  min-height: 18rem;
-  padding: 2rem clamp(1.5rem, 7vw, 2.75rem);
-  background: var(--paper);
-  border-inline: 1px solid rgb(35 35 31 / 13%);
-  box-shadow: 0 0 0 1px rgb(35 35 31 / 5%), 0 1rem 2rem rgb(23 33 29 / 16%);
-  clip-path: polygon(0 0, 100% 0, 99% 96%, 96% 100%, 90% 96%, 84% 100%, 77% 96%, 70% 100%, 62% 96%, 54% 100%, 45% 96%, 37% 100%, 29% 96%, 20% 100%, 12% 96%, 3% 100%);
-  transform: translateX(-50%) rotate(-1.4deg);
-  animation: stub-feed 760ms var(--ease-print) both;
-}
-
-.paper-stub h1 {
-  margin: 1.7rem 0 0.45rem;
-  font-size: clamp(2rem, 7vw, 3rem);
-}
-
-.paper-stub > p:not(:first-child) {
-  margin-bottom: 1.6rem;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-}
-
-.error-rule {
-  width: 100%;
-  margin-top: 1rem;
-  border-top: 1px dashed rgb(35 35 31 / 37%);
-}
-
-.reload-paper-key {
-  border-color: rgb(35 35 31 / 35%);
-  color: var(--ink) !important;
-}
-
-@keyframes stub-feed {
-  from { opacity: 0; transform: translate(-50%, 6rem) rotate(-1.4deg); }
-  to { opacity: 1; transform: translate(-50%, 0) rotate(-1.4deg); }
-}
-
-@media (max-width: 47.99rem) {
-  .paper-track { padding-bottom: 12.5rem; }
-  .printer-topdeck { height: 1.8rem; }
-  .printer-panel {
-    grid-template-columns: 1fr;
-    min-height: 6.3rem;
-    padding: 0.55rem 0 max(0.55rem, env(safe-area-inset-bottom));
-  }
-  .printer-brand { display: none; }
-  .printer-nav { gap: 0.25rem; padding: 0.24rem; }
-  .nav-key {
-    min-width: 0;
-    min-height: 2.65rem;
-    flex: 1;
-    padding-inline: 0.3rem;
-  }
-  .printer-controls {
-    position: absolute;
-    right: 0.9rem;
-    bottom: 0.8rem;
-    padding: 0;
-  }
-  .printer-display { display: none; }
-  .reprint-key { width: 2.35rem; height: 2.35rem; }
-  .printer-nav { padding-right: 3.1rem; }
-  .roller-knob { display: none; }
-  .paper-stub { bottom: 8.1rem; }
-  .principle-list { grid-template-columns: 1fr; gap: 1.4rem; }
-}
-
-@media (max-width: 31rem) {
-  .paper-stub { min-height: 16rem; }
-  .memo-item { grid-template-columns: 3.65rem 1fr; gap: 0.9rem; }
-  .memo-stamp { width: 3.25rem; height: 3.25rem; }
-  .memo-item p { font-size: 0.93rem; }
-  .archive-item { grid-template-columns: 2.1rem 1fr; gap: 0.7rem; }
-  .contact-slip { grid-template-columns: 1fr 1fr; }
-  .contact-slip strong { grid-column: 1 / -1; grid-row: 1; }
 }

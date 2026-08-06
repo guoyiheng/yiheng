@@ -1,16 +1,8 @@
 <script setup lang="ts">
-definePageMeta({
-  errorMode: true
-})
-
 setResponseStatus(404)
-
-useSeoMeta({
-  title: '404 · 纸张耗尽',
-  description: '这张页面没有装进打印机。'
-})
+useSeoMeta({ title: '页面不存在 · yiheng' })
 </script>
 
 <template>
-  <OutOfPaper />
+  <ConstructionReceipt title="页面不存在" code="404" />
 </template>
