@@ -29,7 +29,7 @@ const articles = [
     <div class="rule print-line" style="--print-order: 2" aria-hidden="true">
       <span>6 RECORDS</span>
       <span class="rule-line" />
-      <span>02 / 04</span>
+      <span>02 / 02</span>
     </div>
 
     <section class="archive-list print-line" style="--print-order: 3" aria-label="文章列表">
