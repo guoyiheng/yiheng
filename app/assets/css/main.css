@@ -1043,12 +1043,17 @@ h1 {
   font-weight: 500;
 }
 
-/* Retro printer body */
+/* Fixed bottom retro printer machine body */
 .printer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   color: var(--printer-key);
   background: transparent;
   border-top: 0;
-  box-shadow: 0 -1rem 2rem rgb(23 33 29 / 26%);
+  box-shadow: 0 -1rem 3rem rgba(15, 23, 20, 0.45);
 }
 
 .printer-topdeck {
