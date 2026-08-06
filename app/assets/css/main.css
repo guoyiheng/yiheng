@@ -138,53 +138,56 @@ button {
   top: 0;
   left: -2px;
   right: -2px;
-  height: 1.6rem;
+  height: 2.2rem;
   z-index: 15;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(233, 226, 210, 0.95) 0%, rgba(244, 240, 229, 0.4) 60%, transparent 100%);
-  border-bottom: 1px solid rgba(35, 35, 31, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(180deg, rgba(220, 212, 194, 0.95) 0%, rgba(244, 240, 229, 0.6) 45%, transparent 100%);
+  border-bottom: 1px solid rgba(35, 35, 31, 0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .paper-curl-top::before {
   content: "";
   position: absolute;
-  top: -0.6rem;
+  top: -0.75rem;
   left: 0;
   right: 0;
-  height: 0.8rem;
+  height: 1rem;
   background: inherit;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.08);
-  transform: perspective(600px) rotateX(-20deg);
+  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.12);
+  transform: perspective(700px) rotateX(-24deg);
 }
 
 .paper-curl-top::after {
   content: "";
   position: absolute;
-  bottom: -4px;
-  left: 5%;
-  right: 5%;
-  height: 6px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.12) 0%, transparent 80%);
+  bottom: -6px;
+  left: 3%;
+  right: 3%;
+  height: 8px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.16) 0%, transparent 75%);
 }
 
 .paper.theme-dark .paper-curl-top {
-  background: linear-gradient(180deg, rgba(22, 28, 25, 0.95) 0%, rgba(22, 28, 25, 0.4) 60%, transparent 100%);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(15, 20, 18, 0.95) 0%, rgba(22, 28, 25, 0.5) 50%, transparent 100%);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .paper.is-printing {
-  animation: paper-feed-up 1100ms var(--ease-print) both;
+  animation: paper-feed-upward 1250ms var(--ease-print) both;
 }
 
-@keyframes paper-feed-up {
+@keyframes paper-feed-upward {
   0% {
-    opacity: 0.15;
-    transform: translateY(75vh) scale(0.96) rotateX(12deg);
+    opacity: 0.1;
+    transform: translateY(85vh) scale(0.95) rotateX(15deg);
   }
-  40% {
+  35% {
     opacity: 0.85;
+  }
+  80% {
+    transform: translateY(-6px) scale(1.002) rotateX(-1deg);
   }
   100% {
     opacity: 1;
@@ -194,7 +197,7 @@ button {
 
 .paper.is-printing .print-line {
   animation: ink-set 520ms var(--ease-print) both;
-  animation-delay: calc(450ms + var(--print-order) * 120ms);
+  animation-delay: calc(480ms + var(--print-order) * 120ms);
 }
 
 /* 纸张主题风格 */
