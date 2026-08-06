@@ -35,7 +35,32 @@ function cycleSpeed() {
   else setSpeed('1x')
 }
 
+const rollerRotation = ref(0)
+
+function handleScroll() {
+  if (typeof window !== 'undefined') {
+    rollerRotation.value = (window.scrollY / 2) % 360
+  }
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('scroll', handleScroll, { passive: true })
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('scroll', handleScroll)
+  }
+})
+
+function handleNavClick(to: string) {
+  playKeyClick()
+}
+
 async function navigateFromError(event: MouseEvent, to: string) {
+  playKeyClick()
   if (!props.errorMode) return
   event.preventDefault()
   await clearError({ redirect: to })
@@ -45,13 +70,21 @@ async function navigateFromError(event: MouseEvent, to: string) {
 <template>
   <footer :class="['printer', { 'has-feed-error': errorMode }]" aria-label="复古打印机控制台">
     <div class="printer-topdeck" aria-hidden="true">
-      <span class="roller-knob roller-knob-left" @click="reprint" />
+      <span
+        class="roller-knob roller-knob-left"
+        :style="{ transform: `rotate(${rollerRotation}deg)` }"
+        @click="reprint"
+      />
       <div class="paper-slot">
         <span class="feed-roller feed-roller-left" />
         <span class="feed-channel" />
         <span class="feed-roller feed-roller-right" />
       </div>
-      <span class="roller-knob roller-knob-right" @click="reprint" />
+      <span
+        class="roller-knob roller-knob-right"
+        :style="{ transform: `rotate(${rollerRotation}deg)` }"
+        @click="reprint"
+      />
     </div>
 
     <div class="printer-body">
@@ -71,7 +104,7 @@ async function navigateFromError(event: MouseEvent, to: string) {
             :to="item.to"
             :class="['nav-key', { 'is-active': route.path === item.to && !errorMode }]"
             :aria-current="route.path === item.to && !errorMode ? 'page' : undefined"
-            @click="navigateFromError($event, item.to)"
+            @click="errorMode ? navigateFromError($event, item.to) : handleNavClick(item.to)"
           >
             <span class="key-code" aria-hidden="true">{{ item.code }}</span>
             <UIcon :name="item.icon" class="key-icon" aria-hidden="true" />
