@@ -6,15 +6,12 @@ const props = withDefaults(defineProps<{
 })
 
 const route = useRoute()
-const { reprint, isPrinting, paperTheme, printSpeed, setSpeed } = usePrinter()
+const { reprint, isPrinting } = usePrinter()
 const { isMuted, toggleMute, playKeyClick } = usePrinterAudio()
 
 const navItems = [
   { label: '首页', icon: 'i-lucide-house', to: '/', code: '01' },
-  { label: '文章', icon: 'i-lucide-newspaper', to: '/articles', code: '02' },
-  { label: '札记', icon: 'i-lucide-notebook-pen', to: '/notes', code: '03' },
-  { label: '关于', icon: 'i-lucide-user-round', to: '/about', code: '04' },
-  { label: '工坊', icon: 'i-lucide-keyboard', to: '/studio', code: '05' }
+  { label: '文章', icon: 'i-lucide-newspaper', to: '/articles', code: '02' }
 ]
 
 const currentPage = computed(() => {
@@ -24,16 +21,9 @@ const currentPage = computed(() => {
 
 const displayStatus = computed(() => {
   if (props.errorMode) return 'E-404'
-  if (isPrinting.value) return 'PRINTING...'
+  if (isPrinting.value) return 'FEEDING...'
   return 'READY'
 })
-
-function cycleSpeed() {
-  playKeyClick()
-  if (printSpeed.value === '1x') setSpeed('2x')
-  else if (printSpeed.value === '2x') setSpeed('typewriter')
-  else setSpeed('1x')
-}
 
 const rollerRotation = ref(0)
 
@@ -68,7 +58,8 @@ async function navigateFromError(event: MouseEvent, to: string) {
 </script>
 
 <template>
-  <footer :class="['printer', { 'has-feed-error': errorMode }]" aria-label="复古打印机控制台">
+  <footer :class="['printer', { 'has-feed-error': errorMode }]" aria-label="复古打字机出纸底座">
+    <!-- 打字机顶层槽口与旋转滚轮 -->
     <div class="printer-topdeck" aria-hidden="true">
       <span
         class="roller-knob roller-knob-left"
@@ -87,16 +78,18 @@ async function navigateFromError(event: MouseEvent, to: string) {
       />
     </div>
 
+    <!-- 打字机机架本体与面板 -->
     <div class="printer-body">
       <div class="printer-panel">
-        <div class="printer-brand" aria-label="一恒个人博客">
+        <div class="printer-brand" aria-label="一恒打印机">
           <span :class="['status-light', { 'is-error': errorMode, 'is-printing': isPrinting }]" />
           <div>
             <strong>YIHENG 110</strong>
-            <small>PERSONAL TYPEWRITER</small>
+            <small>VINTAGE TYPEWRITER</small>
           </div>
         </div>
 
+        <!-- 仅保留 01 首页 和 02 文章 双按键导航 -->
         <nav class="printer-nav" aria-label="主要导航">
           <NuxtLink
             v-for="item in navItems"
@@ -112,24 +105,14 @@ async function navigateFromError(event: MouseEvent, to: string) {
           </NuxtLink>
         </nav>
 
+        <!-- 状态液晶面板与操控按键 -->
         <div class="printer-controls">
           <div :class="['printer-display', { 'is-error': errorMode, 'is-printing': isPrinting }]" aria-live="polite">
             <span>{{ displayStatus }}</span>
-            <strong>{{ errorMode ? 'OUT OF PAPER' : `${currentPage} · ${paperTheme.toUpperCase()}` }}</strong>
+            <strong>{{ errorMode ? 'OUT OF PAPER' : currentPage }}</strong>
           </div>
 
           <div class="flex items-center gap-1">
-            <UTooltip :text="`打字速度: ${printSpeed}`">
-              <UButton
-                icon="i-lucide-gauge"
-                color="neutral"
-                variant="ghost"
-                class="reprint-key"
-                :aria-label="`打字速度: ${printSpeed}`"
-                @click="cycleSpeed"
-              />
-            </UTooltip>
-
             <UTooltip :text="isMuted ? '取消静音' : '开启静音'">
               <UButton
                 :icon="isMuted ? 'i-lucide-volume-x' : 'i-lucide-volume-2'"
@@ -141,14 +124,14 @@ async function navigateFromError(event: MouseEvent, to: string) {
               />
             </UTooltip>
 
-            <UTooltip :text="errorMode ? '当前缺纸' : '重新打印本页'">
+            <UTooltip :text="errorMode ? '当前缺纸' : '重新向上吐纸'">
               <UButton
                 icon="i-lucide-rotate-cw"
                 color="neutral"
                 variant="ghost"
                 class="reprint-key"
                 :disabled="errorMode || isPrinting"
-                :aria-label="errorMode ? '当前缺纸' : '重新打印本页'"
+                :aria-label="errorMode ? '当前缺纸' : '重新向上吐纸'"
                 @click="reprint"
               />
             </UTooltip>
