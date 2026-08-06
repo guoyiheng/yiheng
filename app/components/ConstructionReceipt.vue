@@ -6,11 +6,31 @@ const props = defineProps<{
 }>()
 
 const printingText = 'Printing...'.split('')
+const isPrinting = ref(false)
+
+const handlePrint = () => {
+  if (props.missing) {
+    return
+  }
+
+  isPrinting.value = false
+  nextTick(() => {
+    isPrinting.value = true
+  })
+}
+
+onMounted(() => {
+  window.addEventListener('printer:print', handlePrint)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('printer:print', handlePrint)
+})
 </script>
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper">
+    <div :class="['wrapper', { 'is-printing': isPrinting }]">
       <div class="printer" />
 
       <div class="printer-display" :class="{ 'is-error': props.missing }" aria-live="polite">
@@ -19,15 +39,6 @@ const printingText = 'Printing...'.split('')
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
       </div>
-
-      <button
-        class="print-button"
-        type="button"
-        :disabled="props.missing"
-        :aria-label="props.missing ? '打印机缺纸' : '打印建设中票据'"
-      >
-        🖨
-      </button>
 
       <div v-if="!props.missing" class="receipt-wrapper">
         <article class="receipt" :aria-labelledby="`receipt-title-${props.code}`">
