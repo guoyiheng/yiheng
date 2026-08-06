@@ -10,10 +10,23 @@ const props = withDefaults(defineProps<{
   titleId: 'page-title'
 })
 
+const route = useRoute()
 const { printCycle, paperTheme, isPrinting, isTorn, reprint, setTheme, tearPaper, resetPaper } = usePrinter()
-const { isMuted, toggleMute } = usePrinterAudio()
+const audio = usePrinterAudio()
+const { isMuted, toggleMute } = audio
 
 const localIsPrinting = ref(true)
+
+onMounted(() => {
+  audio.playFeedPaper()
+})
+
+watch(() => route.path, async () => {
+  localIsPrinting.value = false
+  audio.playFeedPaper()
+  await nextTick()
+  localIsPrinting.value = true
+})
 
 watch(printCycle, async () => {
   localIsPrinting.value = false

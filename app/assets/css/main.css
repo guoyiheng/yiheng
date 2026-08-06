@@ -175,12 +175,26 @@ button {
 }
 
 .paper.is-printing {
-  animation: paper-feed 900ms var(--ease-print) both;
+  animation: paper-feed-up 1100ms var(--ease-print) both;
+}
+
+@keyframes paper-feed-up {
+  0% {
+    opacity: 0.15;
+    transform: translateY(75vh) scale(0.96) rotateX(12deg);
+  }
+  40% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
 }
 
 .paper.is-printing .print-line {
   animation: ink-set 520ms var(--ease-print) both;
-  animation-delay: calc(420ms + var(--print-order) * 115ms);
+  animation-delay: calc(450ms + var(--print-order) * 120ms);
 }
 
 /* 纸张主题风格 */
