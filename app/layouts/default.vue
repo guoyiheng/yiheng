@@ -1,6 +1,6 @@
 <template>
   <div class="site-shell">
+    <SiteMenu />
     <slot />
-    <ReceiptPrinter />
   </div>
 </template>
