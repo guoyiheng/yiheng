@@ -608,3 +608,520 @@ h1 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Shared paper pages */
+.paper {
+  transform-style: preserve-3d;
+  border-radius: 1.2rem 0.8rem 0.6rem 1rem / 0.3rem 0.5rem 0.25rem 0.45rem;
+  clip-path: polygon(0.25% 0, 99.65% 0.15%, 100% 17%, 99.65% 35%, 100% 53%, 99.7% 71%, 100% 100%, 0.25% 99.9%, 0 76%, 0.3% 57%, 0 37%, 0.25% 18%);
+}
+
+.paper-bend {
+  position: absolute;
+  inset: 0.75rem 2.5% auto;
+  z-index: 1;
+  height: 1rem;
+  pointer-events: none;
+  border-top: 1px solid rgb(35 35 31 / 10%);
+  border-radius: 50%;
+  transform: rotate(-0.15deg);
+}
+
+.paper-bend span {
+  display: block;
+  width: 91%;
+  height: 100%;
+  margin: 0 auto;
+  border-top: 1px solid rgb(35 35 31 / 5%);
+  border-radius: 50%;
+}
+
+.paper.is-printing {
+  animation: paper-feed-v2 1100ms var(--ease-print) both;
+}
+
+.paper.is-printing .print-line {
+  animation: ink-set 520ms var(--ease-print) both;
+  animation-delay: calc(380ms + var(--print-order) * 105ms);
+}
+
+.page-title {
+  max-width: none;
+}
+
+.archive-header .lead {
+  max-width: 31rem;
+}
+
+.archive-list,
+.memo-list,
+.profile-copy,
+.principle-list,
+.contact-slip {
+  position: relative;
+  z-index: 1;
+}
+
+.archive-list {
+  border-top: 2px solid var(--ink);
+}
+
+.archive-item {
+  display: grid;
+  grid-template-columns: 2.8rem 1fr;
+  gap: 1rem;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid rgb(35 35 31 / 22%);
+}
+
+.archive-number {
+  color: var(--accent);
+  font: 0.66rem/1.4 "IBM Plex Mono", monospace;
+}
+
+.archive-copy h2 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.08rem, 3vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.38;
+}
+
+.archive-copy p,
+.profile-copy p,
+.principle-item p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+
+.memo-list {
+  border-top: 1px solid var(--ink);
+}
+
+.memo-item {
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  gap: 1.5rem;
+  padding: 1.65rem 0;
+  border-bottom: 1px dashed rgb(35 35 31 / 31%);
+}
+
+.memo-stamp {
+  display: grid;
+  width: 3.55rem;
+  height: 3.55rem;
+  place-items: center;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  font: 0.58rem/1.35 "IBM Plex Mono", monospace;
+  text-align: center;
+  transform: rotate(-2.5deg);
+}
+
+.memo-item time,
+.section-kicker,
+.contact-slip,
+.empty-feed,
+.paper-stub > p:first-child {
+  color: var(--accent);
+  font: 0.6rem/1.5 "IBM Plex Mono", monospace;
+  letter-spacing: 0.1em;
+}
+
+.memo-item p {
+  max-width: 29rem;
+  margin: 0.5rem 0 0;
+  font-size: 1.03rem;
+  line-height: 1.9;
+}
+
+.profile-copy {
+  padding: 0 0 2.5rem;
+  border-bottom: 1px dashed rgb(35 35 31 / 34%);
+}
+
+.profile-copy h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-weight: 500;
+}
+
+.profile-copy > p:last-child {
+  max-width: 34rem;
+  font-size: 1.03rem;
+  line-height: 2;
+}
+
+.principle-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.principle-item {
+  padding-top: 0.75rem;
+  border-top: 2px solid var(--ink);
+}
+
+.principle-item > span {
+  color: var(--accent);
+  font: 0.6rem/1.5 "IBM Plex Mono", monospace;
+}
+
+.principle-item h2 {
+  margin: 1.8rem 0 0.45rem;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.contact-slip {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 3.5rem;
+  padding: 0.9rem 0;
+  color: var(--ink-soft);
+  border-block: 1px dashed rgb(35 35 31 / 34%);
+}
+
+.contact-slip strong {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Retro printer body */
+.printer {
+  color: var(--printer-key);
+  background: transparent;
+  border-top: 0;
+  box-shadow: 0 -1rem 2rem rgb(23 33 29 / 26%);
+}
+
+.printer-topdeck {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.25rem;
+  background: #c9c2ae;
+  border-top: 1px solid rgb(255 255 255 / 22%);
+  border-bottom: 1px solid rgb(23 33 29 / 25%);
+  box-shadow: inset 0 -0.35rem 0 rgb(23 33 29 / 8%);
+}
+
+.paper-slot {
+  position: relative;
+  width: min(48rem, calc(100% - 5rem));
+  height: 0.85rem;
+  background: #101714;
+  border: 1px solid rgb(23 33 29 / 36%);
+  box-shadow: inset 0 0 0 0.2rem #1c2722, 0 1px 0 rgb(255 255 255 / 23%);
+}
+
+.paper-slot::after { content: none; }
+
+.paper-slot .feed-channel {
+  inset: 0.32rem 0.8rem auto;
+  width: auto;
+  transform: none;
+}
+
+.paper-slot .feed-roller {
+  left: auto;
+  transform: none;
+}
+
+.feed-channel {
+  position: absolute;
+  inset: 0.32rem 0.8rem auto;
+  height: 1px;
+  background: rgb(244 240 229 / 22%);
+}
+
+.feed-roller {
+  position: absolute;
+  top: 0.12rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: #b3a991;
+  border: 1px solid #665e50;
+  border-radius: 50%;
+}
+
+.paper-slot .feed-roller-left { left: 0.35rem; }
+.paper-slot .feed-roller-right { right: 0.35rem; }
+
+.roller-knob {
+  position: absolute;
+  top: 0.38rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: #8e8877;
+  border: 2px solid #5b5549;
+  border-radius: 50%;
+  box-shadow: inset 0.18rem 0.12rem 0 rgb(255 255 255 / 16%);
+}
+
+.roller-knob::after {
+  position: absolute;
+  inset: 0.25rem;
+  border: 1px solid #5b5549;
+  border-radius: 50%;
+  content: "";
+}
+
+.roller-knob-left { left: max(0.75rem, calc(50% - 27rem)); }
+.roller-knob-right { right: max(0.75rem, calc(50% - 27rem)); }
+
+.printer-body {
+  background: var(--printer);
+  border-top: 1px solid rgb(244 240 229 / 14%);
+}
+
+.printer-panel {
+  display: grid;
+  grid-template-columns: 11rem 1fr 12rem;
+  align-items: center;
+  width: min(100% - 2rem, 76rem);
+  min-height: 6.5rem;
+  margin-inline: auto;
+  padding: 0.8rem 0 max(0.8rem, env(safe-area-inset-bottom));
+}
+
+.printer-brand {
+  gap: 0.65rem;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.printer-brand strong { font-size: 0.68rem; }
+.printer-brand small { font-size: 0.43rem; }
+
+.status-light {
+  width: 0.5rem;
+  background: #b9c46a;
+  box-shadow: 0 0 0 3px rgb(185 196 106 / 12%), 0 0 0.55rem rgb(185 196 106 / 42%);
+}
+
+.status-light.is-error {
+  background: #d46d4b;
+  box-shadow: 0 0 0 3px rgb(212 109 75 / 12%), 0 0 0.55rem rgb(212 109 75 / 42%);
+}
+
+.printer-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.3rem;
+  background: var(--printer-deep);
+  border: 1px solid rgb(213 208 194 / 12%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%);
+}
+
+.nav-key {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 0.7rem 1rem;
+  column-gap: 0.38rem;
+  align-items: center;
+  min-width: 5.2rem;
+  min-height: 3.2rem;
+  padding: 0.45rem 0.6rem 0.32rem;
+  color: #45453d !important;
+  background: #d7d1c1;
+  border: 1px solid #aaa392;
+  border-radius: 0.18rem;
+  box-shadow: 0 3px 0 #77705f, 0 4px 0 rgb(12 18 15 / 35%);
+  font: 0.65rem/1 "IBM Plex Mono", monospace;
+  text-decoration: none;
+  transform: translateY(-1px);
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out, background 160ms ease-out;
+}
+
+.nav-key:hover,
+.nav-key:focus-visible {
+  color: #2e332d !important;
+  background: #e4dece !important;
+}
+
+.nav-key:active,
+.nav-key.is-active {
+  color: var(--paper) !important;
+  background: var(--accent) !important;
+  border-color: #7f3827;
+  box-shadow: 0 1px 0 #5f2b20, 0 2px 0 rgb(12 18 15 / 35%);
+  transform: translateY(2px);
+}
+
+.key-code {
+  grid-row: 1 / 3;
+  color: rgb(69 69 61 / 54%);
+  font-size: 0.52rem;
+}
+
+.is-active .key-code { color: rgb(244 240 229 / 66%); }
+.key-icon { width: 0.85rem; height: 0.85rem; }
+
+.printer-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  align-items: center;
+  padding-left: 0.8rem;
+}
+
+.printer-display {
+  display: grid;
+  gap: 0.13rem;
+  min-width: 7.8rem;
+  padding: 0.43rem 0.55rem;
+  color: #b9c46a;
+  background: #111914;
+  border: 1px solid rgb(185 196 106 / 30%);
+  box-shadow: inset 0 0 0 2px rgb(185 196 106 / 5%);
+  font: 0.48rem/1.2 "IBM Plex Mono", monospace;
+  letter-spacing: 0.06em;
+}
+
+.printer-display strong { font-size: 0.56rem; font-weight: 500; }
+.printer-display.is-error { color: #d78060; border-color: rgb(212 109 75 / 40%); }
+
+.reprint-key {
+  width: 2.85rem;
+  height: 2.85rem;
+  justify-content: center;
+  color: var(--printer-key) !important;
+  border: 1px solid rgb(213 208 194 / 27%);
+  border-radius: 50%;
+  transition: transform 160ms var(--ease-print), background 160ms ease-out;
+}
+
+.reprint-key:hover,
+.reprint-key:focus-visible {
+  color: var(--paper) !important;
+  background: rgb(244 240 229 / 11%) !important;
+  transform: rotate(35deg);
+}
+
+.reprint-key:disabled { opacity: 0.35; }
+
+@keyframes paper-feed-v2 {
+  from {
+    opacity: 0.64;
+    transform: translateY(72svh) rotateX(8deg) rotateY(-1.5deg) rotateZ(-0.7deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(0.8deg) rotateY(-0.35deg) rotateZ(-0.12deg);
+  }
+}
+
+/* Empty printer state */
+.error-stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+.empty-feed {
+  position: absolute;
+  top: 23%;
+  left: 50%;
+  display: grid;
+  gap: 0.9rem;
+  justify-items: center;
+  color: rgb(38 53 47 / 48%);
+  transform: translateX(-50%);
+}
+
+.empty-feed-line {
+  display: block;
+  width: 8rem;
+  border-top: 1px dashed rgb(38 53 47 / 40%);
+}
+
+.paper-stub {
+  position: absolute;
+  bottom: 8.5rem;
+  left: 50%;
+  width: min(23rem, calc(100% - 2rem));
+  min-height: 18rem;
+  padding: 2rem clamp(1.5rem, 7vw, 2.75rem);
+  background: var(--paper);
+  border-inline: 1px solid rgb(35 35 31 / 13%);
+  box-shadow: 0 0 0 1px rgb(35 35 31 / 5%), 0 1rem 2rem rgb(23 33 29 / 16%);
+  clip-path: polygon(0 0, 100% 0, 99% 96%, 96% 100%, 90% 96%, 84% 100%, 77% 96%, 70% 100%, 62% 96%, 54% 100%, 45% 96%, 37% 100%, 29% 96%, 20% 100%, 12% 96%, 3% 100%);
+  transform: translateX(-50%) rotate(-1.4deg);
+  animation: stub-feed 760ms var(--ease-print) both;
+}
+
+.paper-stub h1 {
+  margin: 1.7rem 0 0.45rem;
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+
+.paper-stub > p:not(:first-child) {
+  margin-bottom: 1.6rem;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.error-rule {
+  width: 100%;
+  margin-top: 1rem;
+  border-top: 1px dashed rgb(35 35 31 / 37%);
+}
+
+.reload-paper-key {
+  border-color: rgb(35 35 31 / 35%);
+  color: var(--ink) !important;
+}
+
+@keyframes stub-feed {
+  from { opacity: 0; transform: translate(-50%, 6rem) rotate(-1.4deg); }
+  to { opacity: 1; transform: translate(-50%, 0) rotate(-1.4deg); }
+}
+
+@media (max-width: 47.99rem) {
+  .paper-track { padding-bottom: 12.5rem; }
+  .printer-topdeck { height: 1.8rem; }
+  .printer-panel {
+    grid-template-columns: 1fr;
+    min-height: 6.3rem;
+    padding: 0.55rem 0 max(0.55rem, env(safe-area-inset-bottom));
+  }
+  .printer-brand { display: none; }
+  .printer-nav { gap: 0.25rem; padding: 0.24rem; }
+  .nav-key {
+    min-width: 0;
+    min-height: 2.65rem;
+    flex: 1;
+    padding-inline: 0.3rem;
+  }
+  .printer-controls {
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.8rem;
+    padding: 0;
+  }
+  .printer-display { display: none; }
+  .reprint-key { width: 2.35rem; height: 2.35rem; }
+  .printer-nav { padding-right: 3.1rem; }
+  .roller-knob { display: none; }
+  .paper-stub { bottom: 8.1rem; }
+  .principle-list { grid-template-columns: 1fr; gap: 1.4rem; }
+}
+
+@media (max-width: 31rem) {
+  .paper-stub { min-height: 16rem; }
+  .memo-item { grid-template-columns: 3.65rem 1fr; gap: 0.9rem; }
+  .memo-stamp { width: 3.25rem; height: 3.25rem; }
+  .memo-item p { font-size: 0.93rem; }
+  .archive-item { grid-template-columns: 2.1rem 1fr; gap: 0.7rem; }
+  .contact-slip { grid-template-columns: 1fr 1fr; }
+  .contact-slip strong { grid-column: 1 / -1; grid-row: 1; }
+}
