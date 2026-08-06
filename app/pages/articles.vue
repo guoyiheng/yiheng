@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 useSeoMeta({
   title: '文章归档 · 一恒',
-  description: '一恒关于设计、开发与创作的文章归档。'
+  description: '一恒关于设计、开发与创作的文章归档。从底部打印机向上打字吐出。'
 })
+
+const { playFeedPaper, playPrintPin, playBell } = usePrinterAudio()
 
 const articles = [
   { date: '2026.07.28', topic: '设计', title: '把界面做得像一件用久了的东西', summary: '数字产品的质感从哪里来。' },
@@ -12,6 +16,12 @@ const articles = [
   { date: '2025.09.08', topic: '代码', title: '让个人网站保持轻盈', summary: '少一点依赖，多一点清晰。' },
   { date: '2025.05.21', topic: '设计', title: '字体决定了页面说话的速度', summary: '阅读节奏也是界面的一部分。' }
 ]
+
+onMounted(() => {
+  playFeedPaper()
+  setTimeout(() => playPrintPin(), 300)
+  setTimeout(() => playBell(), 1100)
+})
 </script>
 
 <template>
@@ -23,7 +33,7 @@ const articles = [
       </div>
       <p class="eyebrow">WRITING ARCHIVE / 2025—2026</p>
       <h1 id="page-title" class="page-title">文章归档</h1>
-      <p class="lead">关于设计、开发与创作方法的长篇记录，按印刷日期从新到旧排列。</p>
+      <p class="lead">关于设计、开发与创作方法的长篇记录，从底部向上吐纸印出。</p>
     </header>
 
     <div class="rule print-line" style="--print-order: 2" aria-hidden="true">
