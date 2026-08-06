@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const route = useRoute()
-const router = useRouter()
 
 const menuItems = [
   { label: '彷徨', to: '/' },
@@ -9,17 +8,6 @@ const menuItems = [
   { label: '作品', to: '/works' },
   { label: '关于', to: '/about' }
 ]
-
-const handleMenuClick = async (event: MouseEvent, to: string) => {
-  event.preventDefault()
-
-  if (route.path !== to) {
-    await router.push(to)
-  }
-
-  await nextTick()
-  window.dispatchEvent(new CustomEvent('printer:print'))
-}
 </script>
 
 <template>
@@ -30,7 +18,6 @@ const handleMenuClick = async (event: MouseEvent, to: string) => {
       :to="item.to"
       :class="['site-menu-link', { 'is-active': route.path === item.to }]"
       :aria-current="route.path === item.to ? 'page' : undefined"
-      @click="handleMenuClick($event, item.to)"
     >
       {{ item.label }}
     </NuxtLink>
