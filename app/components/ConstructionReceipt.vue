@@ -13,12 +13,14 @@ const printSequence = ref(0)
 const isPrinting = ref(false)
 const hasPrintAnimation = ref(false)
 const initialAnimationPlayed = useState('printer-initial-animation-played', () => false)
+const historyNavigation = useState('printer-history-navigation', () => false)
 const pendingPrintRequest = ref(false)
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
+let removeHistoryHook: (() => void) | undefined
 
 if (!props.missing) pendingPrintRequest.value = consumePrintRequest(route.path)
 
@@ -44,6 +46,7 @@ const schedulePrintFallback = () => {
 }
 
 const beginPrinting = () => {
+  historyNavigation.value = false
   isPrinting.value = true
   hasPrintAnimation.value = true
   printSequence.value += 1
@@ -81,11 +84,18 @@ const restoreScrollPosition = async () => {
 }
 
 onMounted(() => {
+  const markHistoryNavigation = () => {
+    historyNavigation.value = true
+  }
+  window.addEventListener('popstate', markHistoryNavigation)
+  removeHistoryHook = () => window.removeEventListener('popstate', markHistoryNavigation)
+
   if (!props.missing) {
     const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
-    const isHistoryNavigation = navigationEntry?.type === 'back_forward'
+    const isHistoryNavigation = historyNavigation.value || navigationEntry?.type === 'back_forward'
     const shouldAnimate = pendingPrintRequest.value || (!initialAnimationPlayed.value && !isHistoryNavigation)
     initialAnimationPlayed.value = true
+    historyNavigation.value = false
     if (shouldAnimate) {
       beginPrinting()
     }
@@ -109,6 +119,7 @@ watch(() => request.value.sequence, () => {
 
 onBeforeUnmount(() => {
   removeRouterHook?.()
+  removeHistoryHook?.()
   clearPrintFallback()
 })
 </script>
