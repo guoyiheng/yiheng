@@ -12,6 +12,14 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+## Ursa Major and Polaris star map
+
+The site background includes an adapted version of "Ursa Major and Polaris" by Sanu N, from Wikimedia Commons:
+https://commons.wikimedia.org/wiki/File:Ursa_Major_and_Polaris.svg
+
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0):
+https://creativecommons.org/licenses/by-sa/4.0/
+
 ## LXGW WenKai Webfont
 
 The site typography uses LXGW WenKai Webfont, distributed by Chawye Hsu and based on LXGW WenKai by LXGW.
