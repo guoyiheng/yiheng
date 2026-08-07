@@ -190,6 +190,12 @@ a:focus-visible {
   transition: clip-path 0.5s;
 }
 
+.receipt-wrapper.is-ready {
+  z-index: 5;
+  clip-path: inset(-20% -100px -100px -100px);
+  transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset)));
+}
+
 .receipt {
   --receipt-padding-inline: 26px;
   --scrollbar-thumb: color-mix(in srgb, var(--ink-muted) 58%, transparent);
@@ -354,23 +360,11 @@ a:focus-visible {
 }
 
 @keyframes display {
-  0% {
-    z-index: 1;
-    transform: translate(-50%, 10%);
-  }
+  0% { transform: translate(-50%, 10%); }
 
   30% { transform: translate(-50%, 22%) rotate3d(1, 0, 1, -5deg); }
 
-  69.99% {
-    z-index: 1;
-  }
-
-  70% {
-    z-index: 5;
-  }
-
   100% {
-    z-index: 5;
     transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset)));
   }
 }

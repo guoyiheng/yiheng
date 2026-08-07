@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper" :class="{ 'is-printing': !props.missing }">
+    <div class="wrapper" :class="{ 'is-printing': hasPrintAnimation }">
       <div class="printer" />
 
       <div
