@@ -298,11 +298,11 @@ export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
       const documentId = targetId.split('/').at(-1) ?? targetId
 
       if (targetId && documentSources.has(targetId)) {
-        token.href = `/nanqiang-beidiao/${targetId}`
+        token.href = `/nanqiang-beidiao/${encodeURIComponent(targetId)}`
         resourceToken.internal = true
         return
       } else if (documentId && documentSources.has(documentId)) {
-        token.href = `/nanqiang-beidiao/${documentId}`
+        token.href = `/nanqiang-beidiao/${encodeURIComponent(documentId)}`
         resourceToken.internal = true
         return
       }

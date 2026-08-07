@@ -12,11 +12,10 @@ const documentId = computed(() => {
   }
 })
 const { data: document } = await useAsyncData<NanqiangPageDocument | null>(
-  `nanqiang-document-${documentId.value}`,
+  () => `nanqiang-document-${documentId.value}`,
   () => getNanqiangPageDocument(documentId.value),
   {
-    default: () => null,
-    watch: [documentId]
+    default: () => null
   }
 )
 
