@@ -126,7 +126,7 @@ onBeforeUnmount(clearAudioPlayers)
       to="/nanqiang-beidiao"
       aria-label="返回上一级"
     >
-      <span class="nanqiang-back-icon" aria-hidden="true" />
+      <span class="nanqiang-back-arrow" aria-hidden="true">←</span>
     </NuxtLink>
 
     <div
@@ -197,25 +197,10 @@ onBeforeUnmount(clearAudioPlayers)
   transform: translateX(-2px) translateY(1px);
 }
 
-.nanqiang-back-icon {
-  position: relative;
-  display: block;
-  width: 0.9rem;
-  height: 1px;
-  background: currentColor;
-}
-
-.nanqiang-back-icon::before {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 0.42rem;
-  height: 0.42rem;
-  border-bottom: 1.5px solid currentColor;
-  border-left: 1.5px solid currentColor;
-  content: "";
-  transform: translateY(-50%) rotate(45deg);
-  transform-origin: center;
+.nanqiang-back-arrow {
+  display: inline-block;
+  line-height: 1;
+  font-size: 1.1em;
 }
 
 .nanqiang-markdown :deep(h1),
