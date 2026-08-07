@@ -177,29 +177,23 @@ onBeforeUnmount(clearAudioPlayers)
   margin-right: 0;
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--paper-rule) 60%, transparent);
+  border: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--receipt-color) 88%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  box-shadow: 0 2px 8px #00000012;
+  background: transparent;
+  box-shadow: none;
   color: var(--ink-muted);
   text-decoration: none;
-  opacity: 0.9;
-  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  opacity: 0.82;
+  transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 .nanqiang-back:hover {
-  border-color: var(--paper-rule);
-  background: color-mix(in srgb, var(--paper-fill) 85%, var(--receipt-color));
-  box-shadow: 0 3px 10px #0000001a;
   color: var(--ink-strong);
   opacity: 1;
   transform: translateX(-2px);
 }
 
 .nanqiang-back:active {
-  box-shadow: 0 1px 4px #0000001a;
   transform: translateX(-2px) translateY(1px);
 }
 
