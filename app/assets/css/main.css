@@ -103,7 +103,6 @@ a:focus-visible {
 .printer-shell {
   position: absolute;
   inset: 0;
-  z-index: 2;
 }
 
 
@@ -326,7 +325,7 @@ a:focus-visible {
 }
 
 .wrapper.is-printing .receipt-wrapper {
-  z-index: 1;
+  z-index: 0;
   clip-path: inset(200px -100px -100px -100px);
   opacity: 0;
   transform: translate(-50%, -200px);
@@ -371,9 +370,24 @@ a:focus-visible {
 }
 
 @keyframes paper-release {
-  0% { transform: translate(-50%, calc(var(--paper-rest-offset) - 6px)); }
-  55% { transform: translate(-50%, calc(var(--paper-rest-offset) - 2px)) rotate3d(1, 0, 1, -2deg); }
-  100% { transform: translate(-50%, var(--paper-rest-offset)); }
+  0% {
+    z-index: 0;
+    transform: translate(-50%, calc(var(--paper-rest-offset) - 6px));
+  }
+
+  55%, 69.99% {
+    z-index: 0;
+    transform: translate(-50%, calc(var(--paper-rest-offset) - 2px)) rotate3d(1, 0, 1, -2deg);
+  }
+
+  70% {
+    z-index: 5;
+  }
+
+  100% {
+    z-index: 5;
+    transform: translate(-50%, var(--paper-rest-offset));
+  }
 }
 
 @keyframes show-text {
