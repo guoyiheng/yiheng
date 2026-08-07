@@ -21,26 +21,26 @@ type ResourceToken = (Tokens.Link | Tokens.Image) & {
   resourceType?: 'audio'
 }
 
-const rawMarkdownSources = import.meta.glob('../../original-data/**/*.md', {
+const rawMarkdownSources = import.meta.glob('./nanqiang/**/*.md', {
   eager: true,
   query: '?raw',
   import: 'default'
 }) as Record<string, string>
 
-const rawCsvSources = import.meta.glob('../../original-data/**/*.csv', {
+const rawCsvSources = import.meta.glob('./nanqiang/**/*.csv', {
   eager: true,
   query: '?raw',
   import: 'default'
 }) as Record<string, string>
 
 const rawAssetUrls = import.meta.glob(
-  '../../original-data/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
+  './nanqiang/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
   { eager: true, query: '?url', import: 'default' }
 ) as Record<string, string>
 
 const canonicalizeSourceMap = (sourceMap: Record<string, string>) => {
   return Object.fromEntries(Object.entries(sourceMap).map(([sourcePath, value]) => {
-    return [sourcePath.replace(/^\.\.\/\.\.\//, '/'), value]
+    return [sourcePath.replace(/^\.\//, '/app/data/'), value]
   }))
 }
 
@@ -48,8 +48,8 @@ const markdownSources = canonicalizeSourceMap(rawMarkdownSources)
 const csvSources = canonicalizeSourceMap(rawCsvSources)
 const assetUrls = canonicalizeSourceMap(rawAssetUrls)
 
-const documentIdPattern = /([0-9a-f]{32})(?:_all)?\.(md|csv)$/i
-const rootPageId = 'cb9ad85347e3454a8887ea13f3a63aa2'
+const documentIdPattern = /\.([0-9a-f]{32})(?:\.all)?\.(md|csv)$/i
+const rootSourcePath = '/app/data/nanqiang/index.md'
 
 const stripMarkdown = (value: string) => value
   .replace(/\*\*|__|\*|_|`/g, '')
@@ -80,7 +80,7 @@ const documents = new Map<string, NanqiangDocument>()
 
 for (const [sourcePath, content] of Object.entries(markdownSources)) {
   const id = sourcePath.match(documentIdPattern)?.[1]
-  if (!id || id === rootPageId) continue
+  if (!id) continue
 
   documents.set(id, {
     id,
@@ -92,7 +92,7 @@ for (const [sourcePath, content] of Object.entries(markdownSources)) {
 }
 
 for (const [sourcePath, content] of Object.entries(csvSources)) {
-  if (sourcePath.endsWith('_all.csv')) continue
+  if (sourcePath.endsWith('.all.csv')) continue
 
   const id = sourcePath.match(documentIdPattern)?.[1]
   if (!id) continue
@@ -106,14 +106,20 @@ for (const [sourcePath, content] of Object.entries(csvSources)) {
   })
 }
 
-const rootSource = Object.entries(markdownSources).find(([sourcePath]) => {
-  return sourcePath.includes(rootPageId)
-})?.[1] ?? ''
+const rootSource = markdownSources[rootSourcePath] ?? ''
+const indexLinks: Tokens.Link[] = []
+const indexParser = new Marked()
 
-export const nanqiangIndex: NanqiangIndexItem[] = [...rootSource.matchAll(/\[([^\]]+)\]\(([^)]+\.md)\)/g)]
-  .map((match) => {
-    const rawTitle = match[1] ?? ''
-    const rawHref = match[2] ?? ''
+indexParser.walkTokens(indexParser.lexer(rootSource), (token) => {
+  if (token.type === 'link' && /\.md$/i.test(token.href)) {
+    indexLinks.push(token as Tokens.Link)
+  }
+})
+
+export const nanqiangIndex: NanqiangIndexItem[] = indexLinks
+  .map((link) => {
+    const rawTitle = link.text
+    const rawHref = link.href
     const id = rawHref.match(/([0-9a-f]{32})\.md$/i)?.[1] ?? ''
     const document = documents.get(id)
     return {
