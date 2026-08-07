@@ -251,6 +251,25 @@ a:focus-visible {
   transform: rotate(10deg);
 }
 
+.receipt-content {
+  min-height: 0;
+  flex: 1;
+  padding-right: 0.3rem;
+  overflow: auto;
+  scrollbar-color: #9a9884 transparent;
+  scrollbar-width: thin;
+}
+
+.receipt-content::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.receipt-content::-webkit-scrollbar-thumb {
+  border-radius: 1px;
+  background: #9a9884;
+}
+
 .receipt-table {
   color: inherit;
   font: inherit;

@@ -3,6 +3,7 @@ const props = defineProps<{
   title: string
   code: string
   missing?: boolean
+  status?: string
 }>()
 
 const printingText = 'Printing...'.split('')
@@ -105,47 +106,50 @@ onBeforeUnmount(clearPrintFallback)
           <div class="receipt-subheader">
             <span>
               <strong :id="`receipt-title-${props.code}`">{{ props.title }}</strong><br>
-              建设中
+              {{ props.status ?? '建设中' }}
             </span>
           </div>
 
-          <table class="receipt-table">
-            <tbody>
-              <tr>
-                <th>Item</th>
-                <th>Qty</th>
-                <th>Price</th>
-              </tr>
-              <tr>
-                <td>Structure</td>
-                <td>1 x</td>
-                <td>0.00</td>
-              </tr>
-              <tr>
-                <td>Content</td>
-                <td>0 x</td>
-                <td>0.00</td>
-              </tr>
-              <tr>
-                <td>Progress</td>
-                <td>1 x</td>
-                <td>0.00</td>
-              </tr>
-              <tr class="receipt-subtotal">
-                <td colspan="2">Subtotal</td>
-                <td>0.00</td>
-              </tr>
-              <tr class="receipt-tax">
-                <td colspan="2">Tax (0%)</td>
-                <td>0.00</td>
-              </tr>
-              <tr class="receipt-total">
-                <td colspan="2">Total</td>
-                <td>0.00</td>
-              </tr>
-            </tbody>
-          </table>
-
+          <div class="receipt-content">
+            <slot>
+              <table class="receipt-table">
+                <tbody>
+                  <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                  </tr>
+                  <tr>
+                    <td>Structure</td>
+                    <td>1 x</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr>
+                    <td>Content</td>
+                    <td>0 x</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr>
+                    <td>Progress</td>
+                    <td>1 x</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr class="receipt-subtotal">
+                    <td colspan="2">Subtotal</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr class="receipt-tax">
+                    <td colspan="2">Tax (0%)</td>
+                    <td>0.00</td>
+                  </tr>
+                  <tr class="receipt-total">
+                    <td colspan="2">Total</td>
+                    <td>0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </slot>
+          </div>
         </article>
       </div>
     </div>
