@@ -8,6 +8,8 @@
   --ink-muted: #737160;
   --ink-link: #4d5945;
   --ink-code: #74443c;
+  --ink-star: #7e5d22;
+  --ink-bold: #735b80;
   --paper-rule: #aaa892;
   --paper-fill: #d8d6c3;
   --menu-ink: #34352f;
@@ -208,9 +210,9 @@ a:focus-visible {
 
 .receipt {
   --receipt-padding-inline: 36px;
-  --scrollbar-thumb: #989681;
-  --scrollbar-thumb-hover: #777563;
-  --scrollbar-track: color-mix(in srgb, var(--paper-rule) 16%, transparent);
+  --scrollbar-thumb: color-mix(in srgb, var(--ink-muted) 58%, transparent);
+  --scrollbar-thumb-hover: color-mix(in srgb, var(--ink-strong) 72%, transparent);
+  --scrollbar-track: transparent;
 
   position: relative;
   z-index: 2;
@@ -275,8 +277,8 @@ a:focus-visible {
 
 .receipt-content::-webkit-scrollbar,
 .receipt-content *::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
+  width: 2px;
+  height: 2px;
 }
 
 .receipt-content::-webkit-scrollbar-track,

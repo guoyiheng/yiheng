@@ -126,7 +126,7 @@ onBeforeUnmount(clearAudioPlayers)
       to="/nanqiang-beidiao"
       aria-label="返回上一级"
     >
-      <span aria-hidden="true">←</span>
+      <span class="nanqiang-back-icon" aria-hidden="true" />
     </NuxtLink>
 
     <div
@@ -171,25 +171,45 @@ onBeforeUnmount(clearAudioPlayers)
   height: 2rem;
   margin-bottom: 0.55rem;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--paper-rule) 78%, transparent);
+  border: 0;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--receipt-color) 88%, var(--printer-color-2));
-  box-shadow: 0 2px 5px #0002, 0 1px 0 #fff6 inset;
+  background: transparent;
+  box-shadow: none;
   color: var(--ink-muted);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1;
   text-decoration: none;
-  transition: color 0.15s ease, transform 0.15s ease;
+  opacity: 0.82;
+  transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 .nanqiang-back:hover {
   color: var(--ink-strong);
+  opacity: 1;
   transform: translateX(-2px);
 }
 
 .nanqiang-back:active {
   transform: translateX(-2px) translateY(1px);
+}
+
+.nanqiang-back-icon {
+  position: relative;
+  display: block;
+  width: 0.9rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.nanqiang-back-icon::before {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-bottom: 1.5px solid currentColor;
+  border-left: 1.5px solid currentColor;
+  content: "";
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
 }
 
 .nanqiang-markdown :deep(h1),
@@ -266,8 +286,12 @@ onBeforeUnmount(clearAudioPlayers)
 
 .nanqiang-markdown :deep(strong),
 .nanqiang-markdown :deep(b) {
-  color: var(--ink-strong);
+  color: var(--ink-bold);
   font-weight: 700;
+}
+
+.nanqiang-markdown :deep(.nanqiang-star-quote) {
+  color: var(--ink-star);
 }
 
 .nanqiang-markdown :deep(em) {

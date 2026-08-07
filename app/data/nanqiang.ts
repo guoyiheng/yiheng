@@ -172,6 +172,28 @@ const escapeHtml = (value: string) => value
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;')
 
+const starQuoteExtension = {
+  name: 'starQuote',
+  level: 'inline' as const,
+  start(source: string) {
+    const index = source.indexOf('「')
+    return index >= 0 ? index : undefined
+  },
+  tokenizer(source: string) {
+    const match = /^「[^」\n]+」/.exec(source)
+    if (!match) return
+
+    return {
+      type: 'starQuote',
+      raw: match[0],
+      text: match[0]
+    }
+  },
+  renderer(token: { text: string }) {
+    return `<span class="nanqiang-star-quote">${escapeHtml(token.text)}</span>`
+  }
+}
+
 const createRenderer = () => {
   const renderer = new Renderer()
 
@@ -229,7 +251,9 @@ export const getNanqiangDocument = (id: string) => documents.get(id)
 
 export const renderNanqiangMarkdown = (document: NanqiangDocument) => {
   const renderer = createRenderer()
-  const parser = new Marked({
+  const parser = new Marked()
+  parser.use({ extensions: [starQuoteExtension] })
+  parser.setOptions({
     breaks: true,
     gfm: true,
     renderer,
