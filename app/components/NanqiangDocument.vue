@@ -212,6 +212,21 @@ onBeforeUnmount(clearAudioPlayers)
   font-size: 1em;
 }
 
+.nanqiang-markdown :deep(h1),
+.nanqiang-markdown :deep(h2),
+.nanqiang-markdown :deep(h3),
+.nanqiang-markdown :deep(h4),
+.nanqiang-markdown :deep(h5),
+.nanqiang-markdown :deep(h6),
+.nanqiang-markdown :deep(p),
+.nanqiang-markdown :deep(li),
+.nanqiang-markdown :deep(th),
+.nanqiang-markdown :deep(td),
+.nanqiang-csv th,
+.nanqiang-csv td {
+  white-space: break-spaces;
+}
+
 .nanqiang-markdown :deep(p),
 .nanqiang-markdown :deep(ul),
 .nanqiang-markdown :deep(ol),

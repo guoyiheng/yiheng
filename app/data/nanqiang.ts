@@ -230,6 +230,7 @@ export const getNanqiangDocument = (id: string) => documents.get(id)
 export const renderNanqiangMarkdown = (document: NanqiangDocument) => {
   const renderer = createRenderer()
   const parser = new Marked({
+    breaks: true,
     gfm: true,
     renderer,
     walkTokens(token) {
