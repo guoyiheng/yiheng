@@ -35,13 +35,14 @@
 
 .ursa-major {
   position: absolute;
-  top: -7rem;
-  right: clamp(-13rem, -4vw, -3rem);
-  width: min(850px, 88vw);
+  top: clamp(-6rem, -8vh, -1.5rem);
+  right: clamp(-5rem, -1vw, -1rem);
+  width: min(760px, 76vw);
   height: auto;
-  opacity: 0.76;
-  transform: rotate(-4deg);
-  transform-origin: 68% 48%;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 0.75rem #dfc78226);
+  transform: rotate(-7deg);
+  transform-origin: 62% 42%;
 }
 
 .starfield-layer-far {
@@ -218,10 +219,10 @@
 
 @media (max-width: 640px) {
   .ursa-major {
-    top: -2rem;
-    right: -11rem;
-    width: min(650px, 174vw);
-    opacity: 0.64;
+    top: -3.5rem;
+    right: -6.5rem;
+    width: min(580px, 150vw);
+    opacity: 0.76;
   }
 }
 
