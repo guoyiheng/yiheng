@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { nanqiangIndex } from '~/data/nanqiang'
+import type { NanqiangIndexItem } from '~/data/nanqiang'
+
+defineProps<{
+  items: NanqiangIndexItem[]
+}>()
 </script>
 
 <template>
   <ol class="nanqiang-archive">
-    <li v-for="item in nanqiangIndex" :key="item.id">
+    <li v-for="item in items" :key="item.id">
       <NuxtLink class="nanqiang-index-link" :to="`/nanqiang-beidiao/${item.id}`">
         <strong v-if="item.featured" class="nanqiang-index-title">{{ item.title }}</strong>
         <span v-else class="nanqiang-index-title">{{ item.title }}</span>

@@ -1,22 +1,21 @@
 <script setup lang="ts">
-import type { NanqiangDocument } from '~/data/nanqiang'
-import { parseNanqiangCsv, renderNanqiangMarkdown } from '~/data/nanqiang'
+import type { NanqiangPageDocument } from '~/data/nanqiang'
 
 const props = defineProps<{
-  document: NanqiangDocument
+  document: NanqiangPageDocument
 }>()
 const markdownRoot = ref<HTMLDivElement | null>(null)
 let audioCleanups: Array<() => void> = []
 
 const renderedMarkdown = computed(() => {
   return props.document.kind === 'markdown'
-    ? renderNanqiangMarkdown(props.document)
+    ? props.document.html ?? ''
     : ''
 })
 
 const csvRows = computed(() => {
   return props.document.kind === 'csv'
-    ? parseNanqiangCsv(props.document)
+    ? props.document.rows ?? []
     : []
 })
 

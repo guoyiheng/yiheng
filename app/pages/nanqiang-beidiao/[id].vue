@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { getNanqiangDocument } from '~/data/nanqiang'
+import type { NanqiangPageDocument } from '~/data/nanqiang'
+import { getNanqiangPageDocument } from '~/data/nanqiang'
 
 const route = useRoute()
-const document = computed(() => getNanqiangDocument(String(route.params.id)))
+const documentId = computed(() => String(route.params.id))
+const { data: document } = await useAsyncData<NanqiangPageDocument | null>(
+  `nanqiang-document-${documentId.value}`,
+  () => getNanqiangPageDocument(documentId.value),
+  {
+    default: () => null,
+    watch: [documentId]
+  }
+)
 
 useSeoMeta({
   title: () => document.value

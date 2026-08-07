@@ -16,40 +16,59 @@ export interface NanqiangIndexItem {
   date?: string
 }
 
+export interface NanqiangPageDocument {
+  id: string
+  title: string
+  kind: 'markdown' | 'csv'
+  html?: string
+  rows?: string[][]
+}
+
 type ResourceToken = (Tokens.Link | Tokens.Image) & {
   internal?: boolean
   resourceType?: 'audio'
 }
 
-const rawMarkdownSources = import.meta.glob('./nanqiang/**/*.md', {
+type SourceLoader = () => Promise<string>
+
+interface DocumentSource {
+  sourcePath: string
+  kind: 'markdown' | 'csv'
+  load: SourceLoader
+}
+
+const rootSources = import.meta.glob('./nanqiang/index.md', {
   eager: true,
   query: '?raw',
   import: 'default'
 }) as Record<string, string>
 
-const rawCsvSources = import.meta.glob('./nanqiang/**/*.csv', {
-  eager: true,
+const rawMarkdownLoaders = import.meta.glob('./nanqiang/**/*.md', {
   query: '?raw',
   import: 'default'
-}) as Record<string, string>
+}) as Record<string, SourceLoader>
 
-const rawAssetUrls = import.meta.glob(
+const rawCsvLoaders = import.meta.glob('./nanqiang/**/*.csv', {
+  query: '?raw',
+  import: 'default'
+}) as Record<string, SourceLoader>
+
+const rawAssetLoaders = import.meta.glob(
   './nanqiang/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
-  { eager: true, query: '?url', import: 'default' }
-) as Record<string, string>
+  { query: '?url', import: 'default' }
+) as Record<string, SourceLoader>
 
-const canonicalizeSourceMap = (sourceMap: Record<string, string>) => {
-  return Object.fromEntries(Object.entries(sourceMap).map(([sourcePath, value]) => {
-    return [sourcePath.replace(/^\.\//, '/app/data/'), value]
+const canonicalizeLoaderMap = (loaders: Record<string, SourceLoader>) => {
+  return Object.fromEntries(Object.entries(loaders).map(([sourcePath, load]) => {
+    return [sourcePath.replace(/^\.\//, '/app/data/'), load]
   }))
 }
 
-const markdownSources = canonicalizeSourceMap(rawMarkdownSources)
-const csvSources = canonicalizeSourceMap(rawCsvSources)
-const assetUrls = canonicalizeSourceMap(rawAssetUrls)
+const markdownLoaders = canonicalizeLoaderMap(rawMarkdownLoaders)
+const csvLoaders = canonicalizeLoaderMap(rawCsvLoaders)
+const assetLoaders = canonicalizeLoaderMap(rawAssetLoaders)
 
 const documentIdPattern = /\.([0-9a-f]{32})(?:\.all)?\.(md|csv)$/i
-const rootSourcePath = '/app/data/nanqiang/index.md'
 
 const stripMarkdown = (value: string) => value
   .replace(/\*\*|__|\*|_|`/g, '')
@@ -62,51 +81,42 @@ const titleFromSource = (source: string, sourcePath: string) => {
   return stripMarkdown(sourcePath.split('/').at(-1)?.replace(documentIdPattern, '') ?? '无标题')
 }
 
-const dateFromSource = (source: string) => {
-  const leadingLines = source.split(/\r?\n/).slice(1, 8)
+const documentSources = new Map<string, DocumentSource>()
 
-  for (const line of leadingLines) {
-    const match = stripMarkdown(line).match(
-      /^(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})日?$/
-    )
-    if (!match) continue
-
-    const [, year, month = '', day = ''] = match
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-  }
-}
-
-const documents = new Map<string, NanqiangDocument>()
-
-for (const [sourcePath, content] of Object.entries(markdownSources)) {
+for (const [sourcePath, load] of Object.entries(markdownLoaders)) {
   const id = sourcePath.match(documentIdPattern)?.[1]
   if (!id) continue
 
-  documents.set(id, {
-    id,
-    title: titleFromSource(content, sourcePath),
+  documentSources.set(id, {
     sourcePath,
-    content,
-    kind: 'markdown'
+    kind: 'markdown',
+    load
   })
 }
 
-for (const [sourcePath, content] of Object.entries(csvSources)) {
+for (const [sourcePath, load] of Object.entries(csvLoaders)) {
   if (sourcePath.endsWith('.all.csv')) continue
 
   const id = sourcePath.match(documentIdPattern)?.[1]
   if (!id) continue
 
-  documents.set(id, {
-    id,
-    title: titleFromSource('', sourcePath),
+  documentSources.set(id, {
     sourcePath,
-    content,
-    kind: 'csv'
+    kind: 'csv',
+    load
   })
 }
 
-const rootSource = markdownSources[rootSourcePath] ?? ''
+const documentDates: Record<string, string> = {
+  '5506ef9d21f145c7b7f53dc6c07c90f5': '2018-07-21',
+  'f629273353a949f4b6a7e3e29493018a': '2019-08-20',
+  '3fad5fd6640b4143a51202f31538b333': '2020-06-23',
+  'e639b7374631489d83b63983f8d07745': '2022-02-13',
+  'a637ff9dad1748ff82d4af79bbed8b58': '2022-06-01',
+  '566f8190fd244aa3bb3a8387a70afc56': '2022-08-23'
+}
+
+const rootSource = Object.values(rootSources)[0] ?? ''
 const indexLinks: Tokens.Link[] = []
 const indexParser = new Marked()
 
@@ -121,15 +131,14 @@ export const nanqiangIndex: NanqiangIndexItem[] = indexLinks
     const rawTitle = link.text
     const rawHref = link.href
     const id = rawHref.match(/([0-9a-f]{32})\.md$/i)?.[1] ?? ''
-    const document = documents.get(id)
     return {
       id,
       title: stripMarkdown(rawTitle),
       featured: /\*\*/.test(rawTitle),
-      date: document?.kind === 'markdown' ? dateFromSource(document.content) : undefined
+      date: documentDates[id]
     }
   })
-  .filter((item) => item.id && documents.has(item.id))
+  .filter((item) => item.id && documentSources.has(item.id))
   .reverse()
 
 const safeDecode = (value: string) => {
@@ -247,23 +256,36 @@ const createRenderer = () => {
   return renderer
 }
 
-export const getNanqiangDocument = (id: string) => documents.get(id)
+export const getNanqiangDocument = async (id: string) => {
+  const source = documentSources.get(id)
+  if (!source) return
 
-export const renderNanqiangMarkdown = (document: NanqiangDocument) => {
+  const content = await source.load()
+  return {
+    id,
+    title: titleFromSource(content, source.sourcePath),
+    sourcePath: source.sourcePath,
+    content,
+    kind: source.kind
+  } satisfies NanqiangDocument
+}
+
+export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
   const renderer = createRenderer()
   const parser = new Marked()
   parser.use({ extensions: [starQuoteExtension] })
   parser.setOptions({
+    async: true,
     breaks: true,
     gfm: true,
     renderer,
-    walkTokens(token) {
+    async walkTokens(token) {
       if (token.type !== 'link' && token.type !== 'image') return
 
       const resourceToken = token as ResourceToken
       const documentId = token.href.match(/([0-9a-f]{32})\.(?:md|csv)(?:[?#].*)?$/i)?.[1]
 
-      if (documentId && documents.has(documentId)) {
+      if (documentId && documentSources.has(documentId)) {
         token.href = `/nanqiang-beidiao/${documentId}`
         resourceToken.internal = true
         return
@@ -272,16 +294,15 @@ export const renderNanqiangMarkdown = (document: NanqiangDocument) => {
       if (isExternalLink(token.href)) return
 
       const resourcePath = resolveResource(document.sourcePath, token.href)
-      const resourceUrl = assetUrls[resourcePath]
-      if (!resourceUrl) return
+      const loadResource = assetLoaders[resourcePath]
+      if (!loadResource) return
 
-      token.href = resourceUrl
+      token.href = await loadResource()
       if (/\.mp3(?:[?#].*)?$/i.test(resourcePath)) resourceToken.resourceType = 'audio'
     }
   })
 
-  const output = parser.parse(document.content)
-  return typeof output === 'string' ? output : ''
+  return await parser.parse(document.content)
 }
 
 export const parseNanqiangCsv = (document: NanqiangDocument) => {
@@ -290,4 +311,25 @@ export const parseNanqiangCsv = (document: NanqiangDocument) => {
   })
 
   return result.data
+}
+
+export const getNanqiangPageDocument = async (id: string): Promise<NanqiangPageDocument | null> => {
+  const document = await getNanqiangDocument(id)
+  if (!document) return null
+
+  if (document.kind === 'markdown') {
+    return {
+      id: document.id,
+      title: document.title,
+      kind: 'markdown',
+      html: await renderNanqiangMarkdown(document)
+    }
+  }
+
+  return {
+    id: document.id,
+    title: document.title,
+    kind: 'csv',
+    rows: parseNanqiangCsv(document)
+  }
 }
