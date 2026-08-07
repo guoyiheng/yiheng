@@ -1,5 +1,5 @@
 :root {
-  --canvas: #e7e5df;
+  --canvas: #35413a;
   --printer-color: #dcdac4;
   --printer-color-2: #c0beaa;
   --receipt-color: #f5f5f5;
@@ -25,7 +25,14 @@ body {
   min-height: 100svh;
   overflow-x: hidden;
   color: var(--ink);
-  background: var(--canvas);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(#e8e2c208 1px, transparent 1px),
+    linear-gradient(90deg, #e8e2c208 1px, transparent 1px),
+    url("/images/press-room-workbench.webp");
+  background-position: center top;
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: 32px 32px, 32px 32px, cover;
   font-family: "Azeret Mono", "Courier New", monospace;
 }
 
