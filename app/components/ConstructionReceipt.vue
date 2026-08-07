@@ -12,17 +12,17 @@ const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
 const isPrinting = ref(false)
 const hasPrintAnimation = ref(false)
+const isActivePage = ref(false)
+const activePath = ref(route.path)
 const initialAnimationPlayed = useState('printer-initial-animation-played', () => false)
 const historyNavigation = useState('printer-history-navigation', () => false)
-const pendingPrintRequest = ref(false)
+const documentNavigationChecked = useState('printer-document-navigation-checked', () => false)
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
 let removeHistoryHook: (() => void) | undefined
-
-if (!props.missing) pendingPrintRequest.value = consumePrintRequest(route.path)
 
 const titleLength = computed(() => [...props.title].reduce((length, character) => {
   return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
@@ -35,18 +35,21 @@ const displayAnnouncement = computed(() => {
 
 const clearPrintFallback = () => clearTimeout(printFallbackTimer)
 
+const stopPrinting = () => {
+  isPrinting.value = false
+  hasPrintAnimation.value = false
+  clearPrintFallback()
+}
+
 const schedulePrintFallback = () => {
   clearPrintFallback()
   if (props.missing) return
 
   const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3000
-  printFallbackTimer = setTimeout(() => {
-    isPrinting.value = false
-  }, duration)
+  printFallbackTimer = setTimeout(stopPrinting, duration)
 }
 
 const beginPrinting = () => {
-  historyNavigation.value = false
   isPrinting.value = true
   hasPrintAnimation.value = true
   printSequence.value += 1
@@ -55,9 +58,40 @@ const beginPrinting = () => {
 
 const finishPrinting = (event: AnimationEvent) => {
   if (event.target === event.currentTarget && event.animationName === 'display') {
-    isPrinting.value = false
-    clearPrintFallback()
+    stopPrinting()
   }
+}
+
+const enterPage = () => {
+  isActivePage.value = true
+  activePath.value = route.path
+
+  const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+  const isInitialDocumentHistory = !documentNavigationChecked.value
+    && navigationEntry?.type === 'back_forward'
+  const isHistoryNavigation = historyNavigation.value || isInitialDocumentHistory
+  documentNavigationChecked.value = true
+
+  if (props.missing) {
+    historyNavigation.value = false
+    stopPrinting()
+    initialAnimationPlayed.value = true
+    return
+  }
+
+  if (isHistoryNavigation) {
+    historyNavigation.value = false
+    consumePrintRequest(activePath.value)
+    stopPrinting()
+    initialAnimationPlayed.value = true
+    return
+  }
+
+  const isMenuRequest = consumePrintRequest(activePath.value)
+  const isFirstEntry = !initialAnimationPlayed.value
+  initialAnimationPlayed.value = true
+
+  if (isMenuRequest || isFirstEntry) beginPrinting()
 }
 
 const rememberScrollPosition = () => {
@@ -87,19 +121,21 @@ onMounted(() => {
   const markHistoryNavigation = () => {
     historyNavigation.value = true
   }
-  window.addEventListener('popstate', markHistoryNavigation)
-  removeHistoryHook = () => window.removeEventListener('popstate', markHistoryNavigation)
-
-  if (!props.missing) {
-    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
-    const isHistoryNavigation = historyNavigation.value || navigationEntry?.type === 'back_forward'
-    const shouldAnimate = pendingPrintRequest.value || (!initialAnimationPlayed.value && !isHistoryNavigation)
-    initialAnimationPlayed.value = true
-    historyNavigation.value = false
-    if (shouldAnimate) {
-      beginPrinting()
-    }
+  const stopForPageExit = () => stopPrinting()
+  const stopForCachedPageRestore = (event: PageTransitionEvent) => {
+    if (event.persisted) stopPrinting()
   }
+
+  window.addEventListener('popstate', markHistoryNavigation)
+  window.addEventListener('pagehide', stopForPageExit)
+  window.addEventListener('pageshow', stopForCachedPageRestore)
+  removeHistoryHook = () => {
+    window.removeEventListener('popstate', markHistoryNavigation)
+    window.removeEventListener('pagehide', stopForPageExit)
+    window.removeEventListener('pageshow', stopForCachedPageRestore)
+  }
+
+  enterPage()
   void restoreScrollPosition()
   if (props.scrollKey) {
     removeRouterHook = router.afterEach((to) => {
@@ -110,11 +146,28 @@ onMounted(() => {
   }
 })
 
-onActivated(restoreScrollPosition)
+onActivated(() => {
+  enterPage()
+  void restoreScrollPosition()
+})
+
+onDeactivated(() => {
+  isActivePage.value = false
+  stopPrinting()
+})
+
 onBeforeRouteLeave(rememberScrollPosition)
 
 watch(() => request.value.sequence, () => {
-  if (!props.missing && consumePrintRequest(route.path)) beginPrinting()
+  if (
+    !props.missing
+    && isActivePage.value
+    && !historyNavigation.value
+    && request.value.path === activePath.value
+    && consumePrintRequest(activePath.value)
+  ) {
+    beginPrinting()
+  }
 })
 
 onBeforeUnmount(() => {
@@ -150,59 +203,60 @@ onBeforeUnmount(() => {
 
       <SiteMenu />
 
-      <div
-        v-if="!props.missing"
-        :key="`receipt-${printSequence}`"
-        :class="{ 'is-ready': !hasPrintAnimation }"
-        class="receipt-wrapper"
-        @animationend="finishPrinting"
-      >
-        <article class="receipt" :aria-label="props.title">
-          <div
-            ref="receiptContent"
-            class="receipt-content"
-            @scroll.passive="rememberScrollPosition"
-          >
-            <slot>
-              <table class="receipt-table">
-                <tbody>
-                  <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                  </tr>
-                  <tr>
-                    <td>Structure</td>
-                    <td>1 x</td>
-                    <td>0.00</td>
-                  </tr>
-                  <tr>
-                    <td>Content</td>
-                    <td>0 x</td>
-                    <td>0.00</td>
-                  </tr>
-                  <tr>
-                    <td>Progress</td>
-                    <td>1 x</td>
-                    <td>0.00</td>
-                  </tr>
-                  <tr class="receipt-subtotal">
-                    <td colspan="2">Subtotal</td>
-                    <td>0.00</td>
-                  </tr>
-                  <tr class="receipt-tax">
-                    <td colspan="2">Tax (0%)</td>
-                    <td>0.00</td>
-                  </tr>
-                  <tr class="receipt-total">
-                    <td colspan="2">Total</td>
-                    <td>0.00</td>
-                  </tr>
-                </tbody>
-              </table>
-            </slot>
-          </div>
-        </article>
+      <div v-if="!props.missing" class="paper-viewport">
+        <div
+          :key="`receipt-${printSequence}`"
+          :class="{ 'is-ready': !hasPrintAnimation }"
+          class="receipt-wrapper"
+          @animationend="finishPrinting"
+        >
+          <article class="receipt" :aria-label="props.title">
+            <div
+              ref="receiptContent"
+              class="receipt-content"
+              @scroll.passive="rememberScrollPosition"
+            >
+              <slot>
+                <table class="receipt-table">
+                  <tbody>
+                    <tr>
+                      <th>Item</th>
+                      <th>Qty</th>
+                      <th>Price</th>
+                    </tr>
+                    <tr>
+                      <td>Structure</td>
+                      <td>1 x</td>
+                      <td>0.00</td>
+                    </tr>
+                    <tr>
+                      <td>Content</td>
+                      <td>0 x</td>
+                      <td>0.00</td>
+                    </tr>
+                    <tr>
+                      <td>Progress</td>
+                      <td>1 x</td>
+                      <td>0.00</td>
+                    </tr>
+                    <tr class="receipt-subtotal">
+                      <td colspan="2">Subtotal</td>
+                      <td>0.00</td>
+                    </tr>
+                    <tr class="receipt-tax">
+                      <td colspan="2">Tax (0%)</td>
+                      <td>0.00</td>
+                    </tr>
+                    <tr class="receipt-total">
+                      <td colspan="2">Total</td>
+                      <td>0.00</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </slot>
+            </div>
+          </article>
+        </div>
       </div>
     </div>
 
