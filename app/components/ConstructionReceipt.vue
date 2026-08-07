@@ -47,7 +47,7 @@ const beginPrinting = () => {
 }
 
 const finishPrinting = (event: AnimationEvent) => {
-  if (event.target === event.currentTarget && event.animationName === 'paper-release') {
+  if (event.target === event.currentTarget && event.animationName === 'display') {
     isPrinting.value = false
     clearPrintFallback()
   }
@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper" :class="{ 'is-printing': isPrinting }">
+    <div class="wrapper" :class="{ 'is-printing': !props.missing }">
       <div class="printer" />
 
       <div

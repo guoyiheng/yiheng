@@ -16,7 +16,7 @@ const isItemActive = (path: string) => {
 </script>
 
 <template>
-  <nav class="site-menu" aria-label="主要菜单">
+  <nav class="print-button site-menu" aria-label="主要菜单">
     <NuxtLink
       v-for="item in menuItems"
       :key="item.to"
