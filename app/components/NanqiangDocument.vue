@@ -522,16 +522,39 @@ onBeforeUnmount(clearAudioPlayers)
   outline-offset: 3px;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 480px), (orientation: landscape) and (max-height: 600px) {
+  .nanqiang-document {
+    line-height: 1.76;
+  }
+
+  .nanqiang-back {
+    top: 0.25rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.65rem;
+    font-size: 1.2rem;
+  }
+
+  .nanqiang-markdown :deep(pre) {
+    padding: 0.65rem;
+  }
+
+  .nanqiang-markdown :deep(th),
+  .nanqiang-markdown :deep(td),
+  .nanqiang-csv th,
+  .nanqiang-csv td {
+    min-width: 5rem;
+  }
+
   .nanqiang-markdown :deep(.nanqiang-audio-player) {
-    grid-template-columns: 1.9rem minmax(0, 1fr);
-    gap: 0.45rem;
-    padding: 0.35rem 0.4rem;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.5rem;
+    padding: 0.4rem;
   }
 
   .nanqiang-markdown :deep(.nanqiang-audio-toggle) {
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 
   .nanqiang-markdown :deep(.nanqiang-audio-details) {

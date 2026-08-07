@@ -58,12 +58,12 @@ import { nanqiangIndex } from '~/data/nanqiang'
   color: var(--ink-muted);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
   .nanqiang-index-link {
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.4rem;
-    padding: 0.35rem 0.1rem;
+    gap: 0.5rem;
+    padding: 0.5rem 0.1rem;
   }
 
   .nanqiang-index-date {

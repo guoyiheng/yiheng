@@ -170,9 +170,9 @@ import { wanderingEntries } from '~/data/wandering'
   background: var(--paper-fill);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
   .wandering-entry {
-    padding: 0.8rem 0.1rem 1rem;
+    padding: 1rem 0.1rem 1.2rem;
   }
 
   .wandering-heading {
@@ -183,6 +183,10 @@ import { wanderingEntries } from '~/data/wandering'
 
   .wandering-date {
     grid-column: 1;
+  }
+
+  .wandering-code {
+    padding: 0.65rem;
   }
 }
 </style>
