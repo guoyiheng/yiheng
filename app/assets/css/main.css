@@ -205,6 +205,11 @@ a:focus-visible {
 }
 
 .receipt {
+  --receipt-padding-inline: 36px;
+  --scrollbar-thumb: #989681;
+  --scrollbar-thumb-hover: #777563;
+  --scrollbar-track: color-mix(in srgb, var(--paper-rule) 16%, transparent);
+
   position: relative;
   z-index: 2;
   display: flex;
@@ -250,20 +255,46 @@ a:focus-visible {
 .receipt-content {
   min-height: 0;
   flex: 1;
-  padding-right: 0.3rem;
+  margin-inline: calc(var(--receipt-padding-inline) * -1);
+  padding-inline: var(--receipt-padding-inline);
   overflow: auto;
-  scrollbar-color: #9a9884 transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
-.receipt-content::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+.receipt-content *,
+.receipt-content {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
 
-.receipt-content::-webkit-scrollbar-thumb {
-  border-radius: 1px;
-  background: #9a9884;
+.receipt-content::-webkit-scrollbar,
+.receipt-content *::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+.receipt-content::-webkit-scrollbar-track,
+.receipt-content *::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: var(--scrollbar-track);
+}
+
+.receipt-content::-webkit-scrollbar-thumb,
+.receipt-content *::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--scrollbar-thumb);
+}
+
+.receipt-content::-webkit-scrollbar-thumb:hover,
+.receipt-content *::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.receipt-content::-webkit-scrollbar-corner,
+.receipt-content *::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .receipt-table {
@@ -454,6 +485,8 @@ a:focus-visible {
   }
 
   .receipt {
+    --receipt-padding-inline: 24px;
+
     padding: 24px 24px 30px;
     font-size: 0.75em;
   }
