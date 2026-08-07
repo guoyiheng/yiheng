@@ -146,9 +146,10 @@ onBeforeUnmount(clearPrintFallback)
             </tbody>
           </table>
 
-          <footer class="receipt-message">© 2026 yiheng</footer>
         </article>
       </div>
     </div>
+
+    <footer class="site-copyright">© 2026 yiheng</footer>
   </main>
 </template>
