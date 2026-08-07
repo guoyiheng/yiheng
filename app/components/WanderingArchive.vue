@@ -4,10 +4,13 @@ import { wanderingEntries } from '~/data/wandering'
 
 <template>
   <ol class="wandering-archive">
-    <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title}`">
+    <li v-for="(entry, entryIndex) in wanderingEntries" :key="`${entry.date}-${entry.title}`">
       <article class="wandering-entry">
         <header class="wandering-heading">
-          <span class="wandering-title">{{ entry.title }}</span>
+          <span class="wandering-number" aria-hidden="true">
+            {{ String(entryIndex + 1).padStart(2, '0') }}
+          </span>
+          <h2 class="wandering-title">{{ entry.title }}</h2>
           <time class="wandering-date">{{ entry.date }}</time>
         </header>
 
@@ -73,34 +76,47 @@ import { wanderingEntries } from '~/data/wandering'
 
 .wandering-entry {
   padding: 1rem 0.2rem 1.2rem;
-  border-bottom: 1px dashed #aaa892;
+  border-bottom: 1px dashed var(--paper-rule);
 }
 
 .wandering-heading {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: 1.7rem minmax(0, 1fr) auto;
   gap: 0.75rem;
   align-items: baseline;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.wandering-number {
+  color: var(--ink-muted);
+  font-size: 0.72em;
+  font-variant-numeric: tabular-nums;
 }
 
 .wandering-title {
   min-width: 0;
+  margin: 0;
+  color: var(--ink-strong);
   overflow-wrap: anywhere;
-  font-weight: 600;
-  line-height: 1.25;
+  font-size: 1.18em;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .wandering-date {
-  color: #6f6d5d;
-  font-size: 0.82em;
+  color: var(--ink-muted);
+  font-size: 0.76em;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
 .wandering-body {
   display: grid;
   gap: 0.65rem;
-  line-height: 1.55;
+  padding-left: 2.45rem;
+  color: var(--ink);
+  font-size: 0.96em;
+  line-height: 1.62;
 }
 
 .wandering-paragraph,
@@ -117,10 +133,10 @@ import { wanderingEntries } from '~/data/wandering'
   margin: 0;
   padding: 0.75rem;
   overflow: auto;
-  border: 1px solid #b9b69f;
+  border: 1px solid var(--paper-rule);
   border-radius: 2px;
-  background: #d8d6c3;
-  color: #35362f;
+  background: var(--paper-fill);
+  color: var(--ink-strong);
   font: inherit;
   font-size: 0.88em;
   line-height: 1.55;
@@ -129,7 +145,7 @@ import { wanderingEntries } from '~/data/wandering'
 
 .wandering-link {
   width: fit-content;
-  color: #4d5945;
+  color: var(--ink-link);
   text-underline-offset: 0.18em;
 }
 
@@ -137,7 +153,7 @@ import { wanderingEntries } from '~/data/wandering'
   display: block;
   width: 100%;
   height: auto;
-  border: 1px solid #b9b69f;
+  border: 1px solid var(--paper-rule);
 }
 
 .wandering-table-wrap {
@@ -156,12 +172,12 @@ import { wanderingEntries } from '~/data/wandering'
 .wandering-table th,
 .wandering-table td {
   padding: 0.35rem 0.45rem;
-  border: 1px solid #b9b69f;
+  border: 1px solid var(--paper-rule);
   vertical-align: top;
 }
 
 .wandering-table th {
-  background: #d8d6c3;
+  background: var(--paper-fill);
 }
 
 @media (max-width: 600px) {
@@ -170,12 +186,17 @@ import { wanderingEntries } from '~/data/wandering'
   }
 
   .wandering-heading {
+    grid-template-columns: 1.45rem minmax(0, 1fr);
     gap: 0.45rem;
     margin-bottom: 0.6rem;
   }
 
   .wandering-date {
-    font-size: 0.76em;
+    grid-column: 2;
+  }
+
+  .wandering-body {
+    padding-left: 1.9rem;
   }
 }
 </style>
