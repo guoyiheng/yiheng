@@ -68,8 +68,6 @@ const markdownLoaders = canonicalizeLoaderMap(rawMarkdownLoaders)
 const csvLoaders = canonicalizeLoaderMap(rawCsvLoaders)
 const assetLoaders = canonicalizeLoaderMap(rawAssetLoaders)
 
-const documentIdPattern = /\.([0-9a-f]{32})(?:\.all)?\.(md|csv)$/i
-
 const stripMarkdown = (value: string) => value
   .replace(/\*\*|__|\*|_|`/g, '')
   .trim()
@@ -78,42 +76,40 @@ const titleFromSource = (source: string, sourcePath: string) => {
   const heading = source.match(/^#\s+(.+)$/m)?.[1]
   if (heading) return stripMarkdown(heading)
 
-  return stripMarkdown(sourcePath.split('/').at(-1)?.replace(documentIdPattern, '') ?? '无标题')
+  const filename = sourcePath.split('/').at(-1)?.replace(/\.(md|csv)$/i, '').replace(/\.all$/i, '')
+  return stripMarkdown(filename ?? '无标题')
 }
 
 const documentSources = new Map<string, DocumentSource>()
 
-for (const [sourcePath, load] of Object.entries(markdownLoaders)) {
-  const id = sourcePath.match(documentIdPattern)?.[1]
-  if (!id) continue
+const registerDocumentSource = (sourcePath: string, kind: 'markdown' | 'csv', load: SourceLoader) => {
+  const docSource: DocumentSource = { sourcePath, kind, load }
+  const relPath = sourcePath.replace(/^\/app\/data\/nanqiang\//, '').replace(/\.(md|csv)$/i, '').replace(/\.all$/i, '')
+  const decodedRelPath = safeDecode(relPath)
+  const baseName = decodedRelPath.split('/').at(-1) ?? decodedRelPath
 
-  documentSources.set(id, {
-    sourcePath,
-    kind: 'markdown',
-    load
-  })
+  documentSources.set(relPath, docSource)
+  documentSources.set(decodedRelPath, docSource)
+  documentSources.set(baseName, docSource)
+  documentSources.set(encodeURIComponent(baseName), docSource)
+}
+
+for (const [sourcePath, load] of Object.entries(markdownLoaders)) {
+  registerDocumentSource(sourcePath, 'markdown', load)
 }
 
 for (const [sourcePath, load] of Object.entries(csvLoaders)) {
   if (sourcePath.endsWith('.all.csv')) continue
-
-  const id = sourcePath.match(documentIdPattern)?.[1]
-  if (!id) continue
-
-  documentSources.set(id, {
-    sourcePath,
-    kind: 'csv',
-    load
-  })
+  registerDocumentSource(sourcePath, 'csv', load)
 }
 
 const documentDates: Record<string, string> = {
-  '5506ef9d21f145c7b7f53dc6c07c90f5': '2018-07-21',
-  'f629273353a949f4b6a7e3e29493018a': '2019-08-20',
-  '3fad5fd6640b4143a51202f31538b333': '2020-06-23',
-  'e639b7374631489d83b63983f8d07745': '2022-02-13',
-  'a637ff9dad1748ff82d4af79bbed8b58': '2022-06-01',
-  '566f8190fd244aa3bb3a8387a70afc56': '2022-08-23'
+  '有个爱你的人不容易': '2018-07-21',
+  'DOM0&DOM2级事件绑定的区别': '2019-08-20',
+  'Prettier 整合 ESLint 所引发的问题': '2020-06-23',
+  'vue源码之Reflect': '2022-02-13',
+  '如何优雅地使用MacBook': '2022-06-01',
+  '关于Yak Shaving ── 从理解 TS 中 any 与 unknow 的区别中学英语': '2022-08-23'
 }
 
 const rootSource = Object.values(rootSources)[0] ?? ''
@@ -130,7 +126,8 @@ export const nanqiangIndex: NanqiangIndexItem[] = indexLinks
   .map((link) => {
     const rawTitle = link.text
     const rawHref = link.href
-    const id = rawHref.match(/([0-9a-f]{32})\.md$/i)?.[1] ?? ''
+    const decodedHref = safeDecode(rawHref.replace(/\.md$/i, ''))
+    const id = decodedHref.split('/').at(-1) ?? decodedHref
     return {
       id,
       title: stripMarkdown(rawTitle),
@@ -283,9 +280,15 @@ export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
       if (token.type !== 'link' && token.type !== 'image') return
 
       const resourceToken = token as ResourceToken
-      const documentId = token.href.match(/([0-9a-f]{32})\.(?:md|csv)(?:[?#].*)?$/i)?.[1]
+      const cleanHref = safeDecode(token.href.split(/[?#]/)[0] ?? '')
+      const targetId = cleanHref.replace(/\.(md|csv)$/i, '').replace(/^\.\//, '')
+      const documentId = targetId.split('/').at(-1) ?? targetId
 
-      if (documentId && documentSources.has(documentId)) {
+      if (targetId && documentSources.has(targetId)) {
+        token.href = `/nanqiang-beidiao/${targetId}`
+        resourceToken.internal = true
+        return
+      } else if (documentId && documentSources.has(documentId)) {
         token.href = `/nanqiang-beidiao/${documentId}`
         resourceToken.internal = true
         return

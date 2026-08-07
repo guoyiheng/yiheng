@@ -167,12 +167,12 @@ onBeforeUnmount(clearAudioPlayers)
 
 .nanqiang-back {
   position: absolute;
-  top: 0.15rem;
+  top: calc((1.55em * 1.3 - 2rem) / 2);
   right: 0;
   z-index: 10;
   display: inline-flex;
-  width: 2.2rem;
-  height: 2.2rem;
+  width: 2rem;
+  height: 2rem;
   margin: 0;
   align-items: center;
   justify-content: center;
@@ -562,12 +562,12 @@ onBeforeUnmount(clearAudioPlayers)
   }
 
   .nanqiang-back {
-    top: 0.1rem;
+    top: calc((1.55em * 1.3 - 2.2rem) / 2);
     right: 0;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.2rem;
+    height: 2.2rem;
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .nanqiang-markdown :deep(pre) {
