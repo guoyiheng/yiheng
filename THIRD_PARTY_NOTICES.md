@@ -14,7 +14,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## LXGW WenKai Webfont
 
-The site typography and Heart Sutra backdrop use LXGW WenKai Webfont, distributed by Chawye Hsu and based on LXGW WenKai by LXGW.
+The site typography uses LXGW WenKai Webfont, distributed by Chawye Hsu and based on LXGW WenKai by LXGW.
 
 Copyright (c) 2021, LXGW (https://github.com/lxgw/LxgwWenKai)
 

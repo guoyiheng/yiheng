@@ -1,6 +1,6 @@
 <template>
   <div class="site-shell">
-    <SutraBackdrop />
+    <StarfieldBackdrop />
     <slot />
   </div>
 </template>

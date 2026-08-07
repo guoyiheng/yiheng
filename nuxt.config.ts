@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
         { name: 'description', content: '一恒的个人网站。' },
-        { name: 'theme-color', content: '#d9d5cb' }
+        { name: 'theme-color', content: '#101315' }
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
