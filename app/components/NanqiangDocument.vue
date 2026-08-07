@@ -166,33 +166,40 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-back {
-  position: absolute;
+  position: sticky;
   top: calc((1.55em * 1.3 - 2rem) / 2);
-  right: 0;
+  float: right;
   z-index: 10;
   display: inline-flex;
   width: 2rem;
   height: 2rem;
-  margin: 0;
+  margin-top: calc((1.55em * 1.3 - 2rem) / 2);
+  margin-right: 0;
   align-items: center;
   justify-content: center;
-  border: 0;
+  border: 1px solid color-mix(in srgb, var(--paper-rule) 60%, transparent);
   border-radius: 50%;
-  background: transparent;
-  box-shadow: none;
+  background: color-mix(in srgb, var(--receipt-color) 88%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 2px 8px #00000012;
   color: var(--ink-muted);
   text-decoration: none;
-  opacity: 0.82;
-  transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+  opacity: 0.9;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .nanqiang-back:hover {
+  border-color: var(--paper-rule);
+  background: color-mix(in srgb, var(--paper-fill) 85%, var(--receipt-color));
+  box-shadow: 0 3px 10px #0000001a;
   color: var(--ink-strong);
   opacity: 1;
   transform: translateX(-2px);
 }
 
 .nanqiang-back:active {
+  box-shadow: 0 1px 4px #0000001a;
   transform: translateX(-2px) translateY(1px);
 }
 
@@ -595,10 +602,10 @@ onBeforeUnmount(clearAudioPlayers)
 
   .nanqiang-back {
     top: calc((1.55em * 1.3 - 2.2rem) / 2);
-    right: 0;
     width: 2.2rem;
     height: 2.2rem;
-    margin: 0;
+    margin-top: calc((1.55em * 1.3 - 2.2rem) / 2);
+    margin-right: 0;
     font-size: 1.1rem;
   }
 
