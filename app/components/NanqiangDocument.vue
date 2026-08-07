@@ -411,6 +411,38 @@ onBeforeUnmount(clearAudioPlayers)
   background: color-mix(in srgb, var(--paper-fill) 68%, transparent);
 }
 
+.nanqiang-markdown :deep(details) {
+  margin: 0.75rem 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--paper-fill) 50%, var(--receipt-color));
+  transition: background-color 0.2s ease;
+}
+
+.nanqiang-markdown :deep(details[open]) {
+  background: color-mix(in srgb, var(--paper-fill) 75%, transparent);
+}
+
+.nanqiang-markdown :deep(summary) {
+  display: list-item;
+  cursor: pointer;
+  color: var(--ink-strong);
+  font-weight: 600;
+  font-size: 0.9em;
+  user-select: none;
+  outline: none;
+  transition: color 0.15s ease;
+}
+
+.nanqiang-markdown :deep(summary:hover) {
+  color: var(--ink-link);
+}
+
+.nanqiang-markdown :deep(details > *:not(summary)) {
+  margin-top: 0.5rem;
+}
+
 .nanqiang-markdown :deep(hr) {
   margin: 1.25rem 0;
   border: 0;

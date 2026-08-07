@@ -10,14 +10,17 @@ const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
-const isPrinting = ref(!props.missing)
+const isPrinting = ref(false)
+const hasPrintAnimation = ref(false)
+const initialAnimationPlayed = useState('printer-initial-animation-played', () => false)
+const pendingPrintRequest = ref(false)
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
 
-if (!props.missing) consumePrintRequest(route.path)
+if (!props.missing) pendingPrintRequest.value = consumePrintRequest(route.path)
 
 const titleLength = computed(() => [...props.title].reduce((length, character) => {
   return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
@@ -42,6 +45,7 @@ const schedulePrintFallback = () => {
 
 const beginPrinting = () => {
   isPrinting.value = true
+  hasPrintAnimation.value = true
   printSequence.value += 1
   if (import.meta.client) schedulePrintFallback()
 }
@@ -77,7 +81,13 @@ const restoreScrollPosition = async () => {
 }
 
 onMounted(() => {
-  if (isPrinting.value) schedulePrintFallback()
+  if (!props.missing) {
+    const shouldAnimate = pendingPrintRequest.value || !initialAnimationPlayed.value
+    if (shouldAnimate) {
+      initialAnimationPlayed.value = true
+      beginPrinting()
+    }
+  }
   void restoreScrollPosition()
   if (props.scrollKey) {
     removeRouterHook = router.afterEach((to) => {
@@ -130,6 +140,7 @@ onBeforeUnmount(() => {
       <div
         v-if="!props.missing"
         :key="`receipt-${printSequence}`"
+        :class="{ 'is-ready': !hasPrintAnimation }"
         class="receipt-wrapper"
         @animationend="finishPrinting"
       >

@@ -209,7 +209,7 @@ const createRenderer = () => {
 
   renderer.html = ({ text }) => {
     const trimmed = text.trim()
-    if (/^<\/?aside>$/i.test(trimmed)) return trimmed
+    if (/^<\/?(?:aside|details|summary)\b/i.test(trimmed)) return text
     if (/^<br\s*\/?>$/i.test(trimmed)) return '<br>'
     return escapeHtml(text)
   }
