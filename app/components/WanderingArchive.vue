@@ -4,12 +4,9 @@ import { wanderingEntries } from '~/data/wandering'
 
 <template>
   <ol class="wandering-archive">
-    <li v-for="(entry, entryIndex) in wanderingEntries" :key="`${entry.date}-${entry.title}`">
+    <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title}`">
       <article class="wandering-entry">
         <header class="wandering-heading">
-          <span class="wandering-number" aria-hidden="true">
-            {{ String(entryIndex + 1).padStart(2, '0') }}
-          </span>
           <h2 class="wandering-title">{{ entry.title }}</h2>
           <time class="wandering-date">{{ entry.date }}</time>
         </header>
@@ -81,16 +78,10 @@ import { wanderingEntries } from '~/data/wandering'
 
 .wandering-heading {
   display: grid;
-  grid-template-columns: 1.7rem minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.75rem;
   align-items: baseline;
   margin-bottom: 0.85rem;
-}
-
-.wandering-number {
-  color: var(--ink-muted);
-  font-size: 0.72em;
-  font-variant-numeric: tabular-nums;
 }
 
 .wandering-title {
@@ -113,7 +104,6 @@ import { wanderingEntries } from '~/data/wandering'
 .wandering-body {
   display: grid;
   gap: 0.65rem;
-  padding-left: 2.45rem;
   color: var(--ink);
   font-size: 0.96em;
   line-height: 1.62;
@@ -186,17 +176,13 @@ import { wanderingEntries } from '~/data/wandering'
   }
 
   .wandering-heading {
-    grid-template-columns: 1.45rem minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.45rem;
     margin-bottom: 0.6rem;
   }
 
   .wandering-date {
-    grid-column: 2;
-  }
-
-  .wandering-body {
-    padding-left: 1.9rem;
+    grid-column: 1;
   }
 }
 </style>
