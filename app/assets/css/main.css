@@ -148,41 +148,6 @@ a:focus-visible {
   color: #ff6e5f;
 }
 
-.print-button {
-  position: absolute;
-  top: -30px;
-  right: 0;
-  z-index: 2;
-  display: flex;
-  width: 48px;
-  height: 36px;
-  align-items: center;
-  justify-content: center;
-  margin: 16px;
-  border: 1px solid #0001;
-  border-radius: 6px;
-  background-color: var(--printer-color);
-  box-shadow: 1px 1px 2px 0 #fff8 inset, -1px -1px 2px 0 #0002 inset, 0 2px 6px 0 #0002;
-  cursor: pointer;
-  font-size: 1.2em;
-  transition: box-shadow 0.1s ease-in-out, transform 0.1s ease-in-out;
-}
-
-.print-button:hover {
-  box-shadow: 2px 2px 2px 0 #fff9 inset, -2px -2px 2px 0 #0002 inset, 0 2px 10px 0 #0002;
-  transform: scale(1.05);
-}
-
-.print-button:active {
-  box-shadow: 2px 2px 2px 0 #0002 inset, -2px -2px 2px 0 #fff9 inset, 0 0 4px 0 #fff9;
-  transform: scale(0.95);
-}
-
-.print-button:disabled {
-  cursor: not-allowed;
-  filter: grayscale(0.75);
-}
-
 .receipt-wrapper {
   position: absolute;
   top: 80px;
@@ -305,31 +270,31 @@ a:focus-visible {
   opacity: 0;
 }
 
-.wrapper:has(.print-button:focus) .receipt-wrapper {
+.wrapper.is-printing .receipt-wrapper {
   animation: print 1.2s 1 forwards ease-in, display 0.4s 1 forwards cubic-bezier(0, 0.63, 0.96, 1.1);
   animation-delay: 0s, 1.35s;
 }
 
-.wrapper:has(.print-button:focus) .printer-message {
+.wrapper.is-printing .printer-message {
   opacity: 0;
 }
 
-.wrapper:has(.print-button:focus) .letter {
+.wrapper.is-printing .letter {
   animation: show-text 0.6s 1 forwards linear;
 }
 
-.wrapper:has(.print-button:focus) .letter:nth-child(1) { animation-delay: 0.05s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(2) { animation-delay: 0.1s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(3) { animation-delay: 0.15s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(4) { animation-delay: 0.2s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(5) { animation-delay: 0.25s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(6) { animation-delay: 0.3s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(7) { animation-delay: 0.35s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(8) { animation-delay: 0.4s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(9) { animation-delay: 0.45s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(10) { animation-delay: 0.5s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(11) { animation-delay: 0.55s; }
-.wrapper:has(.print-button:focus) .letter:nth-child(12) { animation-delay: 0.6s; }
+.wrapper.is-printing .letter:nth-child(1) { animation-delay: 0.05s; }
+.wrapper.is-printing .letter:nth-child(2) { animation-delay: 0.1s; }
+.wrapper.is-printing .letter:nth-child(3) { animation-delay: 0.15s; }
+.wrapper.is-printing .letter:nth-child(4) { animation-delay: 0.2s; }
+.wrapper.is-printing .letter:nth-child(5) { animation-delay: 0.25s; }
+.wrapper.is-printing .letter:nth-child(6) { animation-delay: 0.3s; }
+.wrapper.is-printing .letter:nth-child(7) { animation-delay: 0.35s; }
+.wrapper.is-printing .letter:nth-child(8) { animation-delay: 0.4s; }
+.wrapper.is-printing .letter:nth-child(9) { animation-delay: 0.45s; }
+.wrapper.is-printing .letter:nth-child(10) { animation-delay: 0.5s; }
+.wrapper.is-printing .letter:nth-child(11) { animation-delay: 0.55s; }
+.wrapper.is-printing .letter:nth-child(12) { animation-delay: 0.6s; }
 
 @keyframes print {
   1% {
@@ -356,7 +321,7 @@ a:focus-visible {
 .site-menu {
   position: absolute;
   top: -10px;
-  right: 84px;
+  right: 30px;
   left: 200px;
   z-index: 3;
   display: grid;
@@ -427,10 +392,6 @@ a:focus-visible {
 
   .receipt-page {
     padding-bottom: 1rem;
-  }
-
-  .print-button {
-    right: 0;
   }
 
   .site-menu-link {

@@ -6,34 +6,35 @@ const props = defineProps<{
 }>()
 
 const printingText = 'Printing...'.split('')
+const printSequence = ref(0)
+
+const restartPrinting = () => {
+  printSequence.value += 1
+}
 </script>
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper">
+    <div class="wrapper" :class="{ 'is-printing': !props.missing }">
       <div class="printer-shell">
         <div class="printer" />
 
-        <div class="printer-display" :class="{ 'is-error': props.missing }" aria-live="polite">
-          <span class="printer-message">{{ props.missing ? 'Paper empty' : 'Click to print' }}</span>
+        <div
+          :key="`display-${printSequence}`"
+          class="printer-display"
+          :class="{ 'is-error': props.missing }"
+          aria-live="polite"
+        >
+          <span class="printer-message">{{ props.missing ? 'Paper empty' : 'Select page' }}</span>
           <div v-if="!props.missing" class="letter-wrapper" aria-hidden="true">
             <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
           </div>
         </div>
 
-        <SiteMenu />
-
-        <button
-          class="print-button"
-          type="button"
-          :disabled="props.missing"
-          :aria-label="props.missing ? '打印机缺纸' : '打印建设中票据'"
-        >
-          🖨
-        </button>
+        <SiteMenu @print="restartPrinting" />
       </div>
 
-      <div v-if="!props.missing" class="receipt-wrapper">
+      <div v-if="!props.missing" :key="`receipt-${printSequence}`" class="receipt-wrapper">
         <article class="receipt" :aria-labelledby="`receipt-title-${props.code}`">
           <header class="receipt-header">
             <span>

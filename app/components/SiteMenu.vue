@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const route = useRoute()
+const emit = defineEmits<{
+  print: []
+}>()
 
 const menuItems = [
   { label: '彷徨', to: '/' },
@@ -18,6 +21,7 @@ const menuItems = [
       :to="item.to"
       :class="['site-menu-link', { 'is-active': route.path === item.to }]"
       :aria-current="route.path === item.to ? 'page' : undefined"
+      @click="emit('print')"
     >
       {{ item.label }}
     </NuxtLink>
