@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import heartSutra from '~/assets/text/heart-sutra.txt?raw'
 
-const sutraParagraphs = heartSutra.trim().split(/\n\s*\n/)
+const sutraParagraphs = heartSutra.trim().split(/\n\s*\n/).slice(2)
 </script>
 
 <template>
@@ -10,7 +10,6 @@ const sutraParagraphs = heartSutra.trim().split(/\n\s*\n/)
       v-for="(paragraph, index) in sutraParagraphs"
       :key="index"
       class="sutra-paragraph"
-      :class="{ 'is-title': index === 0, 'is-credit': index === 1 }"
     >
       {{ paragraph }}
     </p>
@@ -24,13 +23,14 @@ const sutraParagraphs = heartSutra.trim().split(/\n\s*\n/)
   z-index: 0;
   display: flex;
   flex-direction: row-reverse;
-  align-items: center;
-  gap: clamp(0.65rem, 1.4vw, 1.15rem);
-  padding: clamp(1rem, 3vw, 2.5rem);
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 2rem;
   overflow: hidden;
-  color: #b6afa4;
+  color: #b3aca0;
   font-family: var(--site-font);
-  font-size: 0.64rem;
+  font-size: 1rem;
   line-height: 1.72;
   letter-spacing: 0;
   user-select: none;
@@ -38,38 +38,22 @@ const sutraParagraphs = heartSutra.trim().split(/\n\s*\n/)
 }
 
 .sutra-paragraph {
-  max-height: min(78svh, 46rem);
+  height: 100%;
   margin: 0;
-  text-align: start;
+  flex: 0 0 auto;
+  text-align: justify;
+  text-align-last: justify;
   text-orientation: upright;
   writing-mode: vertical-rl;
 }
 
-.sutra-paragraph.is-title {
-  color: #aaa397;
-  font-size: 0.8rem;
-}
-
-.sutra-paragraph.is-credit {
-  font-size: 0.58rem;
-}
-
 @media (max-width: 600px) {
   .sutra-backdrop {
-    gap: 0.5rem;
-    padding: 0.75rem;
-    color: #bbb5aa;
-    font-size: 0.56rem;
-    line-height: 1.64;
-  }
-
-  .sutra-paragraph {
-    max-height: 72svh;
-  }
-
-  .sutra-paragraph.is-title {
-    color: #ada69b;
-    font-size: 0.7rem;
+    gap: 0.4rem;
+    padding: 1.25rem 0.75rem 2.75rem;
+    color: #b7b0a5;
+    font-size: 0.88rem;
+    line-height: 1.62;
   }
 }
 </style>

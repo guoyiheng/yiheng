@@ -2,7 +2,7 @@
   --canvas: #d9d5cb;
   --printer-color: #dcdac4;
   --printer-color-2: #c0beaa;
-  --receipt-color: #f5f5f5;
+  --receipt-color: #e5e3cf;
   --ink: #444;
   --menu-ink: #34352f;
   --site-font: "LXGW WenKai", "STKaiti", "KaiTi", serif;
@@ -69,7 +69,8 @@ a:focus-visible {
   position: relative;
   z-index: 1;
   display: flex;
-  min-height: max(100svh, 58rem);
+  height: 100svh;
+  min-height: 0;
   align-items: flex-start;
   justify-content: center;
   padding: calc(4rem + env(safe-area-inset-top)) 0.5rem 1rem;
@@ -77,10 +78,11 @@ a:focus-visible {
 }
 
 .wrapper {
-  --printer-color: #dcdac4;
-  --printer-color-2: #c0beaa;
-  --receipt-color: #f5f5f5;
-  --paper-width: min(480px, calc(100vw - 2rem));
+  --paper-width: min(
+    480px,
+    calc(100vw - 2rem),
+    max(220px, calc((100svh - 12.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297))
+  );
 
   position: relative;
   width: min(680px, calc(100vw - 1rem));
@@ -405,7 +407,6 @@ a:focus-visible {
 
 @media (max-width: 600px) {
   .receipt-page {
-    min-height: max(100svh, 47rem);
     padding-top: calc(3.5rem + env(safe-area-inset-top));
   }
 
