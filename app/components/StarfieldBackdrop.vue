@@ -1,8 +1,54 @@
 <template>
   <div class="starfield" aria-hidden="true">
-    <span class="starfield-milky-way" />
     <span class="starfield-layer starfield-layer-far" />
     <span class="starfield-layer starfield-layer-near" />
+    <svg
+      class="ursa-major"
+      viewBox="0 0 1000 700"
+      preserveAspectRatio="xMidYMid slice"
+      role="presentation"
+    >
+      <g class="ursa-major-guide">
+        <path d="M248 154 L226 301 L399 331 L425 183 Z" />
+        <path d="M425 183 L546 267 L654 356 L776 470" />
+        <path d="M248 154 L112 112 L70 214 L154 266 L226 301" />
+      </g>
+      <g class="ursa-major-minor-stars">
+        <circle cx="112" cy="112" r="2.5" />
+        <circle cx="70" cy="214" r="2" />
+        <circle cx="154" cy="266" r="2.2" />
+        <circle cx="340" cy="86" r="1.7" />
+        <circle cx="498" cy="128" r="1.8" />
+        <circle cx="624" cy="154" r="1.5" />
+        <circle cx="731" cy="225" r="2" />
+        <circle cx="840" cy="307" r="1.8" />
+        <circle cx="938" cy="420" r="1.8" />
+        <circle cx="947" cy="621" r="1.5" />
+        <circle cx="802" cy="611" r="1.4" />
+        <circle cx="579" cy="536" r="1.7" />
+        <circle cx="386" cy="478" r="1.5" />
+        <circle cx="205" cy="470" r="1.8" />
+      </g>
+      <g class="ursa-major-dipper-stars">
+        <circle class="dipper-star dipper-star-dubhe" cx="248" cy="154" r="8" />
+        <circle class="dipper-star dipper-star-merak" cx="226" cy="301" r="7" />
+        <circle class="dipper-star dipper-star-phecda" cx="399" cy="331" r="6.5" />
+        <circle class="dipper-star dipper-star-megrez" cx="425" cy="183" r="5.5" />
+        <circle class="dipper-star dipper-star-alioth" cx="546" cy="267" r="7" />
+        <circle class="dipper-star dipper-star-mizar" cx="654" cy="356" r="6" />
+        <circle class="dipper-star dipper-star-alkaid" cx="776" cy="470" r="7.5" />
+        <circle class="dipper-companion" cx="665" cy="347" r="2.6" />
+      </g>
+      <g class="ursa-major-haloes">
+        <circle cx="248" cy="154" r="23" />
+        <circle cx="226" cy="301" r="20" />
+        <circle cx="399" cy="331" r="18" />
+        <circle cx="425" cy="183" r="16" />
+        <circle cx="546" cy="267" r="21" />
+        <circle cx="654" cy="356" r="19" />
+        <circle cx="776" cy="470" r="23" />
+      </g>
+    </svg>
     <span class="starfield-sparks">
       <i v-for="index in 9" :key="index" class="starfield-spark" />
     </span>
@@ -28,29 +74,67 @@
 
 .starfield-layer-far,
 .starfield-layer-near,
+.ursa-major,
 .starfield-sparks {
   z-index: 1;
 }
 
-.starfield-milky-way {
+.ursa-major {
   position: absolute;
-  top: 4%;
-  left: -28%;
-  width: 156%;
-  height: 44%;
-  background:
-    linear-gradient(
-      to bottom,
-      transparent 0%,
-      #bfc7c508 18%,
-      #d9cfb512 42%,
-      #e4dcc01b 53%,
-      #adb9b813 64%,
-      transparent 100%
-    );
-  filter: blur(18px);
-  opacity: 0.82;
-  transform: rotate(-13deg);
+  top: 1%;
+  right: -8%;
+  width: min(1040px, 112vw);
+  height: min(760px, 82vh);
+  overflow: visible;
+  opacity: 0.9;
+  transform: rotate(-5deg);
+  transform-origin: 72% 38%;
+}
+
+.ursa-major-guide {
+  fill: none;
+  stroke: #d8c79f;
+  stroke-dasharray: 2 7;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+  opacity: 0.42;
+}
+
+.ursa-major-minor-stars {
+  fill: #d9e1dc;
+  opacity: 0.5;
+}
+
+.ursa-major-dipper-stars {
+  fill: #f1e8c9;
+  filter: drop-shadow(0 0 4px #ead9a966);
+}
+
+.dipper-star {
+  stroke: #fff4d4;
+  stroke-width: 1.5;
+}
+
+.dipper-star-dubhe,
+.dipper-star-alkaid {
+  fill: #f8efd0;
+}
+
+.dipper-star-merak,
+.dipper-star-alioth {
+  fill: #e8e9d5;
+}
+
+.dipper-companion {
+  fill: #d9e1dc;
+  opacity: 0.9;
+}
+
+.ursa-major-haloes {
+  fill: none;
+  stroke: #e7d7ae;
+  stroke-width: 1.5;
+  opacity: 0.17;
 }
 
 .starfield-layer-far {
@@ -223,6 +307,16 @@
   z-index: 2;
   background: radial-gradient(ellipse at center, transparent 36%, #080a0b99 100%);
   content: "";
+}
+
+@media (max-width: 640px) {
+  .ursa-major {
+    top: 5%;
+    right: -8%;
+    width: min(760px, 125vw);
+    height: auto;
+    opacity: 0.82;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
