@@ -164,15 +164,15 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-back {
-  position: sticky;
-  top: 0.35rem;
+  position: relative;
+  top: 0;
   z-index: 4;
-  display: grid;
+  display: inline-flex;
   width: 2rem;
   height: 2rem;
-  float: left;
-  margin: 0 0.45rem 0.25rem 0;
-  place-items: center;
+  margin: 0 0 0.6rem 0;
+  align-items: center;
+  justify-content: center;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -271,7 +271,7 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-markdown :deep(p) {
-  margin-bottom: 1.72em;
+  margin-bottom: 0.75em;
 }
 
 .nanqiang-markdown :deep(ul),
@@ -558,10 +558,10 @@ onBeforeUnmount(clearAudioPlayers)
   }
 
   .nanqiang-back {
-    top: 0.25rem;
-    width: 2.75rem;
-    height: 2.75rem;
-    margin: 0 0.45rem 0.25rem 0;
+    top: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 0 0.5rem 0;
     font-size: 1.2rem;
   }
 
