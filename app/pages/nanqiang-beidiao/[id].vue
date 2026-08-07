@@ -3,7 +3,14 @@ import type { NanqiangPageDocument } from '~/data/nanqiang'
 import { getNanqiangPageDocument } from '~/data/nanqiang'
 
 const route = useRoute()
-const documentId = computed(() => String(route.params.id))
+const documentId = computed(() => {
+  const rawId = String(route.params.id || '')
+  try {
+    return decodeURIComponent(rawId)
+  } catch {
+    return rawId
+  }
+})
 const { data: document } = await useAsyncData<NanqiangPageDocument | null>(
   `nanqiang-document-${documentId.value}`,
   () => getNanqiangPageDocument(documentId.value),

@@ -29,7 +29,7 @@ type ResourceToken = (Tokens.Link | Tokens.Image) & {
   resourceType?: 'audio'
 }
 
-type SourceLoader = () => Promise<string>
+type SourceLoader = () => Promise<string | { default: string }> | string | { default: string }
 
 interface DocumentSource {
   sourcePath: string
@@ -43,30 +43,32 @@ const rootSources = import.meta.glob('./nanqiang/index.md', {
   import: 'default'
 }) as Record<string, string>
 
-const rawMarkdownLoaders = import.meta.glob('./nanqiang/**/*.md', {
+const rawMarkdownSources = import.meta.glob('./nanqiang/**/*.md', {
+  eager: true,
   query: '?raw',
   import: 'default'
-}) as Record<string, SourceLoader>
+}) as Record<string, string>
 
-const rawCsvLoaders = import.meta.glob('./nanqiang/**/*.csv', {
+const rawCsvSources = import.meta.glob('./nanqiang/**/*.csv', {
+  eager: true,
   query: '?raw',
   import: 'default'
-}) as Record<string, SourceLoader>
+}) as Record<string, string>
 
 const rawAssetLoaders = import.meta.glob(
   './nanqiang/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
   { query: '?url', import: 'default' }
-) as Record<string, SourceLoader>
+) as Record<string, () => Promise<any>>
 
-const canonicalizeLoaderMap = (loaders: Record<string, SourceLoader>) => {
-  return Object.fromEntries(Object.entries(loaders).map(([sourcePath, load]) => {
-    return [sourcePath.replace(/^\.\//, '/app/data/'), load]
+const canonicalizeMap = <T>(map: Record<string, T>) => {
+  return Object.fromEntries(Object.entries(map).map(([sourcePath, value]) => {
+    return [sourcePath.replace(/^\.\//, '/app/data/'), value]
   }))
 }
 
-const markdownLoaders = canonicalizeLoaderMap(rawMarkdownLoaders)
-const csvLoaders = canonicalizeLoaderMap(rawCsvLoaders)
-const assetLoaders = canonicalizeLoaderMap(rawAssetLoaders)
+const markdownSources = canonicalizeMap(rawMarkdownSources)
+const csvSources = canonicalizeMap(rawCsvSources)
+const assetLoaders = canonicalizeMap(rawAssetLoaders)
 
 const safeDecode = (value: string) => {
   try {
@@ -90,7 +92,8 @@ const titleFromSource = (source: string, sourcePath: string) => {
 
 const documentSources = new Map<string, DocumentSource>()
 
-const registerDocumentSource = (sourcePath: string, kind: 'markdown' | 'csv', load: SourceLoader) => {
+const registerDocumentSource = (sourcePath: string, kind: 'markdown' | 'csv', contentOrLoader: string | SourceLoader) => {
+  const load: SourceLoader = typeof contentOrLoader === 'function' ? contentOrLoader : () => contentOrLoader
   const docSource: DocumentSource = { sourcePath, kind, load }
   const relPath = sourcePath.replace(/^\/app\/data\/nanqiang\//, '').replace(/\.(md|csv)$/i, '').replace(/\.all$/i, '')
   const decodedRelPath = safeDecode(relPath)
@@ -100,15 +103,16 @@ const registerDocumentSource = (sourcePath: string, kind: 'markdown' | 'csv', lo
   documentSources.set(decodedRelPath, docSource)
   documentSources.set(baseName, docSource)
   documentSources.set(encodeURIComponent(baseName), docSource)
+  documentSources.set(encodeURIComponent(relPath), docSource)
 }
 
-for (const [sourcePath, load] of Object.entries(markdownLoaders)) {
-  registerDocumentSource(sourcePath, 'markdown', load)
+for (const [sourcePath, content] of Object.entries(markdownSources)) {
+  registerDocumentSource(sourcePath, 'markdown', content)
 }
 
-for (const [sourcePath, load] of Object.entries(csvLoaders)) {
+for (const [sourcePath, content] of Object.entries(csvSources)) {
   if (sourcePath.endsWith('.all.csv')) continue
-  registerDocumentSource(sourcePath, 'csv', load)
+  registerDocumentSource(sourcePath, 'csv', content)
 }
 
 const documentDates: Record<string, string> = {
@@ -255,10 +259,18 @@ const createRenderer = () => {
 
 export const getNanqiangDocument = async (id: string) => {
   const decodedId = safeDecode(id)
-  const source = documentSources.get(id) || documentSources.get(decodedId) || documentSources.get(encodeURIComponent(id))
+  const source = documentSources.get(id)
+    || documentSources.get(decodedId)
+    || documentSources.get(encodeURIComponent(id))
+    || documentSources.get(encodeURIComponent(decodedId))
+
   if (!source) return
 
-  const content = await source.load()
+  const rawContent = await source.load()
+  const content = typeof rawContent === 'string'
+    ? rawContent
+    : (rawContent as { default?: string })?.default ?? String(rawContent)
+
   return {
     id,
     title: titleFromSource(content, source.sourcePath),
