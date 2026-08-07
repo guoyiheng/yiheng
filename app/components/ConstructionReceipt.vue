@@ -82,9 +82,11 @@ const restoreScrollPosition = async () => {
 
 onMounted(() => {
   if (!props.missing) {
-    const shouldAnimate = pendingPrintRequest.value || !initialAnimationPlayed.value
+    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    const isHistoryNavigation = navigationEntry?.type === 'back_forward'
+    const shouldAnimate = pendingPrintRequest.value || (!initialAnimationPlayed.value && !isHistoryNavigation)
+    initialAnimationPlayed.value = true
     if (shouldAnimate) {
-      initialAnimationPlayed.value = true
       beginPrinting()
     }
   }
