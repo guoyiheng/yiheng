@@ -254,7 +254,8 @@ const createRenderer = () => {
 }
 
 export const getNanqiangDocument = async (id: string) => {
-  const source = documentSources.get(id)
+  const decodedId = safeDecode(id)
+  const source = documentSources.get(id) || documentSources.get(decodedId) || documentSources.get(encodeURIComponent(id))
   if (!source) return
 
   const content = await source.load()
