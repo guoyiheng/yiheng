@@ -121,9 +121,13 @@ onBeforeUnmount(clearAudioPlayers)
 
 <template>
   <article class="nanqiang-document">
-    <div class="nanqiang-backbar">
-      <NuxtLink class="nanqiang-back" to="/nanqiang-beidiao">← 返回上一级</NuxtLink>
-    </div>
+    <NuxtLink
+      class="nanqiang-back"
+      to="/nanqiang-beidiao"
+      aria-label="返回上一级"
+    >
+      <span aria-hidden="true">←</span>
+    </NuxtLink>
 
     <div
       v-if="props.document.kind === 'markdown'"
@@ -158,27 +162,34 @@ onBeforeUnmount(clearAudioPlayers)
   overflow-wrap: anywhere;
 }
 
-.nanqiang-backbar {
-  position: sticky;
-  top: 0;
-  z-index: 4;
-  margin-bottom: 0.55rem;
-  padding: 0.15rem 0 0.45rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--paper-rule) 64%, transparent);
-  background: var(--receipt-color);
-}
-
 .nanqiang-back {
-  display: inline-block;
+  position: sticky;
+  top: 0.35rem;
+  z-index: 4;
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.55rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--paper-rule) 78%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--receipt-color) 88%, var(--printer-color-2));
+  box-shadow: 0 2px 5px #0002, 0 1px 0 #fff6 inset;
   color: var(--ink-muted);
+  font-size: 1.05rem;
   font-weight: 700;
+  line-height: 1;
   text-decoration: none;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .nanqiang-back:hover {
   color: var(--ink-strong);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
+  transform: translateX(-2px);
+}
+
+.nanqiang-back:active {
+  transform: translateX(-2px) translateY(1px);
 }
 
 .nanqiang-markdown :deep(h1),
