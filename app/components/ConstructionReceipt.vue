@@ -14,7 +14,6 @@ const isPrinting = ref(!props.missing)
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
-const scrollStorageKey = computed(() => `receipt-scroll:${scrollPositionKey.value}`)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
 
@@ -58,30 +57,12 @@ const rememberScrollPosition = () => {
   if (receiptContent.value) {
     const position = receiptContent.value.scrollTop
     scrollPositions.value[scrollPositionKey.value] = position
-    if (import.meta.client) {
-      try {
-        window.sessionStorage.setItem(scrollStorageKey.value, String(position))
-      } catch {
-        // In-memory state still preserves position when storage is unavailable.
-      }
-    }
   }
 }
 
 const restoreScrollPosition = async () => {
   await nextTick()
-  let storedPosition = Number.NaN
-  if (import.meta.client) {
-    try {
-      const value = window.sessionStorage.getItem(scrollStorageKey.value)
-      if (value !== null) storedPosition = Number(value)
-    } catch {
-      storedPosition = Number.NaN
-    }
-  }
-  const position = Number.isFinite(storedPosition)
-    ? storedPosition
-    : scrollPositions.value[scrollPositionKey.value] ?? 0
+  const position = scrollPositions.value[scrollPositionKey.value] ?? 0
   const restore = () => {
     if (receiptContent.value) {
       receiptContent.value.scrollTop = position
