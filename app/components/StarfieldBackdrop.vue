@@ -39,8 +39,9 @@
   right: max(1.25rem, env(safe-area-inset-right));
   width: clamp(160px, calc((100vw - 680px) / 2 - 1.25rem), 360px);
   height: auto;
-  opacity: 0.9;
+  opacity: 0.82;
   filter: drop-shadow(0 0 0.75rem #dfc78226);
+  animation: constellation-bloom 4.6s ease-in-out infinite;
 }
 
 .starfield-layer-far {
@@ -207,6 +208,19 @@
   }
 }
 
+@keyframes constellation-bloom {
+  0%,
+  100% {
+    opacity: 0.72;
+    filter: drop-shadow(0 0 0.5rem #dfc7821a);
+  }
+
+  48% {
+    opacity: 1;
+    filter: drop-shadow(0 0 1rem #dfc78245);
+  }
+}
+
 .starfield::after {
   position: absolute;
   inset: 0;
@@ -228,6 +242,11 @@
   .starfield-spark {
     opacity: var(--star-high);
     transform: rotate(var(--star-rotation));
+    animation: none;
+  }
+
+  .ursa-major {
+    opacity: 0.9;
     animation: none;
   }
 }

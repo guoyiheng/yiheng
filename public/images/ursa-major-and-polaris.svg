@@ -35,6 +35,9 @@
      inkscape:current-layer="layer1" />
   <defs
      id="defs5360">
+    <path
+       id="dipper-star-shape"
+       d="M 0,-4.4 1.1,-1.1 4.4,0 1.1,1.1 0,4.4 -1.1,1.1 -4.4,0 -1.1,-1.1 Z" />
     <marker
        style="overflow:visible"
        id="Arrow1L"
@@ -57,31 +60,36 @@
   </defs>
   <style>
     #g6205 &gt; * { display: none; }
-    #path919,
-    #path820,
-    #circle822,
-    #circle824,
-    #circle826,
-    #circle828,
-    #circle830,
-    #circle832 { display: inline; }
-    #path919 {
-      fill: none;
-      stroke: #d7cda9;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-width: 0.7;
-    }
-    #path820,
-    #circle822,
-    #circle824,
-    #circle826,
-    #circle828,
-    #circle830,
-    #circle832 {
+    #dipper-star-1,
+    #dipper-star-2,
+    #dipper-star-3,
+    #dipper-star-4,
+    #dipper-star-5,
+    #dipper-star-6,
+    #dipper-star-7 { display: inline; }
+    .dipper-star {
       fill: #f5edd3;
       stroke: #fff7df;
       stroke-width: 0.32;
+      filter: drop-shadow(0 0 1.4px #f0d995);
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: dipper-twinkle 3.8s ease-in-out infinite;
+    }
+    #dipper-star-1 .dipper-star { animation-delay: -0.3s; }
+    #dipper-star-2 .dipper-star { animation-delay: -1.9s; }
+    #dipper-star-3 .dipper-star { animation-delay: -2.7s; }
+    #dipper-star-4 .dipper-star { animation-delay: -1.1s; }
+    #dipper-star-5 .dipper-star { animation-delay: -3.4s; }
+    #dipper-star-6 .dipper-star { animation-delay: -2.2s; }
+    #dipper-star-7 .dipper-star { animation-delay: -0.8s; }
+    @keyframes dipper-twinkle {
+      0%, 100% { opacity: 0.54; transform: scale(0.72); }
+      45% { opacity: 1; transform: scale(1.2); }
+      60% { opacity: 0.84; transform: scale(0.92); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dipper-star { animation: none; opacity: 1; transform: none; }
     }
   </style>
   <g
@@ -198,6 +206,27 @@
            d="M -54.166166,5.407476 -23.739864,-4.4958137 -4.4777304,2.2604489 19.855279,7.6453355 28.615227,26.273605 63.960806,19.02469 63.783483,-4.6745365"
            id="path919"
            sodipodi:nodetypes="ccccccc" />
+        <g id="dipper-star-1" transform="translate(-53.850822,5.059916) scale(1.28)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-2" transform="translate(-23.557636,-4.5261765) scale(1.16)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-3" transform="translate(-4.0935597,2.2512436) scale(1.06)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-4" transform="translate(19.676702,7.400456) scale(0.9)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-5" transform="translate(28.649368,26.228249) scale(1.08)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-6" transform="translate(63.81168,19.180214) scale(1.18)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
+        <g id="dipper-star-7" transform="translate(63.625904,-4.6353469) scale(1.34)">
+          <use href="#dipper-star-shape" class="dipper-star" />
+        </g>
         <path
            style="fill:none;stroke:#ffff00;stroke-width:0.338118;marker-start:url(#Arrow1L)"
            d="M 73.499157,-119.59686 C 63.324493,-49.747726 62.501512,-15.084998 64.258127,16.827276"
