@@ -10,13 +10,15 @@ const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
-const isPrinting = ref(!props.missing && consumePrintRequest(route.path))
+const isPrinting = ref(!props.missing)
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
 const scrollStorageKey = computed(() => `receipt-scroll:${scrollPositionKey.value}`)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
+
+if (!props.missing) consumePrintRequest(route.path)
 
 const titleLength = computed(() => [...props.title].reduce((length, character) => {
   return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
