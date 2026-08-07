@@ -8,8 +8,8 @@
   --ink-muted: #737160;
   --ink-link: #4d5945;
   --ink-code: #74443c;
-  --ink-star: #7e5d22;
-  --ink-bold: oklch(35% 0.035 165);
+  --ink-star: oklch(49% 0.09 315);
+  --ink-bold: var(--ink-star);
   --paper-rule: #aaa892;
   --paper-fill: #d8d6c3;
   --menu-ink: #34352f;
@@ -87,7 +87,7 @@ a:focus-visible {
 
 .wrapper {
   --paper-width: min(
-    480px,
+    620px,
     calc(100vw - 2rem),
     max(220px, calc((100svh - 12.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297))
   );
@@ -327,20 +327,11 @@ a:focus-visible {
 .wrapper.is-printing .receipt-wrapper {
   z-index: 1;
   clip-path: inset(200px -100px -100px -100px);
-  opacity: 1 !important;
+  opacity: 0;
   transform: translate(-50%, -200px);
   animation:
     paper-feed 1.25s forwards cubic-bezier(0.16, 1, 0.3, 1),
     paper-release 0.35s 1.28s forwards cubic-bezier(0.22, 1, 0.36, 1);
-  animation-play-state: paused !important;
-}
-
-.wrapper,
-.printer-shell,
-.printer,
-.receipt-wrapper,
-.receipt {
-  outline: 2px solid #ff0000 !important;
 }
 
 .wrapper.is-printing .letter {

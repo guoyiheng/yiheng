@@ -113,7 +113,8 @@ const refreshAudioPlayers = async () => {
   setupAudioPlayers()
 }
 
-onMounted(refreshAudioPlayers)
+onActivated(refreshAudioPlayers)
+onDeactivated(clearAudioPlayers)
 watch(renderedMarkdown, refreshAudioPlayers, { flush: 'post' })
 onBeforeUnmount(clearAudioPlayers)
 </script>
@@ -154,6 +155,7 @@ onBeforeUnmount(clearAudioPlayers)
 
 <style scoped>
 .nanqiang-document {
+  position: relative;
   color: var(--ink);
   font-family: var(--site-font);
   font-size: 1.02em;
@@ -168,7 +170,8 @@ onBeforeUnmount(clearAudioPlayers)
   display: grid;
   width: 2rem;
   height: 2rem;
-  margin-bottom: 0.55rem;
+  float: left;
+  margin: 0 0.45rem 0.25rem 0;
   place-items: center;
   border: 0;
   border-radius: 50%;
@@ -265,6 +268,10 @@ onBeforeUnmount(clearAudioPlayers)
 .nanqiang-markdown :deep(table),
 .nanqiang-markdown :deep(aside) {
   margin: 0 0 1em;
+}
+
+.nanqiang-markdown :deep(p) {
+  margin-bottom: 1.72em;
 }
 
 .nanqiang-markdown :deep(ul),
@@ -554,7 +561,7 @@ onBeforeUnmount(clearAudioPlayers)
     top: 0.25rem;
     width: 2.75rem;
     height: 2.75rem;
-    margin-bottom: 0.65rem;
+    margin: 0 0.45rem 0.25rem 0;
     font-size: 1.2rem;
   }
 

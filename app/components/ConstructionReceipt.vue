@@ -2,14 +2,21 @@
 const props = defineProps<{
   title: string
   missing?: boolean
+  scrollKey?: string
 }>()
 
 const route = useRoute()
+const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
 const isPrinting = ref(!props.missing && consumePrintRequest(route.path))
+const receiptContent = ref<HTMLElement | null>(null)
+const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
+const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
+const scrollStorageKey = computed(() => `receipt-scroll:${scrollPositionKey.value}`)
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
+let removeRouterHook: (() => void) | undefined
 
 const titleLength = computed(() => [...props.title].reduce((length, character) => {
   return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
@@ -45,15 +52,70 @@ const finishPrinting = (event: AnimationEvent) => {
   }
 }
 
+const rememberScrollPosition = () => {
+  if (receiptContent.value) {
+    const position = receiptContent.value.scrollTop
+    scrollPositions.value[scrollPositionKey.value] = position
+    if (import.meta.client) {
+      try {
+        window.sessionStorage.setItem(scrollStorageKey.value, String(position))
+      } catch {
+        // In-memory state still preserves position when storage is unavailable.
+      }
+    }
+  }
+}
+
+const restoreScrollPosition = async () => {
+  await nextTick()
+  let storedPosition = Number.NaN
+  if (import.meta.client) {
+    try {
+      const value = window.sessionStorage.getItem(scrollStorageKey.value)
+      if (value !== null) storedPosition = Number(value)
+    } catch {
+      storedPosition = Number.NaN
+    }
+  }
+  const position = Number.isFinite(storedPosition)
+    ? storedPosition
+    : scrollPositions.value[scrollPositionKey.value] ?? 0
+  const restore = () => {
+    if (receiptContent.value) {
+      receiptContent.value.scrollTop = position
+    }
+  }
+
+  restore()
+  if (import.meta.client) {
+    requestAnimationFrame(() => requestAnimationFrame(restore))
+    setTimeout(restore)
+  }
+}
+
 onMounted(() => {
   if (isPrinting.value) schedulePrintFallback()
+  void restoreScrollPosition()
+  if (props.scrollKey) {
+    removeRouterHook = router.afterEach((to) => {
+      if (to.fullPath === props.scrollKey) {
+        setTimeout(() => void restoreScrollPosition(), 50)
+      }
+    })
+  }
 })
+
+onActivated(restoreScrollPosition)
+onBeforeRouteLeave(rememberScrollPosition)
 
 watch(() => request.value.sequence, () => {
   if (!props.missing && consumePrintRequest(route.path)) beginPrinting()
 })
 
-onBeforeUnmount(clearPrintFallback)
+onBeforeUnmount(() => {
+  removeRouterHook?.()
+  clearPrintFallback()
+})
 </script>
 
 <template>
@@ -91,7 +153,11 @@ onBeforeUnmount(clearPrintFallback)
         @animationend="finishPrinting"
       >
         <article class="receipt" :aria-label="props.title">
-          <div class="receipt-content">
+          <div
+            ref="receiptContent"
+            class="receipt-content"
+            @scroll.passive="rememberScrollPosition"
+          >
             <slot>
               <table class="receipt-table">
                 <tbody>
