@@ -2,7 +2,7 @@
 import type { NanqiangIndexItem } from '~/data/nanqiang'
 import { nanqiangIndex } from '~/data/nanqiang'
 
-const items: NanqiangIndexItem[] = nanqiangIndex
+const items = useState<NanqiangIndexItem[]>('nanqiang-index', () => nanqiangIndex)
 
 useSeoMeta({ title: '南腔北调 · yiheng' })
 </script>
