@@ -1,14 +1,14 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string
-  code: string
   missing?: boolean
-  status?: string
 }>()
 
+const route = useRoute()
+const { request, consumePrintRequest } = usePrinterNavigation()
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
-const isPrinting = ref(!props.missing)
+const isPrinting = ref(!props.missing && consumePrintRequest(route.path))
 let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
 
 const titleLength = computed(() => [...props.title].reduce((length, character) => {
@@ -33,7 +33,8 @@ const schedulePrintFallback = () => {
 }
 
 const beginPrinting = () => {
-  isPrinting.value = !props.missing
+  isPrinting.value = true
+  printSequence.value += 1
   if (import.meta.client) schedulePrintFallback()
 }
 
@@ -44,16 +45,12 @@ const finishPrinting = (event: AnimationEvent) => {
   }
 }
 
-const restartPrinting = () => {
-  printSequence.value += 1
-  beginPrinting()
-}
+onMounted(() => {
+  if (isPrinting.value) schedulePrintFallback()
+})
 
-onMounted(schedulePrintFallback)
-
-watch([() => props.title, () => props.missing], () => {
-  printSequence.value += 1
-  beginPrinting()
+watch(() => request.value.sequence, () => {
+  if (!props.missing && consumePrintRequest(route.path)) beginPrinting()
 })
 
 onBeforeUnmount(clearPrintFallback)
@@ -61,7 +58,7 @@ onBeforeUnmount(clearPrintFallback)
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper" :class="{ 'is-printing': !props.missing }">
+    <div class="wrapper" :class="{ 'is-printing': isPrinting }">
       <div class="printer-shell">
         <div class="printer" />
 
@@ -84,7 +81,7 @@ onBeforeUnmount(clearPrintFallback)
           </div>
         </div>
 
-        <SiteMenu @print="restartPrinting" />
+        <SiteMenu />
       </div>
 
       <div
@@ -93,23 +90,7 @@ onBeforeUnmount(clearPrintFallback)
         class="receipt-wrapper"
         @animationend="finishPrinting"
       >
-        <article class="receipt" :aria-labelledby="`receipt-title-${props.code}`">
-          <header class="receipt-header">
-            <span>
-              yiheng<br>
-              Personal Site<br>
-              Page {{ props.code }}
-            </span>
-            <div class="logo" aria-hidden="true">恒</div>
-          </header>
-
-          <div class="receipt-subheader">
-            <span>
-              <strong :id="`receipt-title-${props.code}`">{{ props.title }}</strong><br>
-              {{ props.status ?? '建设中' }}
-            </span>
-          </div>
-
+        <article class="receipt" :aria-label="props.title">
           <div class="receipt-content">
             <slot>
               <table class="receipt-table">

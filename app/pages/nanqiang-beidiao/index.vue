@@ -3,7 +3,7 @@ useSeoMeta({ title: '南腔北调 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="南腔北调" code="02" status="52 篇 · 原始归档">
+  <ConstructionReceipt title="南腔北调">
     <NanqiangArchive />
   </ConstructionReceipt>
 </template>

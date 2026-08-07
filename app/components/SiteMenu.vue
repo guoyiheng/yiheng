@@ -1,13 +1,11 @@
 <script setup lang="ts">
 const route = useRoute()
-const emit = defineEmits<{
-  print: []
-}>()
+const { requestPrint } = usePrinterNavigation()
 
 const menuItems = [
-  { label: '彷徨', to: '/' },
   { label: '南腔北调', to: '/nanqiang-beidiao' },
-  { label: '人生进度', to: '/life-progress' },
+  { label: '彷徨', to: '/' },
+  { label: '浮躁', to: '/fuzao' },
   { label: '作品', to: '/works' },
   { label: '关于', to: '/about' }
 ]
@@ -26,7 +24,7 @@ const isItemActive = (path: string) => {
       :to="item.to"
       :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
       :aria-current="isItemActive(item.to) ? 'page' : undefined"
-      @click="emit('print')"
+      @click="requestPrint(item.to)"
     >
       {{ item.label }}
     </NuxtLink>

@@ -15,11 +15,9 @@ useSeoMeta({
   <ConstructionReceipt
     v-if="document"
     :title="document.title"
-    code="02-A"
-    status="南腔北调 · 原始归档"
   >
     <NanqiangDocument :document="document" />
   </ConstructionReceipt>
 
-  <ConstructionReceipt v-else title="页面不存在" code="404" missing />
+  <ConstructionReceipt v-else title="页面不存在" missing />
 </template>

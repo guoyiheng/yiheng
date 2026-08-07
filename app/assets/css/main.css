@@ -176,12 +176,11 @@ a:focus-visible {
   position: absolute;
   top: 80px;
   left: 50%;
+  z-index: 5;
   width: var(--paper-width);
-  opacity: 0;
+  opacity: 1;
   filter: drop-shadow(0 0 12px #0001);
-  transform: translate(-50%, -100%);
-  clip-path: inset(100% -100px -100px -100px);
-  transition: clip-path 0.5s;
+  transform: translate(-50%, 18px);
 }
 
 .receipt {
@@ -192,7 +191,6 @@ a:focus-visible {
   min-height: 0;
   aspect-ratio: 210 / 297;
   flex-direction: column;
-  gap: 1em;
   padding: 32px 36px 40px;
   border-radius: 1px 1px 3px 3px;
   background-color: var(--receipt-color);
@@ -226,29 +224,6 @@ a:focus-visible {
   background: var(--receipt-color);
   box-shadow: 0 8px 8px #0002;
   z-index: -1;
-}
-
-.receipt-header,
-.receipt-subheader {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.2em 0;
-}
-
-.receipt-header {
-  font-size: 1.1em;
-  font-weight: 600;
-}
-
-.receipt-subheader {
-  border-bottom: 1px dashed #ccc;
-}
-
-.receipt .logo {
-  width: 48px;
-  filter: grayscale(1);
-  font-size: 3em;
-  transform: rotate(10deg);
 }
 
 .receipt-content {
@@ -327,6 +302,13 @@ a:focus-visible {
 .wrapper.is-printing .letter:nth-child(12) { animation-delay: 0.6s; }
 
 @keyframes print {
+  0% {
+    z-index: 1;
+    clip-path: inset(100% -100px -100px -100px);
+    opacity: 0;
+    transform: translate(-50%, -100%);
+  }
+
   1% {
     opacity: 1;
   }
@@ -355,19 +337,12 @@ a:focus-visible {
 
 .printer-result {
   display: inline-block;
-  opacity: 0;
+  opacity: 1;
   white-space: nowrap;
-  animation: show-result 0.24s forwards cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .printer-result.is-scrolling {
-  animation:
-    show-result 0.24s forwards cubic-bezier(0.25, 1, 0.5, 1),
-    scroll-printer-title 6s 0.8s infinite alternate linear;
-}
-
-@keyframes show-result {
-  to { opacity: 1; }
+  animation: scroll-printer-title 6s 0.8s infinite alternate linear;
 }
 
 @keyframes scroll-printer-title {

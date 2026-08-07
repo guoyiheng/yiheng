@@ -5,11 +5,11 @@ import { wanderingEntries } from '~/data/wandering'
 <template>
   <ol class="wandering-archive">
     <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title}`">
-      <details class="wandering-entry">
-        <summary class="wandering-summary">
+      <article class="wandering-entry">
+        <header class="wandering-heading">
           <span class="wandering-title">{{ entry.title }}</span>
           <time class="wandering-date">{{ entry.date }}</time>
-        </summary>
+        </header>
 
         <div class="wandering-body">
           <template v-for="(block, index) in entry.blocks" :key="index">
@@ -57,7 +57,7 @@ import { wanderingEntries } from '~/data/wandering'
             </div>
           </template>
         </div>
-      </details>
+      </article>
     </li>
   </ol>
 </template>
@@ -72,33 +72,16 @@ import { wanderingEntries } from '~/data/wandering'
 }
 
 .wandering-entry {
+  padding: 1rem 0.2rem 1.2rem;
   border-bottom: 1px dashed #aaa892;
 }
 
-.wandering-summary {
+.wandering-heading {
   display: grid;
-  min-height: 2.5rem;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.75rem;
-  align-items: center;
-  padding: 0.5rem 0.2rem;
-  cursor: pointer;
-}
-
-.wandering-summary::-webkit-details-marker {
-  display: none;
-}
-
-.wandering-summary::before {
-  width: 0.8rem;
-  color: #777561;
-  content: "+";
-  font-weight: 600;
-  text-align: center;
-}
-
-.wandering-entry[open] .wandering-summary::before {
-  content: "-";
+  align-items: baseline;
+  margin-bottom: 0.75rem;
 }
 
 .wandering-title {
@@ -117,7 +100,6 @@ import { wanderingEntries } from '~/data/wandering'
 .wandering-body {
   display: grid;
   gap: 0.65rem;
-  padding: 0.25rem 0.2rem 1rem;
   line-height: 1.55;
 }
 
@@ -183,10 +165,13 @@ import { wanderingEntries } from '~/data/wandering'
 }
 
 @media (max-width: 600px) {
-  .wandering-summary {
-    min-height: 2.25rem;
+  .wandering-entry {
+    padding: 0.8rem 0.1rem 1rem;
+  }
+
+  .wandering-heading {
     gap: 0.45rem;
-    padding: 0.4rem 0.1rem;
+    margin-bottom: 0.6rem;
   }
 
   .wandering-date {

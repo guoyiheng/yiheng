@@ -3,5 +3,5 @@ useSeoMeta({ title: '关于 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="关于" code="05" />
+  <ConstructionReceipt title="关于" />
 </template>
