@@ -35,12 +35,12 @@
 
 .ursa-major {
   position: absolute;
-  top: calc(1rem + env(safe-area-inset-top));
+  top: clamp(7rem, 18vh, 11rem);
   right: max(1.25rem, env(safe-area-inset-right));
   width: clamp(160px, calc((100vw - 680px) / 2 - 1.25rem), 360px);
   height: auto;
-  opacity: 0.82;
-  filter: drop-shadow(0 0 0.75rem #dfc78226);
+  opacity: 0.62;
+  filter: drop-shadow(0 0 0.5rem #dfc7821f);
   animation: constellation-bloom 4.6s ease-in-out infinite;
 }
 
@@ -211,13 +211,13 @@
 @keyframes constellation-bloom {
   0%,
   100% {
-    opacity: 0.72;
-    filter: drop-shadow(0 0 0.5rem #dfc7821a);
+    opacity: 0.52;
+    filter: drop-shadow(0 0 0.35rem #dfc78214);
   }
 
   48% {
-    opacity: 1;
-    filter: drop-shadow(0 0 1rem #dfc78245);
+    opacity: 0.76;
+    filter: drop-shadow(0 0 0.7rem #dfc78233);
   }
 }
 
@@ -231,10 +231,10 @@
 
 @media (max-width: 640px) {
   .ursa-major {
-    top: calc(0.5rem + env(safe-area-inset-top));
+    top: calc(7rem + env(safe-area-inset-top));
     right: 0.75rem;
     width: 150px;
-    opacity: 0.68;
+    opacity: 0.56;
   }
 }
 
@@ -246,7 +246,7 @@
   }
 
   .ursa-major {
-    opacity: 0.9;
+    opacity: 0.68;
     animation: none;
   }
 }
