@@ -121,7 +121,9 @@ onBeforeUnmount(clearAudioPlayers)
 
 <template>
   <article class="nanqiang-document">
-    <NuxtLink class="nanqiang-back" to="/nanqiang-beidiao">← 返回目录</NuxtLink>
+    <div class="nanqiang-backbar">
+      <NuxtLink class="nanqiang-back" to="/nanqiang-beidiao">← 返回上一级</NuxtLink>
+    </div>
 
     <div
       v-if="props.document.kind === 'markdown'"
@@ -156,10 +158,20 @@ onBeforeUnmount(clearAudioPlayers)
   overflow-wrap: anywhere;
 }
 
+.nanqiang-backbar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  margin-bottom: 0.55rem;
+  padding: 0.15rem 0 0.45rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper-rule) 64%, transparent);
+  background: var(--receipt-color);
+}
+
 .nanqiang-back {
   display: inline-block;
-  margin-bottom: 0.75rem;
   color: var(--ink-muted);
+  font-weight: 700;
   text-decoration: none;
 }
 
