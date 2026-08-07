@@ -39,7 +39,7 @@ const beginPrinting = () => {
 }
 
 const finishPrinting = (event: AnimationEvent) => {
-  if (event.target === event.currentTarget && event.animationName === 'display') {
+  if (event.target === event.currentTarget && event.animationName === 'paper-release') {
     isPrinting.value = false
     clearPrintFallback()
   }

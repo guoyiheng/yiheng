@@ -352,11 +352,11 @@ onBeforeUnmount(clearAudioPlayers)
 
 .nanqiang-markdown :deep(.nanqiang-audio-player) {
   display: grid;
-  grid-template-columns: 2.6rem minmax(0, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.5rem;
   align-items: center;
-  margin: 0.4rem 0 1.25rem;
-  padding: 0.65rem 0.75rem;
+  margin: 0.25rem 0 0.85rem;
+  padding: 0.35rem 0.45rem;
   border: 1px solid var(--paper-rule);
   border-radius: 4px;
   background: color-mix(in srgb, var(--paper-fill) 68%, var(--receipt-color));
@@ -369,8 +369,8 @@ onBeforeUnmount(clearAudioPlayers)
 
 .nanqiang-markdown :deep(.nanqiang-audio-toggle) {
   position: relative;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 1.85rem;
+  height: 1.85rem;
   padding: 0;
   border: 1px solid #999782;
   border-radius: 50%;
@@ -395,41 +395,49 @@ onBeforeUnmount(clearAudioPlayers)
   left: 52%;
   width: 0;
   height: 0;
-  border-top: 0.38rem solid transparent;
-  border-bottom: 0.38rem solid transparent;
-  border-left: 0.58rem solid currentColor;
+  border-top: 0.28rem solid transparent;
+  border-bottom: 0.28rem solid transparent;
+  border-left: 0.44rem solid currentColor;
   content: "";
   transform: translate(-42%, -50%);
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-player.is-playing .nanqiang-audio-toggle::before) {
   left: 50%;
-  width: 0.22rem;
-  height: 0.75rem;
+  width: 0.17rem;
+  height: 0.58rem;
   border: 0;
   background: currentColor;
-  box-shadow: 0.38rem 0 currentColor;
-  transform: translate(-0.3rem, -50%);
+  box-shadow: 0.3rem 0 currentColor;
+  transform: translate(-0.23rem, -50%);
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-details) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(9rem, 1.15fr);
+  gap: 0.55rem;
+  align-items: center;
   min-width: 0;
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-title) {
-  margin-bottom: 0.35rem;
+  min-width: 0;
+  overflow: hidden;
   color: var(--ink-strong);
+  font-size: 0.9em;
   font-weight: 700;
   line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-timeline) {
   display: grid;
-  grid-template-columns: 2.6rem minmax(3rem, 1fr) 2.6rem;
-  gap: 0.45rem;
+  grid-template-columns: 2.15rem minmax(3rem, 1fr) 2.15rem;
+  gap: 0.3rem;
   align-items: center;
   color: var(--ink-muted);
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -442,7 +450,7 @@ onBeforeUnmount(clearAudioPlayers)
   --audio-progress: 0%;
 
   width: 100%;
-  height: 0.3rem;
+  height: 0.22rem;
   margin: 0;
   appearance: none;
   border-radius: 2px;
@@ -455,8 +463,8 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-progress::-webkit-slider-thumb) {
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.64rem;
+  height: 0.64rem;
   appearance: none;
   border: 2px solid var(--ink-link);
   border-radius: 50%;
@@ -464,8 +472,8 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-progress::-moz-range-thumb) {
-  width: 0.62rem;
-  height: 0.62rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border: 2px solid var(--ink-link);
   border-radius: 50%;
   background: var(--receipt-color);
@@ -478,14 +486,19 @@ onBeforeUnmount(clearAudioPlayers)
 
 @media (max-width: 480px) {
   .nanqiang-markdown :deep(.nanqiang-audio-player) {
-    grid-template-columns: 2.4rem minmax(0, 1fr);
-    gap: 0.6rem;
-    padding: 0.6rem;
+    grid-template-columns: 1.9rem minmax(0, 1fr);
+    gap: 0.45rem;
+    padding: 0.35rem 0.4rem;
   }
 
   .nanqiang-markdown :deep(.nanqiang-audio-toggle) {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .nanqiang-markdown :deep(.nanqiang-audio-details) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
   }
 }
 </style>

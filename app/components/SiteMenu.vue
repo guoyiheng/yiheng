@@ -6,7 +6,6 @@ const menuItems = [
   { label: '南腔北调', to: '/nanqiang-beidiao' },
   { label: '彷徨', to: '/' },
   { label: '浮躁', to: '/fuzao' },
-  { label: '作品', to: '/works' },
   { label: '关于', to: '/about' }
 ]
 
