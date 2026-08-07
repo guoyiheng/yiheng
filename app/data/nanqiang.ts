@@ -68,6 +68,14 @@ const markdownLoaders = canonicalizeLoaderMap(rawMarkdownLoaders)
 const csvLoaders = canonicalizeLoaderMap(rawCsvLoaders)
 const assetLoaders = canonicalizeLoaderMap(rawAssetLoaders)
 
+const safeDecode = (value: string) => {
+  try {
+    return decodeURIComponent(value)
+  } catch {
+    return value
+  }
+}
+
 const stripMarkdown = (value: string) => value
   .replace(/\*\*|__|\*|_|`/g, '')
   .trim()
@@ -137,14 +145,6 @@ export const nanqiangIndex: NanqiangIndexItem[] = indexLinks
   })
   .filter((item) => item.id && documentSources.has(item.id))
   .reverse()
-
-const safeDecode = (value: string) => {
-  try {
-    return decodeURIComponent(value)
-  } catch {
-    return value
-  }
-}
 
 const normalizeSourcePath = (value: string) => {
   const result: string[] = []
