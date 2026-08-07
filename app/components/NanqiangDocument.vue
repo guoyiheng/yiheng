@@ -155,11 +155,13 @@ onBeforeUnmount(clearAudioPlayers)
 
 <style scoped>
 .nanqiang-document {
+  --doc-line-height: 1.72;
+
   position: relative;
   color: var(--ink);
   font-family: var(--site-font);
   font-size: 1.02em;
-  line-height: 1.72;
+  line-height: var(--doc-line-height);
   overflow-wrap: anywhere;
 }
 
@@ -271,7 +273,7 @@ onBeforeUnmount(clearAudioPlayers)
 }
 
 .nanqiang-markdown :deep(p) {
-  margin-bottom: 0.75em;
+  margin-bottom: calc(var(--doc-line-height) * 1em);
 }
 
 .nanqiang-markdown :deep(ul),
@@ -554,7 +556,7 @@ onBeforeUnmount(clearAudioPlayers)
 
 @media (max-width: 480px), (orientation: landscape) and (max-height: 600px) {
   .nanqiang-document {
-    line-height: 1.76;
+    --doc-line-height: 1.76;
   }
 
   .nanqiang-back {
