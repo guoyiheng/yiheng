@@ -11,23 +11,27 @@ const printingText = 'Printing...'.split('')
 <template>
   <main class="receipt-page">
     <div class="wrapper">
-      <div class="printer" />
+      <div class="printer-shell">
+        <div class="printer" />
 
-      <div class="printer-display" :class="{ 'is-error': props.missing }" aria-live="polite">
-        <span class="printer-message">{{ props.missing ? 'Paper empty' : 'Click to print' }}</span>
-        <div v-if="!props.missing" class="letter-wrapper" aria-hidden="true">
-          <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
+        <div class="printer-display" :class="{ 'is-error': props.missing }" aria-live="polite">
+          <span class="printer-message">{{ props.missing ? 'Paper empty' : 'Click to print' }}</span>
+          <div v-if="!props.missing" class="letter-wrapper" aria-hidden="true">
+            <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
+          </div>
         </div>
-      </div>
 
-      <button
-        class="print-button"
-        type="button"
-        :disabled="props.missing"
-        :aria-label="props.missing ? '打印机缺纸' : '打印建设中票据'"
-      >
-        🖨
-      </button>
+        <SiteMenu />
+
+        <button
+          class="print-button"
+          type="button"
+          :disabled="props.missing"
+          :aria-label="props.missing ? '打印机缺纸' : '打印建设中票据'"
+        >
+          🖨
+        </button>
+      </div>
 
       <div v-if="!props.missing" class="receipt-wrapper">
         <article class="receipt" :aria-labelledby="`receipt-title-${props.code}`">
