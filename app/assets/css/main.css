@@ -327,11 +327,20 @@ a:focus-visible {
 .wrapper.is-printing .receipt-wrapper {
   z-index: 1;
   clip-path: inset(200px -100px -100px -100px);
-  opacity: 0;
+  opacity: 1 !important;
   transform: translate(-50%, -200px);
   animation:
     paper-feed 1.25s forwards cubic-bezier(0.16, 1, 0.3, 1),
     paper-release 0.35s 1.28s forwards cubic-bezier(0.22, 1, 0.36, 1);
+  animation-play-state: paused !important;
+}
+
+.wrapper,
+.printer-shell,
+.printer,
+.receipt-wrapper,
+.receipt {
+  outline: 2px solid #ff0000 !important;
 }
 
 .wrapper.is-printing .letter {
