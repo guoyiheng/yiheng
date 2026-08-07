@@ -4,11 +4,13 @@ import { nanqiangIndex } from '~/data/nanqiang'
 
 <template>
   <ol class="nanqiang-archive">
-    <li v-for="(item, index) in nanqiangIndex" :key="item.id">
+    <li v-for="item in nanqiangIndex" :key="item.id">
       <NuxtLink class="nanqiang-index-link" :to="`/nanqiang-beidiao/${item.id}`">
-        <span class="nanqiang-index-number">{{ String(index + 1).padStart(2, '0') }}</span>
         <strong v-if="item.featured" class="nanqiang-index-title">{{ item.title }}</strong>
         <span v-else class="nanqiang-index-title">{{ item.title }}</span>
+        <time v-if="item.date" class="nanqiang-index-date" :datetime="item.date">
+          {{ item.date }}
+        </time>
         <span class="nanqiang-index-arrow" aria-hidden="true">→</span>
       </NuxtLink>
     </li>
@@ -26,7 +28,7 @@ import { nanqiangIndex } from '~/data/nanqiang'
 .nanqiang-index-link {
   display: grid;
   min-height: 2.5rem;
-  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 0.65rem;
   align-items: center;
   padding: 0.45rem 0.2rem;
@@ -39,10 +41,11 @@ import { nanqiangIndex } from '~/data/nanqiang'
   background: var(--paper-fill);
 }
 
-.nanqiang-index-number {
+.nanqiang-index-date {
   color: var(--ink-muted);
-  font-size: 0.78em;
+  font-size: 0.72em;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .nanqiang-index-title {
@@ -58,9 +61,19 @@ import { nanqiangIndex } from '~/data/nanqiang'
 @media (max-width: 600px) {
   .nanqiang-index-link {
     min-height: 2.25rem;
-    grid-template-columns: 1.6rem minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.4rem;
     padding: 0.35rem 0.1rem;
+  }
+
+  .nanqiang-index-date {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .nanqiang-index-arrow {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 </style>

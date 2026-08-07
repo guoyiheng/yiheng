@@ -13,6 +13,7 @@ export interface NanqiangIndexItem {
   id: string
   title: string
   featured: boolean
+  date?: string
 }
 
 type ResourceToken = (Tokens.Link | Tokens.Image) & {
@@ -61,6 +62,20 @@ const titleFromSource = (source: string, sourcePath: string) => {
   return stripMarkdown(sourcePath.split('/').at(-1)?.replace(documentIdPattern, '') ?? '无标题')
 }
 
+const dateFromSource = (source: string) => {
+  const leadingLines = source.split(/\r?\n/).slice(1, 8)
+
+  for (const line of leadingLines) {
+    const match = stripMarkdown(line).match(
+      /^(20\d{2})[-/.年](\d{1,2})[-/.月](\d{1,2})日?$/
+    )
+    if (!match) continue
+
+    const [, year, month = '', day = ''] = match
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  }
+}
+
 const documents = new Map<string, NanqiangDocument>()
 
 for (const [sourcePath, content] of Object.entries(markdownSources)) {
@@ -100,13 +115,16 @@ export const nanqiangIndex: NanqiangIndexItem[] = [...rootSource.matchAll(/\[([^
     const rawTitle = match[1] ?? ''
     const rawHref = match[2] ?? ''
     const id = rawHref.match(/([0-9a-f]{32})\.md$/i)?.[1] ?? ''
+    const document = documents.get(id)
     return {
       id,
       title: stripMarkdown(rawTitle),
-      featured: /\*\*/.test(rawTitle)
+      featured: /\*\*/.test(rawTitle),
+      date: document?.kind === 'markdown' ? dateFromSource(document.content) : undefined
     }
   })
   .filter((item) => item.id && documents.has(item.id))
+  .reverse()
 
 const safeDecode = (value: string) => {
   try {
