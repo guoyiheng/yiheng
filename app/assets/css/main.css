@@ -470,12 +470,8 @@ a:focus-visible {
   }
 
   .wrapper {
-    --paper-width: min(
-      calc(100vw - 1.5rem - env(safe-area-inset-left) - env(safe-area-inset-right)),
-      max(
-        220px,
-        calc((100svh - 11.75rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297)
-      )
+    --paper-width: calc(
+      100vw - 1.5rem - env(safe-area-inset-left) - env(safe-area-inset-right)
     );
 
     width: min(
@@ -486,40 +482,70 @@ a:focus-visible {
 
   .wrapper,
   .printer {
-    height: 108px;
+    height: 126px;
   }
 
   .printer-display {
-    --display-content-width: 118px;
+    --display-content-width: 82px;
 
-    top: -10px;
+    top: -14px;
     left: 12px;
-    width: 140px;
+    width: 104px;
+    height: 92px;
+    align-items: center;
+    padding: 8px;
+    font-size: 1rem;
   }
 
   .site-menu {
-    top: 34px;
+    top: -14px;
     right: 12px;
-    left: 12px;
-    height: 48px;
+    left: 124px;
+    height: 92px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(2, minmax(44px, 1fr));
+    border-radius: 6px;
+    box-shadow: 0 5px 10px #0002, 0 1px 0 #fff8 inset;
   }
 
   .receipt-wrapper {
-    --paper-rest-offset: 8px;
+    --paper-rest-offset: 6px;
 
-    top: 108px;
+    top: 126px;
   }
 
   .receipt {
     --receipt-padding-inline: 12px;
 
+    height: max(
+      280px,
+      calc(
+        100svh
+        - 2.5rem
+        - env(safe-area-inset-top)
+        - 126px
+        - var(--paper-rest-offset)
+        - max(0.5rem, env(safe-area-inset-bottom))
+      )
+    );
+    aspect-ratio: auto;
     padding: 14px 12px 16px;
     font-size: 1rem;
   }
 
   .site-menu-link {
     min-height: 44px;
-    font-size: 0.75rem;
+    border-right: 0;
+    border-bottom: 0;
+    font-size: 1rem;
+  }
+
+  .site-menu-link:nth-child(odd) {
+    border-right: 1px solid #0002;
+  }
+
+  .site-menu-link:nth-child(-n + 2) {
+    border-bottom: 1px solid #0002;
   }
 
   .site-copyright {
