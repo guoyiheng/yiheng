@@ -7,10 +7,55 @@ const props = defineProps<{
 
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
+const isPrinting = ref(!props.missing)
+let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
+
+const titleLength = computed(() => [...props.title].reduce((length, character) => {
+  return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
+}, 0))
+
+const displayAnnouncement = computed(() => {
+  if (props.missing) return 'Paper empty'
+  return isPrinting.value ? 'Printing...' : props.title
+})
+
+const clearPrintFallback = () => clearTimeout(printFallbackTimer)
+
+const schedulePrintFallback = () => {
+  clearPrintFallback()
+  if (props.missing) return
+
+  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3000
+  printFallbackTimer = setTimeout(() => {
+    isPrinting.value = false
+  }, duration)
+}
+
+const beginPrinting = () => {
+  isPrinting.value = !props.missing
+  if (import.meta.client) schedulePrintFallback()
+}
+
+const finishPrinting = (event: AnimationEvent) => {
+  if (event.target === event.currentTarget && event.animationName === 'display') {
+    isPrinting.value = false
+    clearPrintFallback()
+  }
+}
 
 const restartPrinting = () => {
   printSequence.value += 1
+  beginPrinting()
 }
+
+onMounted(schedulePrintFallback)
+
+watch([() => props.title, () => props.missing], () => {
+  printSequence.value += 1
+  beginPrinting()
+})
+
+onBeforeUnmount(clearPrintFallback)
 </script>
 
 <template>
@@ -24,17 +69,29 @@ const restartPrinting = () => {
           class="printer-display"
           :class="{ 'is-error': props.missing }"
           aria-live="polite"
+          aria-atomic="true"
         >
-          <span class="printer-message">{{ props.missing ? 'Paper empty' : 'Select page' }}</span>
-          <div v-if="!props.missing" class="letter-wrapper" aria-hidden="true">
+          <span class="sr-only">{{ displayAnnouncement }}</span>
+          <span v-if="props.missing" class="printer-message" aria-hidden="true">Paper empty</span>
+          <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
             <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
+          </div>
+          <div v-else class="printer-result-viewport" aria-hidden="true">
+            <span class="printer-result" :class="{ 'is-scrolling': titleLength > 10 }">
+              {{ props.title }}
+            </span>
           </div>
         </div>
 
         <SiteMenu @print="restartPrinting" />
       </div>
 
-      <div v-if="!props.missing" :key="`receipt-${printSequence}`" class="receipt-wrapper">
+      <div
+        v-if="!props.missing"
+        :key="`receipt-${printSequence}`"
+        class="receipt-wrapper"
+        @animationend="finishPrinting"
+      >
         <article class="receipt" :aria-labelledby="`receipt-title-${props.code}`">
           <header class="receipt-header">
             <span>

@@ -47,6 +47,17 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .site-shell {
   position: relative;
   min-height: 100svh;
@@ -124,6 +135,8 @@ a:focus-visible {
 }
 
 .printer-display {
+  --display-content-width: 138px;
+
   position: absolute;
   top: -10px;
   left: 30px;
@@ -148,7 +161,6 @@ a:focus-visible {
 
 .printer-message {
   white-space: nowrap;
-  transition: opacity 0.2s ease;
 }
 
 .printer-display.is-error {
@@ -268,7 +280,6 @@ a:focus-visible {
 }
 
 .letter-wrapper {
-  position: inherit;
   display: flex;
 }
 
@@ -280,10 +291,6 @@ a:focus-visible {
 .wrapper.is-printing .receipt-wrapper {
   animation: print 1.2s 1 forwards ease-in, display 0.4s 1 forwards cubic-bezier(0, 0.63, 0.96, 1.1);
   animation-delay: 0s, 1.35s;
-}
-
-.wrapper.is-printing .printer-message {
-  opacity: 0;
 }
 
 .wrapper.is-printing .letter {
@@ -323,6 +330,33 @@ a:focus-visible {
 
 @keyframes show-text {
   10%, 100% { opacity: 1; }
+}
+
+.printer-result-viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.printer-result {
+  display: inline-block;
+  opacity: 0;
+  white-space: nowrap;
+  animation: show-result 0.24s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.printer-result.is-scrolling {
+  animation:
+    show-result 0.24s forwards cubic-bezier(0.25, 1, 0.5, 1),
+    scroll-printer-title 6s 0.8s infinite alternate linear;
+}
+
+@keyframes show-result {
+  to { opacity: 1; }
+}
+
+@keyframes scroll-printer-title {
+  0%, 15% { transform: translateX(0); }
+  85%, 100% { transform: translateX(calc(var(--display-content-width) - 100%)); }
 }
 
 .site-menu {
@@ -376,6 +410,8 @@ a:focus-visible {
   }
 
   .printer-display {
+    --display-content-width: 118px;
+
     top: -10px;
     left: 12px;
     width: 140px;
@@ -411,7 +447,17 @@ a:focus-visible {
   *,
   *::before,
   *::after {
+    animation-delay: 0.01ms !important;
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .printer-result.is-scrolling {
+    font-size: 8px;
+    line-height: 10px;
+    opacity: 1;
+    white-space: normal;
+    animation: none !important;
   }
 }
