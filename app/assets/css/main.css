@@ -106,19 +106,6 @@ a:focus-visible {
   z-index: 2;
 }
 
-.printer-shell::after {
-  position: absolute;
-  bottom: 7px;
-  left: 50%;
-  z-index: 1;
-  width: min(520px, calc(100% - 72px));
-  height: 8px;
-  border-radius: 2px;
-  background: #77776b;
-  box-shadow: 0 2px 2px #fff4, 0 2px 5px #0007 inset;
-  content: "";
-  transform: translateX(-50%);
-}
 
 .printer {
   width: 100%;
