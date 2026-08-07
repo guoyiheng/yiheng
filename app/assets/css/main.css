@@ -320,6 +320,7 @@ a:focus-visible {
 }
 
 .wrapper.is-printing .receipt-wrapper {
+  z-index: 1;
   clip-path: inset(100% -100px -100px -100px);
   transform: translate(-50%, -100%);
   animation:
@@ -353,8 +354,17 @@ a:focus-visible {
 }
 
 @keyframes display {
-  0% { transform: translate(-50%, 10%); }
+  0% {
+    z-index: 1;
+    transform: translate(-50%, 10%);
+  }
+
   30% { transform: translate(-50%, 22%) rotate3d(1, 0, 1, -5deg); }
+
+  69.99% {
+    z-index: 1;
+  }
+
   70% {
     z-index: 5;
   }
