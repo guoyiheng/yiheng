@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import diamondSutra from '~/assets/text/diamond-sutra.txt?raw'
+import heartSutra from '~/assets/text/heart-sutra.txt?raw'
 
-const backdropText = diamondSutra.replace(/\s+/g, '')
+const sutraText = heartSutra.replace(/\s+/g, '')
+const backdropText = Array.from({ length: 16 }, () => sutraText).join('')
 </script>
 
 <template>
@@ -17,7 +18,7 @@ const backdropText = diamondSutra.replace(/\s+/g, '')
   z-index: 0;
   overflow: hidden;
   color: #aaa397;
-  font-family: "LXGW WenKai", "STKaiti", "KaiTi", serif;
+  font-family: var(--site-font);
   font-size: 0.66rem;
   line-height: 1.82;
   letter-spacing: 0;
