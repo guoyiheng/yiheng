@@ -123,30 +123,28 @@ onBeforeUnmount(() => {
 <template>
   <main class="receipt-page">
     <div class="wrapper" :class="{ 'is-printing': isPrinting }">
-      <div class="printer-shell">
-        <div class="printer" />
+      <div class="printer" />
 
-        <div
-          :key="`display-${printSequence}`"
-          class="printer-display"
-          :class="{ 'is-error': props.missing }"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <span class="sr-only">{{ displayAnnouncement }}</span>
-          <span v-if="props.missing" class="printer-message" aria-hidden="true">Paper empty</span>
-          <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
-            <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
-          </div>
-          <div v-else class="printer-result-viewport" aria-hidden="true">
-            <span class="printer-result" :class="{ 'is-scrolling': titleLength > 10 }">
-              {{ props.title }}
-            </span>
-          </div>
+      <div
+        :key="`display-${printSequence}`"
+        class="printer-display"
+        :class="{ 'is-error': props.missing }"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <span class="sr-only">{{ displayAnnouncement }}</span>
+        <span v-if="props.missing" class="printer-message" aria-hidden="true">Paper empty</span>
+        <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
+          <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
-
-        <SiteMenu />
+        <div v-else class="printer-result-viewport" aria-hidden="true">
+          <span class="printer-result" :class="{ 'is-scrolling': titleLength > 10 }">
+            {{ props.title }}
+          </span>
+        </div>
       </div>
+
+      <SiteMenu />
 
       <div
         v-if="!props.missing"
