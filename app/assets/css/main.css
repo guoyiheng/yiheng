@@ -9,7 +9,7 @@
   --ink-link: #4d5945;
   --ink-code: #74443c;
   --ink-star: #7e5d22;
-  --ink-bold: #735b80;
+  --ink-bold: oklch(35% 0.035 165);
   --paper-rule: #aaa892;
   --paper-fill: #d8d6c3;
   --menu-ink: #34352f;
