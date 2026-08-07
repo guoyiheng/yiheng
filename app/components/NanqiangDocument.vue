@@ -5,6 +5,8 @@ import { parseNanqiangCsv, renderNanqiangMarkdown } from '~/data/nanqiang'
 const props = defineProps<{
   document: NanqiangDocument
 }>()
+const markdownRoot = ref<HTMLDivElement | null>(null)
+let audioCleanups: Array<() => void> = []
 
 const renderedMarkdown = computed(() => {
   return props.document.kind === 'markdown'
@@ -17,6 +19,104 @@ const csvRows = computed(() => {
     ? parseNanqiangCsv(props.document)
     : []
 })
+
+const formatAudioTime = (seconds: number) => {
+  if (!Number.isFinite(seconds)) return '--:--'
+
+  const totalSeconds = Math.max(0, Math.floor(seconds))
+  const minutes = Math.floor(totalSeconds / 60)
+  const remainder = String(totalSeconds % 60).padStart(2, '0')
+  return `${minutes}:${remainder}`
+}
+
+const clearAudioPlayers = () => {
+  audioCleanups.forEach(cleanup => cleanup())
+  audioCleanups = []
+}
+
+const setupAudioPlayers = () => {
+  clearAudioPlayers()
+
+  const root = markdownRoot.value
+  if (!root) return
+
+  root.querySelectorAll<HTMLElement>('[data-audio-player]').forEach((player) => {
+    const audio = player.querySelector('audio')
+    const toggle = player.querySelector<HTMLButtonElement>('[data-audio-toggle]')
+    const progress = player.querySelector<HTMLInputElement>('[data-audio-progress]')
+    const current = player.querySelector<HTMLElement>('[data-audio-current]')
+    const duration = player.querySelector<HTMLElement>('[data-audio-duration]')
+    if (!audio || !toggle || !progress || !current || !duration) return
+
+    const updatePlaybackState = () => {
+      const isPlaying = !audio.paused
+      player.classList.toggle('is-playing', isPlaying)
+      toggle.ariaLabel = isPlaying ? '暂停' : '播放'
+      toggle.title = isPlaying ? '暂停' : '播放'
+    }
+
+    const updateTimeline = () => {
+      const total = Number.isFinite(audio.duration) ? audio.duration : 0
+      const elapsed = Math.min(audio.currentTime, total || audio.currentTime)
+      const percentage = total > 0 ? `${(elapsed / total) * 100}%` : '0%'
+
+      progress.max = String(total)
+      progress.value = String(elapsed)
+      progress.style.setProperty('--audio-progress', percentage)
+      current.textContent = formatAudioTime(elapsed)
+      duration.textContent = total > 0 ? formatAudioTime(total) : '--:--'
+    }
+
+    const togglePlayback = () => {
+      if (audio.paused) {
+        root.querySelectorAll('audio').forEach((otherAudio) => {
+          if (otherAudio !== audio) otherAudio.pause()
+        })
+        void audio.play().catch(() => undefined)
+      } else {
+        audio.pause()
+      }
+    }
+
+    const seek = () => {
+      audio.currentTime = Number(progress.value)
+      updateTimeline()
+    }
+
+    toggle.addEventListener('click', togglePlayback)
+    progress.addEventListener('input', seek)
+    audio.addEventListener('play', updatePlaybackState)
+    audio.addEventListener('pause', updatePlaybackState)
+    audio.addEventListener('ended', updatePlaybackState)
+    audio.addEventListener('loadedmetadata', updateTimeline)
+    audio.addEventListener('durationchange', updateTimeline)
+    audio.addEventListener('timeupdate', updateTimeline)
+
+    audioCleanups.push(() => {
+      audio.pause()
+      toggle.removeEventListener('click', togglePlayback)
+      progress.removeEventListener('input', seek)
+      audio.removeEventListener('play', updatePlaybackState)
+      audio.removeEventListener('pause', updatePlaybackState)
+      audio.removeEventListener('ended', updatePlaybackState)
+      audio.removeEventListener('loadedmetadata', updateTimeline)
+      audio.removeEventListener('durationchange', updateTimeline)
+      audio.removeEventListener('timeupdate', updateTimeline)
+    })
+
+    updatePlaybackState()
+    updateTimeline()
+  })
+}
+
+const refreshAudioPlayers = async () => {
+  await nextTick()
+  setupAudioPlayers()
+}
+
+onMounted(refreshAudioPlayers)
+watch(renderedMarkdown, refreshAudioPlayers, { flush: 'post' })
+onBeforeUnmount(clearAudioPlayers)
 </script>
 
 <template>
@@ -25,6 +125,7 @@ const csvRows = computed(() => {
 
     <div
       v-if="props.document.kind === 'markdown'"
+      ref="markdownRoot"
       class="nanqiang-markdown"
       v-html="renderedMarkdown"
     />
@@ -48,20 +149,22 @@ const csvRows = computed(() => {
 
 <style scoped>
 .nanqiang-document {
-  color: #37352f;
+  color: var(--ink);
+  font-family: var(--site-font);
   font-size: 1.02em;
   line-height: 1.72;
+  overflow-wrap: anywhere;
 }
 
 .nanqiang-back {
   display: inline-block;
   margin-bottom: 0.75rem;
-  color: #78766a;
+  color: var(--ink-muted);
   text-decoration: none;
 }
 
 .nanqiang-back:hover {
-  color: #37352f;
+  color: var(--ink-strong);
   text-decoration: underline;
   text-underline-offset: 0.18em;
 }
@@ -69,9 +172,12 @@ const csvRows = computed(() => {
 .nanqiang-markdown :deep(h1),
 .nanqiang-markdown :deep(h2),
 .nanqiang-markdown :deep(h3),
-.nanqiang-markdown :deep(h4) {
+.nanqiang-markdown :deep(h4),
+.nanqiang-markdown :deep(h5),
+.nanqiang-markdown :deep(h6) {
   margin: 1.25em 0 0.5em;
-  color: #2f302b;
+  color: var(--ink-strong);
+  font-weight: 700;
   line-height: 1.3;
 }
 
@@ -86,6 +192,12 @@ const csvRows = computed(() => {
 
 .nanqiang-markdown :deep(h3) {
   font-size: 1.12em;
+}
+
+.nanqiang-markdown :deep(h4),
+.nanqiang-markdown :deep(h5),
+.nanqiang-markdown :deep(h6) {
+  font-size: 1em;
 }
 
 .nanqiang-markdown :deep(p),
@@ -108,27 +220,43 @@ const csvRows = computed(() => {
 }
 
 .nanqiang-markdown :deep(a) {
-  color: #0b6e99;
+  color: var(--ink-link);
   overflow-wrap: anywhere;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.18em;
 }
 
-.nanqiang-markdown :deep(strong) {
-  color: #2f302b;
-  font-weight: 600;
+.nanqiang-markdown :deep(strong),
+.nanqiang-markdown :deep(b) {
+  color: var(--ink-strong);
+  font-weight: 700;
+}
+
+.nanqiang-markdown :deep(em) {
+  color: var(--ink-muted);
+}
+
+.nanqiang-markdown :deep(del) {
+  color: var(--ink-muted);
+  text-decoration-color: color-mix(in srgb, var(--ink-muted) 72%, transparent);
+}
+
+.nanqiang-markdown :deep(mark) {
+  padding: 0 0.15em;
+  background: color-mix(in srgb, var(--printer-color-2) 54%, transparent);
+  color: var(--ink-strong);
 }
 
 .nanqiang-markdown :deep(blockquote) {
   padding-left: 0.9em;
-  border-left: 3px solid #9b9a97;
-  color: #5d5c56;
+  border-left: 2px solid var(--paper-rule);
+  color: var(--ink-muted);
 }
 
 .nanqiang-markdown :deep(code) {
   border-radius: 2px;
-  background: #d5d2bc;
-  color: #b23b3b;
+  background: color-mix(in srgb, var(--paper-fill) 82%, transparent);
+  color: var(--ink-code);
   font-family: var(--site-font);
   font-size: 0.9em;
 }
@@ -141,15 +269,15 @@ const csvRows = computed(() => {
   max-width: 100%;
   padding: 0.8rem;
   overflow: auto;
-  border: 1px solid #b9b69f;
+  border: 1px solid var(--paper-rule);
   border-radius: 2px;
-  background: #d8d6c3;
+  background: var(--paper-fill);
 }
 
 .nanqiang-markdown :deep(pre code) {
   padding: 0;
   background: transparent;
-  color: #35362f;
+  color: var(--ink-strong);
   white-space: pre;
 }
 
@@ -161,10 +289,20 @@ const csvRows = computed(() => {
   margin: 0 auto 1em;
 }
 
-.nanqiang-markdown :deep(audio) {
-  display: block;
-  width: 100%;
-  margin: 0 0 1em;
+.nanqiang-markdown :deep(input[type="checkbox"]) {
+  margin: 0 0.35em 0 0;
+  accent-color: var(--ink-link);
+}
+
+.nanqiang-markdown :deep(kbd) {
+  padding: 0.08em 0.32em;
+  border: 1px solid var(--paper-rule);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  background: var(--paper-fill);
+  color: var(--ink-strong);
+  font: inherit;
+  font-size: 0.86em;
 }
 
 .nanqiang-markdown :deep(table),
@@ -184,30 +322,170 @@ const csvRows = computed(() => {
 .nanqiang-csv td {
   min-width: 6rem;
   padding: 0.35rem 0.45rem;
-  border: 1px solid #b9b69f;
+  border: 1px solid var(--paper-rule);
   vertical-align: top;
 }
 
 .nanqiang-markdown :deep(th),
 .nanqiang-csv th {
-  background: #d8d6c3;
-  color: #2f302b;
+  background: var(--paper-fill);
+  color: var(--ink-strong);
+  font-weight: 700;
 }
 
 .nanqiang-markdown :deep(aside) {
   padding: 0.75rem 0.9rem;
-  border: 1px solid #c4c1ac;
-  background: #dddbc8;
+  border: 1px solid var(--paper-rule);
+  background: color-mix(in srgb, var(--paper-fill) 68%, transparent);
 }
 
 .nanqiang-markdown :deep(hr) {
   margin: 1.25rem 0;
   border: 0;
-  border-top: 1px solid #b9b69f;
+  border-top: 1px solid var(--paper-rule);
 }
 
 .nanqiang-csv-wrap {
   max-width: 100%;
   overflow-x: auto;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-player) {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  margin: 0.4rem 0 1.25rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--paper-fill) 68%, var(--receipt-color));
+  box-shadow: 0 1px 0 #fff5 inset, 0 -1px 0 #0000000a inset;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-player audio) {
+  display: none;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-toggle) {
+  position: relative;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border: 1px solid #999782;
+  border-radius: 50%;
+  background: var(--printer-color);
+  box-shadow: 0 2px 0 #9d9b87, 0 1px 0 #fff8 inset;
+  color: var(--ink-strong);
+  cursor: pointer;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-toggle:hover) {
+  background: var(--printer-color-2);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-toggle:active) {
+  box-shadow: 0 1px 0 #9d9b87, 0 1px 0 #fff6 inset;
+  transform: translateY(1px);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-toggle::before) {
+  position: absolute;
+  top: 50%;
+  left: 52%;
+  width: 0;
+  height: 0;
+  border-top: 0.38rem solid transparent;
+  border-bottom: 0.38rem solid transparent;
+  border-left: 0.58rem solid currentColor;
+  content: "";
+  transform: translate(-42%, -50%);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-player.is-playing .nanqiang-audio-toggle::before) {
+  left: 50%;
+  width: 0.22rem;
+  height: 0.75rem;
+  border: 0;
+  background: currentColor;
+  box-shadow: 0.38rem 0 currentColor;
+  transform: translate(-0.3rem, -50%);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-details) {
+  min-width: 0;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-title) {
+  margin-bottom: 0.35rem;
+  color: var(--ink-strong);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-timeline) {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(3rem, 1fr) 2.6rem;
+  gap: 0.45rem;
+  align-items: center;
+  color: var(--ink-muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-timeline span:last-child) {
+  text-align: right;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-progress) {
+  --audio-progress: 0%;
+
+  width: 100%;
+  height: 0.3rem;
+  margin: 0;
+  appearance: none;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    var(--ink-link) 0 var(--audio-progress),
+    var(--paper-rule) var(--audio-progress) 100%
+  );
+  cursor: pointer;
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-progress::-webkit-slider-thumb) {
+  width: 0.8rem;
+  height: 0.8rem;
+  appearance: none;
+  border: 2px solid var(--ink-link);
+  border-radius: 50%;
+  background: var(--receipt-color);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-progress::-moz-range-thumb) {
+  width: 0.62rem;
+  height: 0.62rem;
+  border: 2px solid var(--ink-link);
+  border-radius: 50%;
+  background: var(--receipt-color);
+}
+
+.nanqiang-markdown :deep(.nanqiang-audio-progress:focus-visible) {
+  outline: 2px solid var(--ink-link);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .nanqiang-markdown :deep(.nanqiang-audio-player) {
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    gap: 0.6rem;
+    padding: 0.6rem;
+  }
+
+  .nanqiang-markdown :deep(.nanqiang-audio-toggle) {
+    width: 2.2rem;
+    height: 2.2rem;
+  }
 }
 </style>

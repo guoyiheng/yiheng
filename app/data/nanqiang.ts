@@ -158,13 +158,36 @@ const createRenderer = () => {
     return escapeHtml(text)
   }
 
+  renderer.paragraph = function (token) {
+    const onlyToken = token.tokens.length === 1
+      ? token.tokens[0] as ResourceToken
+      : undefined
+    const content = this.parser.parseInline(token.tokens)
+
+    return onlyToken?.resourceType === 'audio'
+      ? `${content}\n`
+      : `<p>${content}</p>\n`
+  }
+
   renderer.link = function (token) {
     const resourceToken = token as ResourceToken
     const label = this.parser.parseInline(token.tokens)
     const href = escapeAttribute(token.href)
 
     if (resourceToken.resourceType === 'audio') {
-      return `<audio controls preload="none" src="${href}">${label}</audio>`
+      const audioLabel = escapeAttribute(token.text || '音频')
+      return `<figure class="nanqiang-audio-player" data-audio-player>
+        <audio preload="metadata" src="${href}" aria-label="${audioLabel}"></audio>
+        <button class="nanqiang-audio-toggle" type="button" data-audio-toggle aria-label="播放" title="播放"></button>
+        <figcaption class="nanqiang-audio-details">
+          <div class="nanqiang-audio-title">${label}</div>
+          <div class="nanqiang-audio-timeline">
+            <span data-audio-current>0:00</span>
+            <input class="nanqiang-audio-progress" data-audio-progress type="range" min="0" max="1" value="0" step="0.1" aria-label="音频进度">
+            <span data-audio-duration>--:--</span>
+          </div>
+        </figcaption>
+      </figure>`
     }
 
     const title = token.title ? ` title="${escapeAttribute(token.title)}"` : ''

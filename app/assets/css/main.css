@@ -3,10 +3,16 @@
   --printer-color: #dcdac4;
   --printer-color-2: #c0beaa;
   --receipt-color: #e5e3cf;
-  --ink: #444;
+  --ink: #3f4038;
+  --ink-strong: #252720;
+  --ink-muted: #737160;
+  --ink-link: #4d5945;
+  --ink-code: #74443c;
+  --paper-rule: #aaa892;
+  --paper-fill: #d8d6c3;
   --menu-ink: #34352f;
   --site-font: "LXGW WenKai", "STKaiti", "KaiTi", serif;
-  font-synthesis: none;
+  font-synthesis: weight;
   text-rendering: optimizeLegibility;
 }
 
@@ -195,7 +201,7 @@ a:focus-visible {
   border-radius: 1px 1px 3px 3px;
   background-color: var(--receipt-color);
   box-shadow: 0 12px 12px 0 #0001, 0 24px 24px 0 #0001, 0 36px 36px 0 #0001;
-  color: #444;
+  color: var(--ink);
   font-family: var(--site-font);
   font-size: 0.82em;
   font-weight: 400;

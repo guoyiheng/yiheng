@@ -30,17 +30,17 @@ import { nanqiangIndex } from '~/data/nanqiang'
   gap: 0.65rem;
   align-items: center;
   padding: 0.45rem 0.2rem;
-  border-bottom: 1px dashed #aaa892;
-  color: #37352f;
+  border-bottom: 1px dashed var(--paper-rule);
+  color: var(--ink);
   text-decoration: none;
 }
 
 .nanqiang-index-link:hover {
-  background: #d8d6c3;
+  background: var(--paper-fill);
 }
 
 .nanqiang-index-number {
-  color: #78766a;
+  color: var(--ink-muted);
   font-size: 0.78em;
   font-variant-numeric: tabular-nums;
 }
@@ -52,7 +52,7 @@ import { nanqiangIndex } from '~/data/nanqiang'
 }
 
 .nanqiang-index-arrow {
-  color: #78766a;
+  color: var(--ink-muted);
 }
 
 @media (max-width: 600px) {
