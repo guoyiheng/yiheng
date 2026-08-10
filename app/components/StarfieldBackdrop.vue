@@ -87,7 +87,7 @@
   z-index: 1;
   background:
     linear-gradient(180deg, #0d1112d9 0%, #0d111255 36%, #0d111244 58%, #0d1112d9 100%),
-    url('/images/milky-way.jpg') center 34% / cover no-repeat;
+    url('/images/galactic.jpg') center 38% / cover no-repeat;
   filter: saturate(0.72) contrast(0.9) blur(1px);
   mix-blend-mode: screen;
   opacity: 0.34;
