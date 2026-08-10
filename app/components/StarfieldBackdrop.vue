@@ -13,8 +13,9 @@
   z-index: 0;
   overflow: hidden;
   background:
-    linear-gradient(155deg, #0b0e10a6 0%, #11131352 44%, #151310a8 100%),
+    linear-gradient(155deg, #2a2118 0%, #1c1813 46%, #100f0d 100%),
     url('/images/galactic.jpg') center / cover no-repeat;
+  background-blend-mode: color, normal;
   pointer-events: none;
 }
 
@@ -37,18 +38,18 @@
   width: clamp(160px, calc((100vw - 680px) / 2 - 1.25rem), 360px);
   height: auto;
   opacity: 0.62;
-  filter: drop-shadow(0 0 0.5rem #dfc7821f);
+  filter: drop-shadow(0 0 0.5rem #d977571f);
   animation: constellation-bloom 4.6s ease-in-out infinite;
 }
 
 .starfield-layer-far {
   background-image:
-    radial-gradient(circle, #f0ead8 0 0.6px, transparent 0.9px),
-    radial-gradient(circle, #cbd9db 0 0.7px, transparent 1px),
-    radial-gradient(circle, #d9c99e 0 0.55px, transparent 0.85px),
-    radial-gradient(circle, #e4e1d5 0 0.5px, transparent 0.8px),
-    radial-gradient(circle, #bac7ca 0 0.65px, transparent 0.95px),
-    radial-gradient(circle, #d8d0ba 0 0.45px, transparent 0.75px);
+    radial-gradient(circle, #f2ead9 0 0.6px, transparent 0.9px),
+    radial-gradient(circle, #d8cbb8 0 0.7px, transparent 1px),
+    radial-gradient(circle, #d9b394 0 0.55px, transparent 0.85px),
+    radial-gradient(circle, #e5dccd 0 0.5px, transparent 0.8px),
+    radial-gradient(circle, #b9aa96 0 0.65px, transparent 0.95px),
+    radial-gradient(circle, #d9c8ae 0 0.45px, transparent 0.75px);
   background-position: 17px 43px, 89px 19px, 37px 113px, 151px 71px, 109px 157px, 53px 197px;
   background-size: 173px 191px, 229px 211px, 283px 263px, 347px 317px, 419px 389px, 487px 457px;
   opacity: 0.78;
@@ -56,10 +57,10 @@
 
 .starfield-layer-near {
   background-image:
-    radial-gradient(circle, #f4ecd2 0 1.25px, #b9ad8d 1.35px 1.55px, transparent 1.8px),
-    radial-gradient(circle, #dbe6e5 0 1.05px, #92a3a5 1.15px 1.35px, transparent 1.65px),
-    radial-gradient(circle, #e4d09c 0 0.9px, transparent 1.35px),
-    radial-gradient(circle, #d4dedd 0 0.85px, transparent 1.25px);
+    radial-gradient(circle, #f5e9d1 0 1.25px, #bca887 1.35px 1.55px, transparent 1.8px),
+    radial-gradient(circle, #e8ded0 0 1.05px, #a4937d 1.15px 1.35px, transparent 1.65px),
+    radial-gradient(circle, #dfaa82 0 0.9px, transparent 1.35px),
+    radial-gradient(circle, #d8c9b7 0 0.85px, transparent 1.25px);
   background-position: 73px 127px, 257px 61px, 419px 233px, 149px 359px;
   background-size: 613px 557px, 757px 683px, 877px 773px, 997px 911px;
   opacity: 0.86;
@@ -69,12 +70,12 @@
   0%,
   100% {
     opacity: 0.52;
-    filter: drop-shadow(0 0 0.35rem #dfc78214);
+    filter: drop-shadow(0 0 0.35rem #d9775714);
   }
 
   48% {
     opacity: 0.76;
-    filter: drop-shadow(0 0 0.7rem #dfc78233);
+    filter: drop-shadow(0 0 0.7rem #d9775733);
   }
 }
 
@@ -82,7 +83,7 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: radial-gradient(ellipse at center, transparent 36%, #080a0b99 100%);
+  background: radial-gradient(ellipse at center, transparent 36%, #0b090799 100%);
   content: "";
 }
 

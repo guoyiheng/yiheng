@@ -407,14 +407,14 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: #0b0d0dcc;
+  background: color-mix(in srgb, var(--canvas) 86%, transparent);
   isolation: isolate;
 }
 
 .nanqiang-inspector-scrim {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, #262b2a22, #050606b8 78%);
+  background: radial-gradient(ellipse at center, #5c493322, #090806b8 78%);
 }
 
 .nanqiang-inspector-stage {
@@ -459,9 +459,9 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   display: inline-flex;
   gap: 0.35rem;
   padding: 0.35rem;
-  border: 1px solid #d8d0b655;
+  border: 1px solid var(--inverse-border);
   border-radius: 999px;
-  background: #141715dd;
+  background: color-mix(in srgb, var(--canvas-raised) 88%, transparent);
   box-shadow: 0 10px 24px #0005, 0 1px 0 #fff2 inset;
 }
 
@@ -474,7 +474,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: #e4dcc6;
+  color: var(--inverse-text);
   cursor: pointer;
   font-family: Georgia, serif;
   font-size: 1.3rem;
@@ -483,8 +483,8 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 }
 
 .nanqiang-inspector-toolbar button:hover {
-  background: #e4dcc61f;
-  color: #fff6dd;
+  background: color-mix(in srgb, var(--inverse-text) 12%, transparent);
+  color: var(--inverse-text-strong);
 }
 
 .nanqiang-markdown :deep(h1),
@@ -746,10 +746,10 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   width: 1.85rem;
   height: 1.85rem;
   padding: 0;
-  border: 1px solid #999782;
+  border: 1px solid var(--paper-rule);
   border-radius: 50%;
   background: var(--printer-color);
-  box-shadow: 0 2px 0 #9d9b87, 0 1px 0 #fff8 inset;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--paper-rule) 80%, var(--ink)), 0 1px 0 #fff8 inset;
   color: var(--ink-strong);
   cursor: pointer;
 }
@@ -759,7 +759,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 }
 
 .nanqiang-markdown :deep(.nanqiang-audio-toggle:active) {
-  box-shadow: 0 1px 0 #9d9b87, 0 1px 0 #fff6 inset;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--paper-rule) 80%, var(--ink)), 0 1px 0 #fff6 inset;
   transform: translateY(1px);
 }
 
