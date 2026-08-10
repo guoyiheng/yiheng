@@ -30,6 +30,7 @@ type ResourceToken = (Tokens.Link | Tokens.Image) & {
 }
 
 type SourceLoader = () => Promise<string | { default: string }> | string | { default: string }
+type AssetSource = string | (() => Promise<any>)
 
 interface DocumentSource {
   sourcePath: string
@@ -57,8 +58,8 @@ const rawCsvSources = import.meta.glob('./nanqiang/**/*.csv', {
 
 const rawAssetLoaders = import.meta.glob(
   './nanqiang/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
-  { query: '?url', import: 'default' }
-) as Record<string, () => Promise<any>>
+  { eager: true, query: '?url', import: 'default' }
+) as Record<string, string>
 
 const canonicalizeMap = <T>(map: Record<string, T>) => {
   return Object.fromEntries(Object.entries(map).map(([sourcePath, value]) => {
@@ -68,7 +69,7 @@ const canonicalizeMap = <T>(map: Record<string, T>) => {
 
 const markdownSources = canonicalizeMap(rawMarkdownSources)
 const csvSources = canonicalizeMap(rawCsvSources)
-const assetLoaders = canonicalizeMap(rawAssetLoaders)
+const assetLoaders = canonicalizeMap<AssetSource>(rawAssetLoaders)
 
 const safeDecode = (value: string) => {
   try {
@@ -313,7 +314,10 @@ export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
       const loadResource = assetLoaders[resourcePath]
       if (!loadResource) return
 
-      token.href = await loadResource()
+      const resourceUrl = typeof loadResource === 'function'
+        ? await loadResource()
+        : loadResource
+      token.href = resourceUrl
       if (/\.mp3(?:[?#].*)?$/i.test(resourcePath)) resourceToken.resourceType = 'audio'
     }
   })
