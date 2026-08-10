@@ -2,7 +2,6 @@
   <div class="starfield" aria-hidden="true">
     <span class="starfield-layer starfield-layer-far" />
     <span class="starfield-layer starfield-layer-near" />
-    <span class="milky-way" />
     <img class="ursa-major" src="/images/ursa-major-and-polaris.svg" alt="" />
   </div>
 </template>
@@ -14,7 +13,8 @@
   z-index: 0;
   overflow: hidden;
   background:
-    linear-gradient(155deg, #0d1112 0%, #111313 42%, #151310 100%);
+    linear-gradient(155deg, #0b0e10a6 0%, #11131352 44%, #151310a8 100%),
+    url('/images/galactic.jpg') center / cover no-repeat;
   pointer-events: none;
 }
 
@@ -76,23 +76,6 @@
     opacity: 0.76;
     filter: drop-shadow(0 0 0.7rem #dfc78233);
   }
-}
-
-.milky-way {
-  position: absolute;
-  top: 29%;
-  left: -10%;
-  width: 120%;
-  height: clamp(7rem, 19vh, 13rem);
-  z-index: 1;
-  background:
-    linear-gradient(180deg, #0d1112d9 0%, #0d111255 36%, #0d111244 58%, #0d1112d9 100%),
-    url('/images/galactic.jpg') center 38% / cover no-repeat;
-  filter: saturate(0.72) contrast(0.9) blur(1px);
-  mix-blend-mode: screen;
-  opacity: 0.34;
-  pointer-events: none;
-  transform: rotate(-13deg);
 }
 
 .starfield::after {
