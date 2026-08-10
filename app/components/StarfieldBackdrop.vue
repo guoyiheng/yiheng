@@ -81,7 +81,7 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: radial-gradient(ellipse at center, transparent 36%, #0b090799 100%);
+  background: var(--starfield-vignette);
   content: "";
 }
 
