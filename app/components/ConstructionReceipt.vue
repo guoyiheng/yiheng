@@ -13,6 +13,7 @@ const printSequence = ref(0)
 const isPrinting = ref(false)
 const hasPrintAnimation = ref(false)
 const isPrintPaused = ref(false)
+const isPrintRetracting = ref(false)
 const isActivePage = ref(false)
 const activePath = ref(route.path)
 const initialAnimationPlayed = useState('printer-initial-animation-played', () => false)
@@ -39,6 +40,7 @@ const stopPrinting = () => {
   isPrinting.value = false
   hasPrintAnimation.value = false
   isPrintPaused.value = false
+  isPrintRetracting.value = false
   clearPrintTimer()
 }
 
@@ -48,7 +50,8 @@ const schedulePrintTimer = () => {
   if (props.missing) {
     printTimer = setTimeout(() => {
       isPrintPaused.value = true
-    }, 1000)
+      isPrintRetracting.value = true
+    }, 300)
     return
   }
 
@@ -60,6 +63,7 @@ const beginPrinting = () => {
   isPrinting.value = true
   hasPrintAnimation.value = true
   isPrintPaused.value = false
+  isPrintRetracting.value = false
   printSequence.value += 1
   if (import.meta.client) schedulePrintTimer()
 }
@@ -192,7 +196,8 @@ onBeforeUnmount(() => {
       class="wrapper"
       :class="{
         'is-printing': hasPrintAnimation,
-        'is-print-paused': isPrintPaused
+        'is-print-paused': isPrintPaused,
+        'is-print-retracting': isPrintRetracting
       }"
     >
       <div class="printer" />

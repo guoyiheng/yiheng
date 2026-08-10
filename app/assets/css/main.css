@@ -380,6 +380,10 @@ a:focus-visible {
   animation-play-state: paused;
 }
 
+.wrapper.is-print-retracting .receipt {
+  animation: print-retract 0.22s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 @keyframes print {
   100% {
     clip-path: inset(-20% -100px -100px -100px);
@@ -399,6 +403,11 @@ a:focus-visible {
 
 @keyframes show-text {
   10%, 100% { opacity: 1; }
+}
+
+@keyframes print-retract {
+  75% { transform: translateY(-6px); }
+  100% { transform: translateY(-5px); }
 }
 
 .printer-result-viewport {
