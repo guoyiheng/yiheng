@@ -1,7 +1,7 @@
 <script setup lang="ts">
-useSeoMeta({ title: '首页 · yiheng' })
+useSeoMeta({ title: '浮躁 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="首页" missing />
+  <ConstructionReceipt title="浮躁" missing />
 </template>
