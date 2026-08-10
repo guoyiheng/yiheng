@@ -68,9 +68,9 @@
     #dipper-star-6,
     #dipper-star-7 { display: inline; }
     .dipper-star {
-      fill: #f5edd3;
+      fill: #fff5dc;
       stroke: none;
-      filter: drop-shadow(0 0 0.65px #f0d995);
+      filter: drop-shadow(0 0 0.75px #ffe2a3);
       transform-box: fill-box;
       transform-origin: center;
       animation: dipper-twinkle 3.8s ease-in-out infinite;
@@ -83,9 +83,9 @@
     #dipper-star-6 .dipper-star { animation-delay: -2.2s; }
     #dipper-star-7 .dipper-star { animation-delay: -0.8s; }
     @keyframes dipper-twinkle {
-      0%, 100% { opacity: 0.48; transform: scale(0.78); }
-      45% { opacity: 0.88; transform: scale(1.06); }
-      60% { opacity: 0.66; transform: scale(0.9); }
+      0%, 100% { opacity: 0.56; transform: scale(0.78); }
+      45% { opacity: 0.94; transform: scale(1.06); }
+      60% { opacity: 0.72; transform: scale(0.9); }
     }
     @media (prefers-reduced-motion: reduce) {
       .dipper-star { animation: none; opacity: 1; transform: none; }

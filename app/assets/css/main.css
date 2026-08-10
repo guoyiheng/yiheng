@@ -15,9 +15,9 @@
   --paper-fill: #e7ddcf;
   --menu-ink: #39342e;
   --focus-ring: #3898ec;
-  --display-surface: #14130f;
-  --display-text: #dfb46b;
-  --display-error: #d97757;
+  --display-surface: #000;
+  --display-text: #5aff5a;
+  --display-error: #ff6e5f;
   --inverse-border: #d8cbb455;
   --inverse-text: #eadfca;
   --inverse-text-strong: #fff7e8;

@@ -37,8 +37,8 @@
   right: max(1.25rem, env(safe-area-inset-right));
   width: clamp(160px, calc((100vw - 680px) / 2 - 1.25rem), 360px);
   height: auto;
-  opacity: 0.62;
-  filter: drop-shadow(0 0 0.5rem #d977571f);
+  opacity: 0.7;
+  filter: drop-shadow(0 0 0.55rem #e6b06b2b);
   animation: constellation-bloom 4.6s ease-in-out infinite;
 }
 
@@ -69,13 +69,13 @@
 @keyframes constellation-bloom {
   0%,
   100% {
-    opacity: 0.52;
-    filter: drop-shadow(0 0 0.35rem #d9775714);
+    opacity: 0.6;
+    filter: drop-shadow(0 0 0.4rem #e6b06b24);
   }
 
   48% {
-    opacity: 0.76;
-    filter: drop-shadow(0 0 0.7rem #d9775733);
+    opacity: 0.84;
+    filter: drop-shadow(0 0 0.75rem #e6b06b42);
   }
 }
 
@@ -92,13 +92,13 @@
     top: calc(7rem + env(safe-area-inset-top));
     right: 0.75rem;
     width: 150px;
-    opacity: 0.56;
+    opacity: 0.66;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ursa-major {
-    opacity: 0.68;
+    opacity: 0.82;
     animation: none;
   }
 }
