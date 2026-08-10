@@ -14,12 +14,11 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "csv-parse": "^7.0.2",
     "marked": "^18.0.9",
-    "nuxt": "^4.5.2",
-    "papaparse": "^5.5.4"
+    "nuxt": "^4.5.2"
   },
   "devDependencies": {
-    "@types/papaparse": "^5.5.2",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.1.5"
   }

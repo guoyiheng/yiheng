@@ -1,5 +1,5 @@
 import { Marked, Renderer, type Tokens } from 'marked'
-import Papa from 'papaparse'
+import { parse } from 'csv-parse/browser/esm/sync'
 
 export interface NanqiangDocument {
   id: string
@@ -326,11 +326,10 @@ export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
 }
 
 export const parseNanqiangCsv = (document: NanqiangDocument) => {
-  const result = Papa.parse<string[]>(document.content, {
-    skipEmptyLines: true
-  })
-
-  return result.data
+  return parse(document.content, {
+    bom: true,
+    skip_empty_lines: true
+  }) as string[][]
 }
 
 export const getNanqiangPageDocument = async (id: string): Promise<NanqiangPageDocument | null> => {
