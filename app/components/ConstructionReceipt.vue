@@ -260,6 +260,13 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <footer class="site-copyright">© 2026 yiheng</footer>
+    <footer class="site-copyright">
+      <a
+        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        target="_blank"
+        rel="noreferrer"
+      >CC BY-NC-SA 4.0</a>
+      2020-PRESENT ©
+    </footer>
   </main>
 </template>
