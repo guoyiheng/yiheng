@@ -201,7 +201,9 @@ onBeforeUnmount(() => {
       <div v-if="props.missing" class="paper-viewport">
         <div class="receipt-wrapper jammed-paper-wrapper">
           <article class="receipt jammed-paper" aria-label="404 页面不存在">
-            <strong class="jammed-paper-code">404</strong>
+            <div class="receipt-content jammed-paper-content">
+              <strong class="jammed-paper-code">404</strong>
+            </div>
           </article>
         </div>
       </div>
