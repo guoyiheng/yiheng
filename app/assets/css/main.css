@@ -1,6 +1,8 @@
 :root {
   --canvas: #000;
   --canvas-raised: #171717;
+  --starfield-background: #000;
+  --starfield-blend-mode: normal;
   --printer-color: #282624;
   --printer-color-2: #121110;
   --receipt-color: #141414;
@@ -25,6 +27,27 @@
   --site-font: "LXGW WenKai", "STKaiti", "KaiTi", serif;
   font-synthesis: weight;
   text-rendering: optimizeLegibility;
+}
+
+:root[data-theme='light'] {
+  --canvas: #171512;
+  --canvas-raised: #24211c;
+  --starfield-background:
+    linear-gradient(155deg, #2a2118 0%, #1c1813 46%, #100f0d 100%),
+    url('/images/galactic.jpg') center / cover no-repeat;
+  --starfield-blend-mode: color, normal;
+  --printer-color: #f4f0e6;
+  --printer-color-2: #d8d1c4;
+  --receipt-color: #f4f0e6;
+  --ink: #4d4942;
+  --ink-strong: #26231f;
+  --ink-muted: #6f685e;
+  --ink-link: #8c4935;
+  --ink-code: #88463b;
+  --ink-star: #a85138;
+  --paper-rule: #c8bba7;
+  --paper-fill: #eee8dc;
+  --menu-ink: #39342e;
 }
 
 * {
@@ -513,7 +536,7 @@ a:focus-visible {
   display: grid;
   width: 100%;
   height: 100%;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   overflow: hidden;
   border: 1px solid var(--paper-rule);
   border-radius: 3px;
@@ -548,6 +571,14 @@ a:focus-visible {
 
 .site-menu-link:last-child {
   border-right: 0;
+}
+
+.site-menu-theme-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--menu-ink);
+  cursor: pointer;
+  font-size: 0.9rem;
 }
 
 .site-menu-link:hover,
@@ -688,7 +719,7 @@ a:focus-visible {
     font-size: 1rem;
   }
 
-  .site-menu-link:last-child {
+.site-menu-link:last-child {
     border-bottom: 0;
   }
 

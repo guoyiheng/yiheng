@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { requestPrint } = usePrinterNavigation()
+const { theme, toggleTheme } = useSiteTheme()
 const isMenuOpen = ref(false)
 
 const menuItems = [
@@ -18,6 +19,8 @@ const isItemActive = (path: string) => {
 const activeMenuItem = computed(() => {
   return menuItems.find(item => isItemActive(item.to)) ?? menuItems[0]!
 })
+
+const isDarkTheme = computed(() => theme.value === 'dark')
 
 const handleMenuClick = (path: string) => {
   isMenuOpen.value = false
@@ -60,6 +63,17 @@ watch(() => route.fullPath, () => {
       >
         {{ item.label }}
       </NuxtLink>
+
+      <button
+        class="site-menu-link site-menu-theme-toggle"
+        type="button"
+        :aria-label="isDarkTheme ? '切换到浅色模式' : '切换到深色模式'"
+        :title="isDarkTheme ? '切换到浅色模式' : '切换到深色模式'"
+        :aria-pressed="!isDarkTheme"
+        @click.stop="toggleTheme"
+      >
+        <span aria-hidden="true">{{ isDarkTheme ? '☼' : '☾' }}</span>
+      </button>
     </div>
   </nav>
 </template>

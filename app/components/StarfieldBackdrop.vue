@@ -12,7 +12,8 @@
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #000;
+  background: var(--starfield-background);
+  background-blend-mode: var(--starfield-blend-mode);
   pointer-events: none;
 }
 
