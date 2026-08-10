@@ -11,6 +11,11 @@ const menuItems = [
   { label: '作品', to: '/works' },
   { label: '关于', to: '/about' }
 ]
+
+const isItemActive = (path: string) => {
+  if (path === '/') return route.path === '/'
+  return route.path === path || route.path.startsWith(`${path}/`)
+}
 </script>
 
 <template>
@@ -19,8 +24,8 @@ const menuItems = [
       v-for="item in menuItems"
       :key="item.to"
       :to="item.to"
-      :class="['site-menu-link', { 'is-active': route.path === item.to }]"
-      :aria-current="route.path === item.to ? 'page' : undefined"
+      :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
+      :aria-current="isItemActive(item.to) ? 'page' : undefined"
       @click="emit('print')"
     >
       {{ item.label }}

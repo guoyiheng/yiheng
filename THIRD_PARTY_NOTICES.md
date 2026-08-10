@@ -21,3 +21,19 @@ Copyright (c) 2021, LXGW (https://github.com/lxgw/LxgwWenKai)
 Copyright (c) 2022, Chawye Hsu (https://github.com/chawyehsu/lxgw-wenkai-webfont)
 
 Licensed under the SIL Open Font License, Version 1.1, and the MIT License respectively.
+
+## Marked
+
+The Nanqiang Beidiao archive uses Marked to parse Markdown content.
+
+Copyright (c) 2011-2018, Christopher Jeffrey. Copyright (c) 2018+, MarkedJS.
+
+Licensed under the MIT License.
+
+## Papa Parse
+
+The Nanqiang Beidiao archive uses Papa Parse to parse CSV exports.
+
+Copyright (c) 2015 Matthew Holt.
+
+Licensed under the MIT License.
