@@ -431,6 +431,8 @@ a:focus-visible {
 
 .site-menu-toggle {
   display: none;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .site-menu-toggle.is-active {
@@ -460,6 +462,18 @@ a:focus-visible {
 .site-menu-link.is-active {
   background: #c0beaa;
   color: #171813;
+}
+
+.site-menu-link:first-child:hover,
+.site-menu-link:first-child.is-active {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.site-menu-link:last-child:hover,
+.site-menu-link:last-child.is-active {
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 
 .site-copyright {
@@ -561,6 +575,7 @@ a:focus-visible {
     display: none;
     height: auto;
     grid-template-columns: 1fr;
+    overflow: hidden;
     border: 2px solid var(--printer-color-2);
     border-radius: 6px;
     background: var(--printer-color);
