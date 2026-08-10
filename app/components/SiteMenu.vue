@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { requestPrint } = usePrinterNavigation()
+const isMenuOpen = ref(false)
 
 const menuItems = [
   { label: '首页', to: '/fuzao' },
@@ -13,19 +14,51 @@ const isItemActive = (path: string) => {
   if (path === '/') return route.path === '/'
   return route.path === path || route.path.startsWith(`${path}/`)
 }
+
+const activeMenuItem = computed(() => {
+  return menuItems.find(item => isItemActive(item.to)) ?? menuItems[0]!
+})
+
+const handleMenuClick = (path: string) => {
+  isMenuOpen.value = false
+  requestPrint(path)
+}
+
+watch(() => route.fullPath, () => {
+  isMenuOpen.value = false
+})
 </script>
 
 <template>
-  <nav class="print-button site-menu" aria-label="主要菜单">
-    <NuxtLink
-      v-for="item in menuItems"
-      :key="item.to"
-      :to="item.to"
-      :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
-      :aria-current="isItemActive(item.to) ? 'page' : undefined"
-      @click="requestPrint(item.to)"
+  <nav
+    class="print-button site-menu"
+    :class="{ 'is-open': isMenuOpen }"
+    aria-label="主要菜单"
+    @keydown.esc="isMenuOpen = false"
+  >
+    <button
+      class="site-menu-toggle"
+      type="button"
+      :aria-expanded="isMenuOpen"
+      aria-controls="site-menu-links"
+      :aria-label="isMenuOpen ? '关闭菜单' : '打开菜单'"
+      @click="isMenuOpen = !isMenuOpen"
     >
-      {{ item.label }}
-    </NuxtLink>
+      <span class="site-menu-toggle-label">{{ activeMenuItem.label }}</span>
+      <span class="site-menu-toggle-icon" aria-hidden="true">⌄</span>
+    </button>
+
+    <div id="site-menu-links" class="site-menu-links">
+      <NuxtLink
+        v-for="item in menuItems"
+        :key="item.to"
+        :to="item.to"
+        :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
+        :aria-current="isItemActive(item.to) ? 'page' : undefined"
+        @click="handleMenuClick(item.to)"
+      >
+        {{ item.label }}
+      </NuxtLink>
+    </div>
   </nav>
 </template>

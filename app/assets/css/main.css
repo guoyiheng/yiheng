@@ -410,15 +410,27 @@ a:focus-visible {
   top: -10px;
   right: 40px;
   left: 200px;
-  display: grid;
+  display: block;
   width: auto;
   height: 32px;
-  grid-template-columns: repeat(4, 1fr);
   overflow: hidden;
   border: 2px solid var(--printer-color-2);
   border-radius: 8px;
   background: var(--printer-color);
   box-shadow: 0 8px 16px #0002, 0 1px 0 #fff8 inset;
+}
+
+.site-menu-links {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(4, 1fr);
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.site-menu-toggle {
+  display: none;
 }
 
 .site-menu-link {
@@ -499,11 +511,57 @@ a:focus-visible {
     top: -14px;
     right: 12px;
     left: 124px;
-    height: 92px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(44px, 1fr));
+    height: 44px;
     border-radius: 6px;
     box-shadow: 0 5px 10px #0002, 0 1px 0 #fff8 inset;
+  }
+
+  .site-menu.is-open {
+    overflow: visible;
+  }
+
+  .site-menu-toggle {
+    display: flex;
+    width: 100%;
+    height: 44px;
+    padding: 0 0.8rem;
+    align-items: center;
+    justify-content: space-between;
+    border: 0;
+    background: transparent;
+    color: var(--menu-ink);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .site-menu-toggle-icon {
+    color: var(--ink-muted);
+    font-size: 1.2em;
+    line-height: 1;
+    transform: translateY(-0.1em);
+    transition: transform 0.15s ease;
+  }
+
+  .site-menu.is-open .site-menu-toggle-icon {
+    transform: translateY(0.1em) rotate(180deg);
+  }
+
+  .site-menu-links {
+    position: absolute;
+    top: calc(100% + 0.35rem);
+    right: 0;
+    left: 0;
+    display: none;
+    height: auto;
+    grid-template-columns: 1fr;
+    border: 2px solid var(--printer-color-2);
+    border-radius: 6px;
+    background: var(--printer-color);
+    box-shadow: 0 8px 16px #0003;
+  }
+
+  .site-menu.is-open .site-menu-links {
+    display: grid;
   }
 
   .receipt-wrapper {
@@ -532,16 +590,12 @@ a:focus-visible {
   .site-menu-link {
     min-height: 44px;
     border-right: 0;
-    border-bottom: 0;
+    border-bottom: 1px solid #0002;
     font-size: 1rem;
   }
 
-  .site-menu-link:nth-child(odd) {
-    border-right: 1px solid #0002;
-  }
-
-  .site-menu-link:nth-child(-n + 2) {
-    border-bottom: 1px solid #0002;
+  .site-menu-link:last-child {
+    border-bottom: 0;
   }
 
   .site-copyright {
@@ -578,6 +632,11 @@ a:focus-visible {
 
   .site-menu {
     height: 48px;
+  }
+
+  .site-menu-toggle {
+    height: 48px;
+    font-size: 0.75rem;
   }
 
   .site-menu-link {
