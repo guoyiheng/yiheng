@@ -4,8 +4,8 @@ import type { NanqiangPageDocument } from '~/data/nanqiang'
 const props = defineProps<{
   document: NanqiangPageDocument
 }>()
-const markdownRoot = ref<HTMLDivElement | null>(null)
-const inspectorMarkdownRoot = ref<HTMLDivElement | null>(null)
+const documentRoot = ref<HTMLElement | null>(null)
+const inspectorContent = ref<HTMLDivElement | null>(null)
 const inspectorDialog = ref<HTMLDivElement | null>(null)
 const inspectorButton = ref<HTMLButtonElement | null>(null)
 const isInspectorOpen = ref(false)
@@ -20,18 +20,6 @@ const dragState = {
   startRotationY: 0
 }
 let audioCleanups: Array<() => void> = []
-
-const renderedMarkdown = computed(() => {
-  return props.document.kind === 'markdown'
-    ? props.document.html ?? ''
-    : ''
-})
-
-const csvRows = computed(() => {
-  return props.document.kind === 'csv'
-    ? props.document.rows ?? []
-    : []
-})
 
 const formatAudioTime = (seconds: number) => {
   if (!Number.isFinite(seconds)) return '--:--'
@@ -123,8 +111,8 @@ const setBodyInspectionLock = (locked: boolean) => {
 const setupAudioPlayers = () => {
   clearAudioPlayers()
 
-  const roots = [markdownRoot.value, inspectorMarkdownRoot.value].filter(
-    (root): root is HTMLDivElement => Boolean(root)
+  const roots = [documentRoot.value, inspectorContent.value].filter(
+    (root): root is HTMLElement => Boolean(root)
   )
   if (!roots.length) return
 
@@ -204,14 +192,14 @@ const refreshAudioPlayers = async () => {
 
 onActivated(refreshAudioPlayers)
 onDeactivated(clearAudioPlayers)
-watch(renderedMarkdown, refreshAudioPlayers, { flush: 'post' })
+watch(() => props.document.html, refreshAudioPlayers, { flush: 'post' })
 watch(isInspectorOpen, setBodyInspectionLock)
 onBeforeUnmount(clearAudioPlayers)
 onBeforeUnmount(() => setBodyInspectionLock(false))
 </script>
 
 <template>
-  <article class="nanqiang-document">
+  <article ref="documentRoot" class="nanqiang-document">
     <div class="nanqiang-actions">
       <NuxtLink
         class="nanqiang-back"
@@ -237,27 +225,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
       </button>
     </div>
 
-    <div
-      v-if="props.document.kind === 'markdown'"
-      ref="markdownRoot"
-      class="nanqiang-markdown"
-      v-html="renderedMarkdown"
-    />
-
-    <div v-else class="nanqiang-csv-wrap">
-      <table class="nanqiang-csv">
-        <thead v-if="csvRows[0]">
-          <tr>
-            <th v-for="(cell, index) in csvRows[0]" :key="index">{{ cell }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, rowIndex) in csvRows.slice(1)" :key="rowIndex">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <NanqiangDocumentContent :document="props.document" />
 
     <Teleport to="body">
       <div
@@ -284,28 +252,8 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
             @pointerup="endInspectorDrag"
             @pointercancel="endInspectorDrag"
           >
-            <div class="receipt-content inspector-content">
-              <div
-                v-if="props.document.kind === 'markdown'"
-                ref="inspectorMarkdownRoot"
-                class="nanqiang-markdown"
-                v-html="renderedMarkdown"
-              />
-
-              <div v-else class="nanqiang-csv-wrap">
-                <table class="nanqiang-csv">
-                  <thead v-if="csvRows[0]">
-                    <tr>
-                      <th v-for="(cell, index) in csvRows[0]" :key="index">{{ cell }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(row, rowIndex) in csvRows.slice(1)" :key="rowIndex">
-                      <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div ref="inspectorContent" class="receipt-content inspector-content">
+              <NanqiangDocumentContent :document="props.document" />
             </div>
           </article>
         </div>
@@ -428,12 +376,15 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 }
 
 .inspector-paper {
+  --doc-line-height: 1.8;
+
   width: min(76vw, 720px);
   height: min(86vh, 1020px);
   min-height: 0;
   padding: 34px 38px 40px;
   box-shadow: 0 30px 60px #0008, 0 10px 20px #0006;
   font-size: clamp(1rem, 1.55vw, 1.32rem);
+  line-height: var(--doc-line-height);
   transform-origin: center center;
   transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
   will-change: transform;
@@ -529,8 +480,8 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 .nanqiang-markdown :deep(li),
 .nanqiang-markdown :deep(th),
 .nanqiang-markdown :deep(td),
-.nanqiang-csv th,
-.nanqiang-csv td {
+:deep(.nanqiang-csv th),
+:deep(.nanqiang-csv td) {
   white-space: break-spaces;
 }
 
@@ -648,7 +599,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 }
 
 .nanqiang-markdown :deep(table),
-.nanqiang-csv {
+:deep(.nanqiang-csv) {
   display: block;
   max-width: 100%;
   overflow-x: auto;
@@ -660,8 +611,8 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 
 .nanqiang-markdown :deep(th),
 .nanqiang-markdown :deep(td),
-.nanqiang-csv th,
-.nanqiang-csv td {
+:deep(.nanqiang-csv th),
+:deep(.nanqiang-csv td) {
   min-width: 6rem;
   padding: 0.35rem 0.45rem;
   border: 1px solid var(--paper-rule);
@@ -669,7 +620,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 }
 
 .nanqiang-markdown :deep(th),
-.nanqiang-csv th {
+:deep(.nanqiang-csv th) {
   background: var(--paper-fill);
   color: var(--ink-strong);
   font-weight: 700;
@@ -719,7 +670,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   border-top: 1px solid var(--paper-rule);
 }
 
-.nanqiang-csv-wrap {
+:deep(.nanqiang-csv-wrap) {
   max-width: 100%;
   overflow-x: auto;
 }
@@ -900,8 +851,8 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 
   .nanqiang-markdown :deep(th),
   .nanqiang-markdown :deep(td),
-  .nanqiang-csv th,
-  .nanqiang-csv td {
+  :deep(.nanqiang-csv th),
+  :deep(.nanqiang-csv td) {
     min-width: 5rem;
   }
 
