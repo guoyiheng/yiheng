@@ -38,6 +38,7 @@ watch(() => route.fullPath, () => {
   >
     <button
       class="site-menu-toggle"
+      :class="{ 'is-active': !isMenuOpen }"
       type="button"
       :aria-expanded="isMenuOpen"
       aria-controls="site-menu-links"
