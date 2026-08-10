@@ -1,9 +1,9 @@
 :root {
   --canvas: #000;
   --canvas-raised: #171717;
-  --printer-color: #f4f0e6;
-  --printer-color-2: #d8d1c4;
-  --receipt-color: #f4f0e6;
+  --printer-color: #1a1a1a;
+  --printer-color-2: #0b0b0b;
+  --receipt-color: #141414;
   --ink: #4d4942;
   --ink-strong: #26231f;
   --ink-muted: #6f685e;
@@ -12,7 +12,7 @@
   --ink-star: #a85138;
   --ink-bold: var(--ink-star);
   --paper-rule: #c8bba7;
-  --paper-fill: #eee8dc;
+  --paper-fill: #202020;
   --menu-ink: #39342e;
   --focus-ring: #3898ec;
   --display-surface: #000;
