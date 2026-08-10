@@ -84,14 +84,14 @@
   background: linear-gradient(
     154deg,
     transparent 28%,
-    #d8cfb40a 39%,
-    #d8cfb414 46%,
-    #b9c9d00d 53%,
+    #d8cfb414 39%,
+    #d8cfb424 46%,
+    #b9c9d018 53%,
     transparent 67%
   );
   content: "";
-  filter: blur(22px);
-  opacity: 0.72;
+  filter: blur(18px);
+  opacity: 0.8;
   pointer-events: none;
   transform: rotate(-8deg) scale(1.08);
 }
