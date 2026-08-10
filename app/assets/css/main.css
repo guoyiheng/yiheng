@@ -260,6 +260,31 @@ a:focus-visible {
   z-index: -1;
 }
 
+.jammed-paper-wrapper {
+  --paper-rest-offset: 8px;
+
+  clip-path: inset(-20% -100px -100px -100px);
+  transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset))) rotate(-0.6deg);
+  animation: paper-jam 0.9s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.receipt.jammed-paper {
+  height: 68px;
+  min-height: 68px;
+  aspect-ratio: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 24px 12px;
+  overflow: hidden;
+}
+
+.jammed-paper-code {
+  color: var(--ink-strong);
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .receipt-content {
   min-height: 0;
   flex: 1;
@@ -387,6 +412,27 @@ a:focus-visible {
 
 @keyframes show-text {
   10%, 100% { opacity: 1; }
+}
+
+@keyframes paper-jam {
+  0% {
+    clip-path: inset(100% -100px -100px -100px);
+    transform: translate(-50%, calc(var(--printer-height) - 22px));
+  }
+
+  55% {
+    clip-path: inset(-20% -100px -100px -100px);
+    transform: translate(-50%, calc(var(--printer-height) + 12px)) rotate(-1.2deg);
+  }
+
+  74% {
+    transform: translate(-50%, calc(var(--printer-height) + 5px)) rotate(0.8deg);
+  }
+
+  100% {
+    clip-path: inset(-20% -100px -100px -100px);
+    transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset))) rotate(-0.6deg);
+  }
 }
 
 .printer-result-viewport {

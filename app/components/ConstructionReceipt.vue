@@ -198,7 +198,15 @@ onBeforeUnmount(() => {
 
       <SiteMenu />
 
-      <div v-if="!props.missing" class="paper-viewport">
+      <div v-if="props.missing" class="paper-viewport">
+        <div class="receipt-wrapper jammed-paper-wrapper">
+          <article class="receipt jammed-paper" aria-label="404 页面不存在">
+            <strong class="jammed-paper-code">404</strong>
+          </article>
+        </div>
+      </div>
+
+      <div v-else class="paper-viewport">
         <div :key="`receipt-${printSequence}`" :class="{ 'is-ready': !hasPrintAnimation }" class="receipt-wrapper"
           @animationend="finishPrinting">
           <article class="receipt" :aria-label="props.title">
