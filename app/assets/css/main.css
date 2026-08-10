@@ -1,9 +1,9 @@
 :root {
-  --canvas: #171512;
-  --canvas-raised: #24211c;
-  --printer-color: #d8ccb7;
-  --printer-color-2: #b9aa91;
-  --receipt-color: #f2ece1;
+  --canvas: #000;
+  --canvas-raised: #171717;
+  --printer-color: #f4f0e6;
+  --printer-color-2: #d8d1c4;
+  --receipt-color: #f4f0e6;
   --ink: #4d4942;
   --ink-strong: #26231f;
   --ink-muted: #6f685e;
@@ -12,7 +12,7 @@
   --ink-star: #a85138;
   --ink-bold: var(--ink-star);
   --paper-rule: #c8bba7;
-  --paper-fill: #e7ddcf;
+  --paper-fill: #eee8dc;
   --menu-ink: #39342e;
   --focus-ring: #3898ec;
   --display-surface: #000;

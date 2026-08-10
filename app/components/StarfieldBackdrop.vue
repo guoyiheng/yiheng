@@ -12,10 +12,7 @@
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background:
-    linear-gradient(155deg, #2a2118 0%, #1c1813 46%, #100f0d 100%),
-    url('/images/galactic.jpg') center / cover no-repeat;
-  background-blend-mode: color, normal;
+  background: #000;
   pointer-events: none;
 }
 
