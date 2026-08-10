@@ -29,7 +29,6 @@ const titleLength = computed(() => [...props.title].reduce((length, character) =
 }, 0))
 
 const displayAnnouncement = computed(() => {
-  if (props.missing) return 'Printer jammed'
   return isPrinting.value ? 'Printing...' : props.title
 })
 
@@ -43,7 +42,6 @@ const stopPrinting = () => {
 
 const schedulePrintFallback = () => {
   clearPrintFallback()
-  if (props.missing) return
 
   const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3000
   printFallbackTimer = setTimeout(stopPrinting, duration)
@@ -71,13 +69,6 @@ const enterPage = () => {
     && navigationEntry?.type === 'back_forward'
   const isHistoryNavigation = historyNavigation.value || isInitialDocumentHistory
   documentNavigationChecked.value = true
-
-  if (props.missing) {
-    historyNavigation.value = false
-    stopPrinting()
-    initialAnimationPlayed.value = true
-    return
-  }
 
   if (isHistoryNavigation) {
     historyNavigation.value = false
@@ -160,8 +151,7 @@ onBeforeRouteLeave(rememberScrollPosition)
 
 watch(() => request.value.sequence, () => {
   if (
-    !props.missing
-    && isActivePage.value
+    isActivePage.value
     && !historyNavigation.value
     && request.value.path === activePath.value
     && consumePrintRequest(activePath.value)
@@ -182,11 +172,9 @@ onBeforeUnmount(() => {
     <div class="wrapper" :class="{ 'is-printing': hasPrintAnimation }">
       <div class="printer" />
 
-      <div :key="`display-${printSequence}`" class="printer-display" :class="{ 'is-error': props.missing }"
-        aria-live="polite" aria-atomic="true">
+      <div :key="`display-${printSequence}`" class="printer-display" aria-live="polite" aria-atomic="true">
         <span class="sr-only">{{ displayAnnouncement }}</span>
-        <span v-if="props.missing" class="printer-message" aria-hidden="true">Printer jammed</span>
-        <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
+        <div v-if="isPrinting" class="letter-wrapper" aria-hidden="true">
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
         <div v-else class="printer-result-viewport" aria-hidden="true">
@@ -198,22 +186,21 @@ onBeforeUnmount(() => {
 
       <SiteMenu />
 
-      <div v-if="props.missing" class="paper-viewport">
-        <div class="receipt-wrapper jammed-paper-wrapper">
-          <article class="receipt jammed-paper" aria-label="404 页面不存在">
-            <div class="receipt-content jammed-paper-content">
-              <strong class="jammed-paper-code">404</strong>
-            </div>
-          </article>
-        </div>
-      </div>
-
-      <div v-else class="paper-viewport">
+      <div class="paper-viewport">
         <div :key="`receipt-${printSequence}`" :class="{ 'is-ready': !hasPrintAnimation }" class="receipt-wrapper"
           @animationend="finishPrinting">
-          <article class="receipt" :aria-label="props.title">
-            <div ref="receiptContent" class="receipt-content" @scroll.passive="rememberScrollPosition">
-              <slot>
+          <article class="receipt" :aria-label="props.missing ? '404 页面不存在' : props.title">
+            <div
+              ref="receiptContent"
+              class="receipt-content"
+              :class="{ 'is-not-found': props.missing }"
+              @scroll.passive="rememberScrollPosition"
+            >
+              <div v-if="props.missing" class="receipt-not-found">
+                <h1>404</h1>
+              </div>
+
+              <slot v-else>
                 <table class="receipt-table">
                   <tbody>
                     <tr>

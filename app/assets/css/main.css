@@ -17,7 +17,6 @@
   --focus-ring: #3898ec;
   --display-surface: #000;
   --display-text: #5aff5a;
-  --display-error: #ff6e5f;
   --inverse-border: #d8cbb455;
   --inverse-text: #eadfca;
   --inverse-text-strong: #fff7e8;
@@ -178,14 +177,6 @@ a:focus-visible {
   font-size: 0.8em;
 }
 
-.printer-message {
-  white-space: nowrap;
-}
-
-.printer-display.is-error {
-  color: var(--display-error);
-}
-
 .paper-viewport {
   position: absolute;
   inset: 0;
@@ -260,25 +251,15 @@ a:focus-visible {
   z-index: -1;
 }
 
-.jammed-paper-wrapper {
-  --jammed-paper-reveal: 60px;
-  --paper-rest-offset: 6px;
-
-  clip-path: inset(0 -100px calc(100% - var(--jammed-paper-reveal)) -100px);
-  transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset))) rotate(-0.35deg);
-  animation: paper-jam 0.8s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.receipt-content.jammed-paper-content {
-  overflow: hidden;
-  text-align: center;
-}
-
-.jammed-paper-code {
+.receipt-not-found {
   color: var(--ink-strong);
-  font-size: 1.8rem;
+}
+
+.receipt-not-found h1 {
+  margin: 0;
+  font-size: 2rem;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
 }
 
 .receipt-content {
@@ -292,6 +273,11 @@ a:focus-visible {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
+}
+
+.receipt-content.is-not-found {
+  display: grid;
+  place-items: center;
 }
 
 .receipt-content *,
@@ -408,28 +394,6 @@ a:focus-visible {
 
 @keyframes show-text {
   10%, 100% { opacity: 1; }
-}
-
-@keyframes paper-jam {
-  0% {
-    clip-path: inset(0 -100px 100% -100px);
-    transform: translate(-50%, calc(var(--printer-height) - 18px));
-  }
-
-  68% {
-    clip-path: inset(0 -100px calc(100% - 64px) -100px);
-    transform: translate(-50%, calc(var(--printer-height) + 9px)) rotate(-0.7deg);
-  }
-
-  84% {
-    clip-path: inset(0 -100px calc(100% - 57px) -100px);
-    transform: translate(-50%, calc(var(--printer-height) + 4px)) rotate(0.2deg);
-  }
-
-  100% {
-    clip-path: inset(0 -100px calc(100% - var(--jammed-paper-reveal)) -100px);
-    transform: translate(-50%, calc(var(--printer-height) + var(--paper-rest-offset))) rotate(-0.35deg);
-  }
 }
 
 .printer-result-viewport {
