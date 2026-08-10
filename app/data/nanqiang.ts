@@ -58,8 +58,8 @@ const rawCsvSources = import.meta.glob('./nanqiang/**/*.csv', {
 
 const rawAssetLoaders = import.meta.glob(
   './nanqiang/**/*.{png,jpg,jpeg,gif,webp,svg,mp3,pdf,html}',
-  { eager: true, query: '?url', import: 'default' }
-) as Record<string, string>
+  { query: '?url', import: 'default' }
+) as Record<string, () => Promise<string>>
 
 const canonicalizeMap = <T>(map: Record<string, T>) => {
   return Object.fromEntries(Object.entries(map).map(([sourcePath, value]) => {
