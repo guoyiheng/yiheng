@@ -166,8 +166,6 @@ a:focus-visible {
   border: 3px solid var(--printer-color-2);
   border-radius: 6px;
   background-color: var(--display-surface);
-  background-image: linear-gradient(transparent 0, #fff2 90%, transparent 100%);
-  background-repeat: no-repeat;
   background-size: 100% 8px;
   box-shadow: -1px -1px 2px 0 #fff9 inset, 1px 1px 5px 1px #000 inset, 0 0 1px 2px #0002;
   color: var(--display-text);
