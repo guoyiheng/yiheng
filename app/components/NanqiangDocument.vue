@@ -5,6 +5,20 @@ const props = defineProps<{
   document: NanqiangPageDocument
 }>()
 const markdownRoot = ref<HTMLDivElement | null>(null)
+const inspectorMarkdownRoot = ref<HTMLDivElement | null>(null)
+const inspectorDialog = ref<HTMLDivElement | null>(null)
+const inspectorButton = ref<HTMLButtonElement | null>(null)
+const isInspectorOpen = ref(false)
+const inspectorScale = ref(1)
+const inspectorRotation = reactive({ x: 0, y: 0 })
+const isDraggingInspector = ref(false)
+const dragState = {
+  pointerId: -1,
+  startX: 0,
+  startY: 0,
+  startRotationX: 0,
+  startRotationY: 0
+}
 let audioCleanups: Array<() => void> = []
 
 const renderedMarkdown = computed(() => {
@@ -33,13 +47,88 @@ const clearAudioPlayers = () => {
   audioCleanups = []
 }
 
+const clampInspectorScale = (scale: number) => Math.min(2.4, Math.max(0.72, scale))
+
+const resetInspectorView = () => {
+  inspectorScale.value = 1
+  inspectorRotation.x = 0
+  inspectorRotation.y = 0
+}
+
+const zoomInspector = (amount: number) => {
+  inspectorScale.value = clampInspectorScale(inspectorScale.value + amount)
+}
+
+const openInspector = async () => {
+  resetInspectorView()
+  isInspectorOpen.value = true
+  await nextTick()
+  setupAudioPlayers()
+  inspectorDialog.value?.focus()
+}
+
+const closeInspector = async () => {
+  isInspectorOpen.value = false
+  await nextTick()
+  inspectorButton.value?.focus()
+}
+
+const handleInspectorWheel = (event: WheelEvent) => {
+  const target = event.target
+  if (!event.ctrlKey && target instanceof Element && target.closest('.inspector-content')) return
+
+  event.preventDefault()
+  zoomInspector(event.deltaY > 0 ? -0.08 : 0.08)
+}
+
+const beginInspectorDrag = (event: PointerEvent) => {
+  if (event.button !== 0) return
+  if (event.target instanceof Element && event.target.closest('button, a, input, textarea, select')) return
+
+  dragState.pointerId = event.pointerId
+  dragState.startX = event.clientX
+  dragState.startY = event.clientY
+  dragState.startRotationX = inspectorRotation.x
+  dragState.startRotationY = inspectorRotation.y
+  isDraggingInspector.value = true
+  ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+}
+
+const moveInspector = (event: PointerEvent) => {
+  if (!isDraggingInspector.value || event.pointerId !== dragState.pointerId) return
+
+  inspectorRotation.y = dragState.startRotationY + (event.clientX - dragState.startX) * 0.24
+  inspectorRotation.x = Math.min(
+    32,
+    Math.max(-32, dragState.startRotationX - (event.clientY - dragState.startY) * 0.18)
+  )
+}
+
+const endInspectorDrag = (event: PointerEvent) => {
+  if (event.pointerId !== dragState.pointerId) return
+
+  isDraggingInspector.value = false
+  dragState.pointerId = -1
+}
+
+const inspectorPaperStyle = computed(() => ({
+  transform: `rotateX(${inspectorRotation.x}deg) rotateY(${inspectorRotation.y}deg) scale(${inspectorScale.value})`
+}))
+
+const setBodyInspectionLock = (locked: boolean) => {
+  if (!import.meta.client) return
+  document.body.classList.toggle('is-inspecting', locked)
+}
+
 const setupAudioPlayers = () => {
   clearAudioPlayers()
 
-  const root = markdownRoot.value
-  if (!root) return
+  const roots = [markdownRoot.value, inspectorMarkdownRoot.value].filter(
+    (root): root is HTMLDivElement => Boolean(root)
+  )
+  if (!roots.length) return
 
-  root.querySelectorAll<HTMLElement>('[data-audio-player]').forEach((player) => {
+  roots.flatMap(root => [...root.querySelectorAll<HTMLElement>('[data-audio-player]')]).forEach((player) => {
     const audio = player.querySelector('audio')
     const toggle = player.querySelector<HTMLButtonElement>('[data-audio-toggle]')
     const progress = player.querySelector<HTMLInputElement>('[data-audio-progress]')
@@ -68,7 +157,7 @@ const setupAudioPlayers = () => {
 
     const togglePlayback = () => {
       if (audio.paused) {
-        root.querySelectorAll('audio').forEach((otherAudio) => {
+        roots.flatMap(root => [...root.querySelectorAll('audio')]).forEach((otherAudio) => {
           if (otherAudio !== audio) otherAudio.pause()
         })
         void audio.play().catch(() => undefined)
@@ -116,18 +205,37 @@ const refreshAudioPlayers = async () => {
 onActivated(refreshAudioPlayers)
 onDeactivated(clearAudioPlayers)
 watch(renderedMarkdown, refreshAudioPlayers, { flush: 'post' })
+watch(isInspectorOpen, setBodyInspectionLock)
 onBeforeUnmount(clearAudioPlayers)
+onBeforeUnmount(() => setBodyInspectionLock(false))
 </script>
 
 <template>
   <article class="nanqiang-document">
-    <NuxtLink
-      class="nanqiang-back"
-      to="/nanqiang-beidiao"
-      aria-label="返回上一级"
-    >
-      <span class="nanqiang-back-arrow" aria-hidden="true">←</span>
-    </NuxtLink>
+    <div class="nanqiang-actions">
+      <NuxtLink
+        class="nanqiang-back"
+        to="/nanqiang-beidiao"
+        aria-label="返回上一级"
+        title="返回上一级"
+      >
+        <span class="nanqiang-back-arrow" aria-hidden="true">←</span>
+      </NuxtLink>
+
+      <button
+        ref="inspectorButton"
+        class="nanqiang-inspect"
+        type="button"
+        aria-label="检阅页面"
+        title="检阅页面"
+        @click="openInspector"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+          <circle cx="12" cy="12" r="2.6" />
+        </svg>
+      </button>
+    </div>
 
     <div
       v-if="props.document.kind === 'markdown'"
@@ -150,6 +258,66 @@ onBeforeUnmount(clearAudioPlayers)
         </tbody>
       </table>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="isInspectorOpen"
+        ref="inspectorDialog"
+        class="nanqiang-inspector"
+        role="dialog"
+        aria-modal="true"
+        aria-label="检阅页面"
+        tabindex="-1"
+        @click.self="closeInspector"
+        @keydown.esc="closeInspector"
+        @wheel="handleInspectorWheel"
+      >
+        <div class="nanqiang-inspector-scrim" aria-hidden="true" @click="closeInspector" />
+        <div class="nanqiang-inspector-stage">
+          <article
+            class="receipt inspector-paper"
+            :class="{ 'is-dragging': isDraggingInspector }"
+            :style="inspectorPaperStyle"
+            aria-label="检阅中的页面"
+            @pointerdown="beginInspectorDrag"
+            @pointermove="moveInspector"
+            @pointerup="endInspectorDrag"
+            @pointercancel="endInspectorDrag"
+          >
+            <div class="receipt-content inspector-content">
+              <div
+                v-if="props.document.kind === 'markdown'"
+                ref="inspectorMarkdownRoot"
+                class="nanqiang-markdown"
+                v-html="renderedMarkdown"
+              />
+
+              <div v-else class="nanqiang-csv-wrap">
+                <table class="nanqiang-csv">
+                  <thead v-if="csvRows[0]">
+                    <tr>
+                      <th v-for="(cell, index) in csvRows[0]" :key="index">{{ cell }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(row, rowIndex) in csvRows.slice(1)" :key="rowIndex">
+                      <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="nanqiang-inspector-toolbar" aria-label="检阅控制">
+          <button type="button" aria-label="缩小页面" title="缩小" @click="zoomInspector(-0.12)">−</button>
+          <button type="button" aria-label="放大页面" title="放大" @click="zoomInspector(0.12)">＋</button>
+          <button type="button" aria-label="重置视角" title="重置" @click="resetInspectorView">↺</button>
+          <button type="button" aria-label="关闭检阅" title="关闭" @click="closeInspector">×</button>
+        </div>
+      </div>
+    </Teleport>
   </article>
 </template>
 
@@ -165,16 +333,22 @@ onBeforeUnmount(clearAudioPlayers)
   overflow-wrap: anywhere;
 }
 
-.nanqiang-back {
+.nanqiang-actions {
   position: sticky;
   top: calc((1.55em * 1.3 - 2rem) / 2);
   float: right;
   z-index: 10;
   display: inline-flex;
+  gap: 0.2rem;
+  align-items: center;
+  margin-top: calc((1.55em * 1.3 - 2rem) / 2);
+}
+
+.nanqiang-back,
+.nanqiang-inspect {
+  display: inline-flex;
   width: 2rem;
   height: 2rem;
-  margin-top: calc((1.55em * 1.3 - 2rem) / 2);
-  margin-right: 0;
   align-items: center;
   justify-content: center;
   border: 0;
@@ -184,12 +358,17 @@ onBeforeUnmount(clearAudioPlayers)
   color: var(--ink-muted);
   text-decoration: none;
   opacity: 0.82;
+  cursor: pointer;
   transition: color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
-.nanqiang-back:hover {
+.nanqiang-back:hover,
+.nanqiang-inspect:hover {
   color: var(--ink-strong);
   opacity: 1;
+}
+
+.nanqiang-back:hover {
   transform: translateX(-2px);
 }
 
@@ -197,10 +376,115 @@ onBeforeUnmount(clearAudioPlayers)
   transform: translateX(-2px) translateY(1px);
 }
 
+.nanqiang-inspect:active {
+  transform: translateY(1px);
+}
+
 .nanqiang-back-arrow {
   display: inline-block;
   line-height: 1;
   font-size: 1.1em;
+}
+
+.nanqiang-inspect svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+:global(body.is-inspecting) {
+  overflow: hidden;
+}
+
+.nanqiang-inspector {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #0b0d0dcc;
+  isolation: isolate;
+}
+
+.nanqiang-inspector-scrim {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #262b2a22, #050606b8 78%);
+}
+
+.nanqiang-inspector-stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: min(88vw, 820px);
+  height: min(88vh, 1120px);
+  place-items: center;
+  perspective: 1400px;
+}
+
+.inspector-paper {
+  width: min(76vw, 720px);
+  height: min(86vh, 1020px);
+  min-height: 0;
+  padding: 34px 38px 40px;
+  box-shadow: 0 30px 60px #0008, 0 10px 20px #0006;
+  font-size: clamp(1rem, 1.55vw, 1.32rem);
+  transform-origin: center center;
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  will-change: transform;
+  cursor: grab;
+  touch-action: none;
+}
+
+.inspector-paper.is-dragging {
+  box-shadow: 0 38px 80px #0009, 0 14px 28px #0007;
+  cursor: grabbing;
+  transition: none;
+}
+
+.inspector-content {
+  overscroll-behavior: contain;
+}
+
+.nanqiang-inspector-toolbar {
+  position: absolute;
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 2;
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.35rem;
+  border: 1px solid #d8d0b655;
+  border-radius: 999px;
+  background: #141715dd;
+  box-shadow: 0 10px 24px #0005, 0 1px 0 #fff2 inset;
+}
+
+.nanqiang-inspector-toolbar button {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #e4dcc6;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nanqiang-inspector-toolbar button:hover {
+  background: #e4dcc61f;
+  color: #fff6dd;
 }
 
 .nanqiang-markdown :deep(h1),
@@ -579,13 +863,35 @@ onBeforeUnmount(clearAudioPlayers)
     --doc-line-height: 1.76;
   }
 
-  .nanqiang-back {
+  .nanqiang-actions {
     top: calc((1.55em * 1.3 - 2.2rem) / 2);
+    gap: 0.1rem;
+    margin-top: calc((1.55em * 1.3 - 2.2rem) / 2);
+  }
+
+  .nanqiang-back,
+  .nanqiang-inspect {
     width: 2.2rem;
     height: 2.2rem;
-    margin-top: calc((1.55em * 1.3 - 2.2rem) / 2);
-    margin-right: 0;
     font-size: 1.1rem;
+  }
+
+  .nanqiang-inspector-stage {
+    width: 100vw;
+    height: 86vh;
+  }
+
+  .inspector-paper {
+    width: 88vw;
+    height: 82vh;
+    padding: 20px 18px 24px;
+    font-size: 1.08rem;
+  }
+
+  .nanqiang-inspector-toolbar {
+    right: 50%;
+    bottom: max(0.8rem, env(safe-area-inset-bottom));
+    transform: translateX(50%);
   }
 
   .nanqiang-markdown :deep(pre) {
