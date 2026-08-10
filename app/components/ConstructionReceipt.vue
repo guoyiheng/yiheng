@@ -29,7 +29,7 @@ const titleLength = computed(() => [...props.title].reduce((length, character) =
 }, 0))
 
 const displayAnnouncement = computed(() => {
-  if (props.missing) return '建设中...'
+  if (props.missing) return '(Printer jammed)'
   return isPrinting.value ? 'Printing...' : props.title
 })
 
@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
       <div :key="`display-${printSequence}`" class="printer-display" :class="{ 'is-error': props.missing }"
         aria-live="polite" aria-atomic="true">
         <span class="sr-only">{{ displayAnnouncement }}</span>
-        <span v-if="props.missing" class="printer-message" aria-hidden="true">建设中...</span>
+        <span v-if="props.missing" class="printer-message" aria-hidden="true">(Printer jammed)</span>
         <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
