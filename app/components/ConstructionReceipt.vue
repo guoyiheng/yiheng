@@ -182,13 +182,8 @@ onBeforeUnmount(() => {
     <div class="wrapper" :class="{ 'is-printing': hasPrintAnimation }">
       <div class="printer" />
 
-      <div
-        :key="`display-${printSequence}`"
-        class="printer-display"
-        :class="{ 'is-error': props.missing }"
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <div :key="`display-${printSequence}`" class="printer-display" :class="{ 'is-error': props.missing }"
+        aria-live="polite" aria-atomic="true">
         <span class="sr-only">{{ displayAnnouncement }}</span>
         <span v-if="props.missing" class="printer-message" aria-hidden="true">Paper empty</span>
         <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
@@ -204,18 +199,10 @@ onBeforeUnmount(() => {
       <SiteMenu />
 
       <div v-if="!props.missing" class="paper-viewport">
-        <div
-          :key="`receipt-${printSequence}`"
-          :class="{ 'is-ready': !hasPrintAnimation }"
-          class="receipt-wrapper"
-          @animationend="finishPrinting"
-        >
+        <div :key="`receipt-${printSequence}`" :class="{ 'is-ready': !hasPrintAnimation }" class="receipt-wrapper"
+          @animationend="finishPrinting">
           <article class="receipt" :aria-label="props.title">
-            <div
-              ref="receiptContent"
-              class="receipt-content"
-              @scroll.passive="rememberScrollPosition"
-            >
+            <div ref="receiptContent" class="receipt-content" @scroll.passive="rememberScrollPosition">
               <slot>
                 <table class="receipt-table">
                   <tbody>
@@ -261,12 +248,7 @@ onBeforeUnmount(() => {
     </div>
 
     <footer class="site-copyright">
-      <a
-        href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-        target="_blank"
-        rel="noreferrer"
-      >CC BY-NC-SA 4.0</a>
-      2020-PRESENT ©
+      2020-PRESENT © YIHENG
     </footer>
   </main>
 </template>
