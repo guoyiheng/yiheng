@@ -375,6 +375,11 @@ a:focus-visible {
 .wrapper.is-printing .letter:nth-child(11) { animation-delay: 0.55s; }
 .wrapper.is-printing .letter:nth-child(12) { animation-delay: 0.6s; }
 
+.wrapper.is-print-paused .receipt-wrapper,
+.wrapper.is-print-paused .letter {
+  animation-play-state: paused;
+}
+
 @keyframes print {
   100% {
     clip-path: inset(-20% -100px -100px -100px);

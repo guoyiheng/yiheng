@@ -12,6 +12,7 @@ const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
 const isPrinting = ref(false)
 const hasPrintAnimation = ref(false)
+const isPrintPaused = ref(false)
 const isActivePage = ref(false)
 const activePath = ref(route.path)
 const initialAnimationPlayed = useState('printer-initial-animation-played', () => false)
@@ -20,7 +21,7 @@ const documentNavigationChecked = useState('printer-document-navigation-checked'
 const receiptContent = ref<HTMLElement | null>(null)
 const scrollPositions = useState<Record<string, number>>('receipt-scroll-positions', () => ({}))
 const scrollPositionKey = computed(() => props.scrollKey ?? props.title)
-let printFallbackTimer: ReturnType<typeof setTimeout> | undefined
+let printTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
 let removeHistoryHook: (() => void) | undefined
 
@@ -32,26 +33,35 @@ const displayAnnouncement = computed(() => {
   return isPrinting.value ? 'Printing...' : props.title
 })
 
-const clearPrintFallback = () => clearTimeout(printFallbackTimer)
+const clearPrintTimer = () => clearTimeout(printTimer)
 
 const stopPrinting = () => {
   isPrinting.value = false
   hasPrintAnimation.value = false
-  clearPrintFallback()
+  isPrintPaused.value = false
+  clearPrintTimer()
 }
 
-const schedulePrintFallback = () => {
-  clearPrintFallback()
+const schedulePrintTimer = () => {
+  clearPrintTimer()
+
+  if (props.missing) {
+    printTimer = setTimeout(() => {
+      isPrintPaused.value = true
+    }, 1000)
+    return
+  }
 
   const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3000
-  printFallbackTimer = setTimeout(stopPrinting, duration)
+  printTimer = setTimeout(stopPrinting, duration)
 }
 
 const beginPrinting = () => {
   isPrinting.value = true
   hasPrintAnimation.value = true
+  isPrintPaused.value = false
   printSequence.value += 1
-  if (import.meta.client) schedulePrintFallback()
+  if (import.meta.client) schedulePrintTimer()
 }
 
 const finishPrinting = (event: AnimationEvent) => {
@@ -172,13 +182,19 @@ watch(() => request.value.sequence, () => {
 onBeforeUnmount(() => {
   removeRouterHook?.()
   removeHistoryHook?.()
-  clearPrintFallback()
+  clearPrintTimer()
 })
 </script>
 
 <template>
   <main class="receipt-page">
-    <div class="wrapper" :class="{ 'is-printing': hasPrintAnimation }">
+    <div
+      class="wrapper"
+      :class="{
+        'is-printing': hasPrintAnimation,
+        'is-print-paused': isPrintPaused
+      }"
+    >
       <div class="printer" />
 
       <div :key="`display-${printSequence}`" class="printer-display" aria-live="polite" aria-atomic="true">
