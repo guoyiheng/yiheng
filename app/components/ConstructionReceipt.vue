@@ -31,6 +31,7 @@ const titleLength = computed(() => [...props.title].reduce((length, character) =
 }, 0))
 
 const displayAnnouncement = computed(() => {
+  if (isPrintPaused.value) return 'Printer jammed'
   return isPrinting.value ? 'Printing...' : props.title
 })
 
@@ -204,7 +205,10 @@ onBeforeUnmount(() => {
 
       <div :key="`display-${printSequence}`" class="printer-display" aria-live="polite" aria-atomic="true">
         <span class="sr-only">{{ displayAnnouncement }}</span>
-        <div v-if="isPrinting" class="letter-wrapper" aria-hidden="true">
+        <div v-if="isPrintPaused" class="printer-result-viewport" aria-hidden="true">
+          <span class="printer-result is-scrolling is-jammed">Printer jammed</span>
+        </div>
+        <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
         <div v-else class="printer-result-viewport" aria-hidden="true">

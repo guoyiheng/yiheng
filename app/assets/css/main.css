@@ -17,6 +17,7 @@
   --focus-ring: #3898ec;
   --display-surface: #000;
   --display-text: #5aff5a;
+  --display-error: #ff6e5f;
   --inverse-border: #d8cbb455;
   --inverse-text: #eadfca;
   --inverse-text-strong: #fff7e8;
@@ -466,6 +467,10 @@ a:focus-visible {
   display: inline-block;
   opacity: 1;
   white-space: nowrap;
+}
+
+.printer-result.is-jammed {
+  color: var(--display-error);
 }
 
 .printer-result.is-scrolling {
