@@ -61,6 +61,7 @@ const finishPrinting = (event: AnimationEvent) => {
 }
 
 const enterPage = () => {
+  const wasActive = isActivePage.value
   isActivePage.value = true
   activePath.value = route.path
 
@@ -69,6 +70,14 @@ const enterPage = () => {
     && navigationEntry?.type === 'back_forward'
   const isHistoryNavigation = historyNavigation.value || isInitialDocumentHistory
   documentNavigationChecked.value = true
+
+  if (props.missing && !wasActive) {
+    historyNavigation.value = false
+    consumePrintRequest(activePath.value)
+    initialAnimationPlayed.value = true
+    beginPrinting()
+    return
+  }
 
   if (isHistoryNavigation) {
     historyNavigation.value = false
@@ -193,7 +202,6 @@ onBeforeUnmount(() => {
             <div
               ref="receiptContent"
               class="receipt-content"
-              :class="{ 'is-not-found': props.missing }"
               @scroll.passive="rememberScrollPosition"
             >
               <div v-if="props.missing" class="receipt-not-found">

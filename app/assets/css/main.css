@@ -252,14 +252,19 @@ a:focus-visible {
 }
 
 .receipt-not-found {
+  position: absolute;
+  right: 0;
+  bottom: 100px;
+  left: 0;
   color: var(--ink-strong);
+  text-align: center;
 }
 
 .receipt-not-found h1 {
   margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: inherit;
 }
 
 .receipt-content {
@@ -273,11 +278,6 @@ a:focus-visible {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
-}
-
-.receipt-content.is-not-found {
-  display: grid;
-  place-items: center;
 }
 
 .receipt-content *,
