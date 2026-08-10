@@ -3,9 +3,9 @@ const route = useRoute()
 const { requestPrint } = usePrinterNavigation()
 
 const menuItems = [
+  { label: '首页', to: '/fuzao' },
   { label: '南腔北调', to: '/nanqiang-beidiao' },
   { label: '彷徨', to: '/' },
-  { label: '浮躁', to: '/fuzao' },
   { label: '关于', to: '/about' }
 ]
 

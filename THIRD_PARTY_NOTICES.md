@@ -20,6 +20,14 @@ https://commons.wikimedia.org/wiki/File:Ursa_Major_and_Polaris.svg
 Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0):
 https://creativecommons.org/licenses/by-sa/4.0/
 
+## Milky Way photograph
+
+The site background includes a cropped Milky Way photograph from Unsplash:
+https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3
+
+Used under the Unsplash License:
+https://unsplash.com/license
+
 ## LXGW WenKai Webfont
 
 The site typography uses LXGW WenKai Webfont, distributed by Chawye Hsu and based on LXGW WenKai by LXGW.
