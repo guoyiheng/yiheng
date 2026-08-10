@@ -83,17 +83,9 @@
   display: block;
   width: 0.7rem;
   aspect-ratio: 1;
-  background: currentColor;
-  clip-path: polygon(
-    50% 0,
-    58% 41%,
-    100% 50%,
-    58% 59%,
-    50% 100%,
-    42% 59%,
-    0 50%,
-    42% 41%
-  );
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: radial-gradient(circle, currentColor 0 28%, transparent 34% 100%);
   color: #eee6ce;
   filter: drop-shadow(0 0 0.2rem currentColor);
   opacity: var(--star-low);
