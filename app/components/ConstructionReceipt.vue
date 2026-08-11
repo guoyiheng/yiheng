@@ -221,8 +221,10 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <SiteMenu />
-      <PrinterThemeControls />
+      <div class="printer-toolbar">
+        <SiteMenu />
+        <PrinterThemeControls />
+      </div>
 
       <div class="paper-viewport">
         <div :key="`receipt-${printSequence}`" :class="{ 'is-ready': !hasPrintAnimation }" class="receipt-wrapper"

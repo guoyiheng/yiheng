@@ -4,12 +4,11 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
     head: {
-      htmlAttrs: { lang: 'zh-CN', 'data-theme': 'dark' },
+      htmlAttrs: { lang: 'zh-CN' },
       title: 'yiheng',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-        { name: 'description', content: '一恒的个人网站。' },
-        { name: 'theme-color', content: '#0d1112' }
+        { name: 'description', content: '一恒的个人网站。' }
       ],
       link: [
         { rel: 'icon', href: '/favicon.ico', sizes: 'any' },

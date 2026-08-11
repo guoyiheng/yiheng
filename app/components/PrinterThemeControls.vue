@@ -23,14 +23,10 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 <style scoped>
 .printer-theme-control {
-  position: absolute;
-  top: -10px;
-  right: 40px;
-  z-index: 2;
   display: grid;
   width: 44px;
   min-width: 44px;
-  height: 34px;
+  height: 100%;
   padding: 2px;
   align-items: center;
   place-items: center;
@@ -106,11 +102,6 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 @media (max-width: 600px) {
   .printer-theme-control {
-    top: -14px;
-    right: 12px;
-    width: 44px;
-    min-width: 44px;
-    height: 46px;
     border-radius: 6px;
     box-shadow: 0 5px 10px #0002, 0 1px 0 #fff8 inset;
   }

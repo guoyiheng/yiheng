@@ -1,27 +1,51 @@
 export type SiteTheme = 'dark' | 'light'
 
 const THEME_STORAGE_KEY = 'yiheng-theme'
+const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
 
 export const useSiteTheme = () => {
-  const theme = useState<SiteTheme>('site-theme', () => 'dark')
+  const savedTheme = useCookie<SiteTheme | null>(THEME_STORAGE_KEY, {
+    default: () => null,
+    maxAge: THEME_COOKIE_MAX_AGE,
+    sameSite: 'lax'
+  })
+  const theme = useState<SiteTheme>('site-theme', () => {
+    return savedTheme.value === 'light' ? 'light' : 'dark'
+  })
   const themeFeedback = useState<string | null>('site-theme-feedback', () => null)
-  const themeInitialized = useState('site-theme-initialized', () => false)
 
-  const applyTheme = (nextTheme: SiteTheme, persist = true) => {
+  const applyTheme = (nextTheme: SiteTheme) => {
     theme.value = nextTheme
+    savedTheme.value = nextTheme
 
     if (!import.meta.client) return
 
     document.documentElement.dataset.theme = nextTheme
 
-    if (persist) {
-      try {
-        localStorage.setItem(THEME_STORAGE_KEY, nextTheme)
-      } catch {
-        // Theme still applies when storage is unavailable.
-      }
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme)
+    } catch {
+      // Theme still applies when storage is unavailable.
     }
+  }
+
+  const initializeTheme = () => {
+    if (!import.meta.client) return
+
+    let storedTheme: string | null = null
+
+    try {
+      storedTheme = localStorage.getItem(THEME_STORAGE_KEY)
+    } catch {
+      // Fall back to the cookie-backed theme when storage is unavailable.
+    }
+
+    const initialTheme = storedTheme === 'light' || storedTheme === 'dark'
+      ? storedTheme
+      : theme.value
+
+    applyTheme(initialTheme)
   }
 
   const toggleTheme = () => {
@@ -35,24 +59,10 @@ export const useSiteTheme = () => {
     }, 1400)
   }
 
-  onMounted(() => {
-    if (themeInitialized.value) return
-
-    let savedTheme: string | null = null
-
-    try {
-      savedTheme = localStorage.getItem(THEME_STORAGE_KEY)
-    } catch {
-      // Fall back to the current dark theme when storage is unavailable.
-    }
-
-    applyTheme(savedTheme === 'light' ? 'light' : 'dark', false)
-    themeInitialized.value = true
-  })
-
   return {
     theme: readonly(theme),
     themeFeedback: readonly(themeFeedback),
+    initializeTheme,
     toggleTheme
   }
 }
