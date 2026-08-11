@@ -8,6 +8,7 @@ const props = defineProps<{
 const route = useRoute()
 const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
+const { themeFeedback } = useSiteTheme()
 const printingText = 'Printing...'.split('')
 const printSequence = ref(0)
 const isPrinting = ref(false)
@@ -26,13 +27,15 @@ let printTimer: ReturnType<typeof setTimeout> | undefined
 let removeRouterHook: (() => void) | undefined
 let removeHistoryHook: (() => void) | undefined
 
-const titleLength = computed(() => [...props.title].reduce((length, character) => {
+const displayText = computed(() => themeFeedback.value ?? props.title)
+
+const displayTextLength = computed(() => [...displayText.value].reduce((length, character) => {
   return length + (character.charCodeAt(0) > 255 ? 1 : 0.6)
 }, 0))
 
 const displayAnnouncement = computed(() => {
   if (isPrintPaused.value) return 'Printer jammed'
-  return isPrinting.value ? 'Printing...' : props.title
+  return isPrinting.value ? 'Printing...' : displayText.value
 })
 
 const clearPrintTimer = () => clearTimeout(printTimer)
@@ -212,13 +215,14 @@ onBeforeUnmount(() => {
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
         </div>
         <div v-else class="printer-result-viewport" aria-hidden="true">
-          <span class="printer-result" :class="{ 'is-scrolling': titleLength > 10 }">
-            {{ props.title }}
+          <span class="printer-result" :class="{ 'is-scrolling': displayTextLength > 10 }">
+            {{ displayText }}
           </span>
         </div>
       </div>
 
       <SiteMenu />
+      <PrinterThemeControls />
 
       <div class="paper-viewport">
         <div :key="`receipt-${printSequence}`" :class="{ 'is-ready': !hasPrintAnimation }" class="receipt-wrapper"
