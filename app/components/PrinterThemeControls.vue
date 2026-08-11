@@ -27,7 +27,7 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 .printer-theme-control {
   position: absolute;
   top: 25px;
-  right: 30px;
+  right: 40px;
   z-index: 4;
   display: flex;
   flex-direction: column;
@@ -109,7 +109,7 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 @media (max-width: 600px) {
   .printer-theme-control {
     top: 32px;
-    right: 30px;
+    right: 12px;
     height: 52px;
   }
 
