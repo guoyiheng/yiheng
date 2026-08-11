@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   app: {
     head: {
-      htmlAttrs: { lang: 'zh-CN' },
+      htmlAttrs: { lang: 'zh-CN', 'data-theme': 'dark' },
       title: 'yiheng',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
