@@ -1,12 +1,6 @@
 export type SiteTheme = 'dark' | 'light'
-export type ThemeControlSource = 'paper' | 'ink' | 'mode'
 
 const THEME_STORAGE_KEY = 'yiheng-theme'
-const feedbackLabels: Record<ThemeControlSource, string> = {
-  paper: 'PAPER',
-  ink: 'INK',
-  mode: 'MODE'
-}
 let feedbackTimer: ReturnType<typeof setTimeout> | undefined
 
 export const useSiteTheme = () => {
@@ -30,11 +24,11 @@ export const useSiteTheme = () => {
     }
   }
 
-  const toggleTheme = (source: ThemeControlSource = 'mode') => {
+  const toggleTheme = () => {
     const nextTheme = theme.value === 'dark' ? 'light' : 'dark'
     applyTheme(nextTheme)
 
-    themeFeedback.value = `${feedbackLabels[source]}:${nextTheme === 'dark' ? 'D' : 'L'}`
+    themeFeedback.value = `INK:${nextTheme === 'dark' ? 'D' : 'L'}`
     clearTimeout(feedbackTimer)
     feedbackTimer = setTimeout(() => {
       themeFeedback.value = null
