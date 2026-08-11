@@ -23,12 +23,22 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 <style scoped>
 .printer-theme-control {
+  position: absolute;
+  top: -10px;
+  right: 40px;
+  z-index: 2;
   display: grid;
   width: 44px;
   min-width: 44px;
-  height: 100%;
+  height: 34px;
+  padding: 2px;
   align-items: center;
   place-items: center;
+  border: 1px solid var(--printer-color-2);
+  border-radius: 6px;
+  background-color: var(--printer-color);
+  background-image: linear-gradient(to bottom, #fff3, transparent 40%, #0001);
+  box-shadow: 0 7px 14px #0002, 0 1px 0 #fff8 inset;
   color: var(--menu-ink);
 }
 
@@ -40,10 +50,10 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
   height: 100%;
   padding: 0;
   place-items: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  border: 1px solid var(--paper-rule);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--printer-color) 76%, var(--printer-color-2));
+  box-shadow: 0 1px 0 #fff4 inset;
   color: var(--menu-ink);
   cursor: pointer;
   transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1);
@@ -96,9 +106,13 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 @media (max-width: 600px) {
   .printer-theme-control {
-    width: 100%;
-    min-width: 0;
-    height: 44px;
+    top: -14px;
+    right: 12px;
+    width: 44px;
+    min-width: 44px;
+    height: 46px;
+    border-radius: 6px;
+    box-shadow: 0 5px 10px #0002, 0 1px 0 #fff8 inset;
   }
 }
 </style>
