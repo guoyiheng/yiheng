@@ -6,14 +6,12 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 <template>
   <div class="printer-theme-control" role="group" aria-label="主题切换控制台">
-    <span class="theme-control-label" aria-hidden="true">INK</span>
     <button
       class="ink-knob-button"
       :class="{ 'is-dark': isDarkTheme }"
       type="button"
       :aria-label="`使用墨盒旋钮切换到${targetThemeLabel}模式`"
       :aria-pressed="isDarkTheme"
-      :title="`墨盒旋钮：切换到${targetThemeLabel}模式`"
       @click="toggleTheme"
     >
       <span class="ink-knob" aria-hidden="true">
@@ -32,17 +30,11 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   gap: 2px;
   height: 38px;
   color: var(--menu-ink);
   transition: opacity 180ms cubic-bezier(0.25, 1, 0.5, 1), transform 180ms cubic-bezier(0.25, 1, 0.5, 1);
-}
-
-.theme-control-label {
-  color: color-mix(in srgb, var(--menu-ink) 70%, transparent);
-  font-family: var(--site-font);
-  font-size: 6px;
-  line-height: 1;
 }
 
 .ink-knob-button {
