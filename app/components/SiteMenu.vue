@@ -60,6 +60,8 @@ watch(() => route.fullPath, () => {
       >
         {{ item.label }}
       </NuxtLink>
+
+      <PrinterThemeControls />
     </div>
   </nav>
 </template>

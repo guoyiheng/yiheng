@@ -23,32 +23,27 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 <style scoped>
 .printer-theme-control {
-  position: absolute;
-  top: 25px;
-  right: 40px;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  width: 44px;
+  min-width: 44px;
+  height: 100%;
   align-items: center;
-  justify-content: flex-end;
-  gap: 2px;
-  height: 38px;
+  place-items: center;
   color: var(--menu-ink);
-  transition: opacity 180ms cubic-bezier(0.25, 1, 0.5, 1), transform 180ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .ink-knob-button {
   position: relative;
   display: grid;
-  width: 44px;
-  min-width: 44px;
-  height: 28px;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
   padding: 0;
   place-items: center;
-  border: 1px solid color-mix(in srgb, var(--paper-rule) 82%, var(--printer-color-2));
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--printer-color) 68%, var(--printer-color-2));
-  box-shadow: 0 1px 0 #fff5 inset, 0 2px 3px #0004;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: var(--menu-ink);
   cursor: pointer;
   transition: transform 120ms cubic-bezier(0.25, 1, 0.5, 1);
@@ -90,6 +85,7 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 @media (hover: hover) {
   .ink-knob-button:hover {
+    background: var(--printer-color-2);
     transform: translateY(-1px);
   }
 
@@ -100,20 +96,8 @@ const targetThemeLabel = computed(() => isDarkTheme.value ? '浅色' : '深色')
 
 @media (max-width: 600px) {
   .printer-theme-control {
-    top: 32px;
-    right: 12px;
-    height: 52px;
-  }
-
-  :global(.site-menu.is-open) + .printer-theme-control {
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-
-@media (pointer: coarse) {
-  .ink-knob-button {
+    width: 100%;
+    min-width: 0;
     height: 44px;
   }
 }
