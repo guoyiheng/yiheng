@@ -209,7 +209,7 @@ onBeforeUnmount(() => {
       <div :key="`display-${printSequence}`" class="printer-display" aria-live="polite" aria-atomic="true">
         <span class="sr-only">{{ displayAnnouncement }}</span>
         <div v-if="isPrintPaused" class="printer-result-viewport" aria-hidden="true">
-          <span class="printer-result is-scrolling is-jammed">Printer jammed</span>
+          <span class="printer-result is-jammed">Printer jammed</span>
         </div>
         <div v-else-if="isPrinting" class="letter-wrapper" aria-hidden="true">
           <span v-for="(letter, index) in printingText" :key="index" class="letter">{{ letter }}</span>
