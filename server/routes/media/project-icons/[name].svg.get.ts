@@ -8,15 +8,9 @@ const iconSources: Record<string, string> = {
   'pronunciation-corrector': 'https://pronunciation.yiheng.run/favicon.svg'
 }
 
-const fallbackIcon = (name: string) => {
-  const letter = iconSources[name] ? name.charAt(0).toUpperCase() : 'Y'
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="${letter}"><rect width="64" height="64" rx="8" fill="#e7e1d5"/><text x="32" y="39" fill="#4d4840" font-family="sans-serif" font-size="27" font-weight="700" text-anchor="middle">${letter}</text></svg>`
-}
-
 export default defineEventHandler(async (event) => {
   const name = getRouterParam(event, 'name') ?? ''
   const sourceUrl = iconSources[name]
-  let body = fallbackIcon(name)
 
   if (sourceUrl) {
     try {
@@ -26,14 +20,16 @@ export default defineEventHandler(async (event) => {
       })
       if (response.ok && response.headers.get('content-type')?.includes('svg')) {
         const svg = await response.text()
-        if (svg.length <= 100_000) body = svg
+        if (svg.length <= 100_000) {
+          setResponseHeader(event, 'Content-Type', 'image/svg+xml; charset=utf-8')
+          setResponseHeader(event, 'Cache-Control', 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800')
+          return svg
+        }
       }
     } catch {
-      // The local fallback keeps the row useful when an upstream favicon is unavailable.
+      return sendRedirect(event, '/favicon.svg', 302)
     }
   }
 
-  setResponseHeader(event, 'Content-Type', 'image/svg+xml; charset=utf-8')
-  setResponseHeader(event, 'Cache-Control', 'public, max-age=86400, s-maxage=2592000, stale-while-revalidate=604800')
-  return body
+  return sendRedirect(event, '/favicon.svg', 302)
 })

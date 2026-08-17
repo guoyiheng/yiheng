@@ -52,12 +52,12 @@ import { favouriteAlbums } from '~/data/albums'
 .album-list {
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--profile-rule);
+  border-top: 1px dashed var(--profile-rule);
   list-style: none;
 }
 
-.album-list > li + li {
-  border-top: 1px solid var(--profile-rule);
+.album-list li {
+  border-bottom: 1px dashed var(--profile-rule);
 }
 
 .album-list a {

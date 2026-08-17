@@ -22,7 +22,6 @@ interface PsnGame {
 interface PsnProfile {
   trophies: TrophyCounts
   games: PsnGame[]
-  profileUrl: string
 }
 
 const PSN_ID = 'shallwetalk2022'
@@ -58,18 +57,13 @@ const errorMessage = computed(() => {
     <section class="game-platform" aria-labelledby="ps-games-heading">
       <header class="platform-heading">
         <h2 id="ps-games-heading">PS</h2>
-        <a
+        <span
           v-if="profile"
           class="platinum-count"
-          :href="profile.profileUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="在 PSNINE 查看完整档案"
         >
           <span class="platinum-trophy" aria-hidden="true">🏆</span>
           <span>白金 {{ profile.trophies.platinum }}</span>
-          <span aria-hidden="true">↗</span>
-        </a>
+        </span>
       </header>
 
       <p v-if="status === 'pending'" class="psn-feedback" aria-live="polite">
@@ -92,17 +86,24 @@ const errorMessage = computed(() => {
             >
             <span v-else class="game-image-placeholder" aria-hidden="true" />
             <span class="game-copy">
-              <span class="game-title-row">
-                <strong>{{ game.title }}</strong>
-                <span
-                  v-if="game.trophies.platinum > 0"
-                  class="platinum-trophy game-platinum"
-                  aria-label="已获得白金奖杯"
-                >🏆</span>
-              </span>
+              <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
+              <span class="progress-row">
+                <span class="progress-track" aria-hidden="true">
+                  <span class="progress-fill" :style="{ width: `${game.progress}%` }" />
+                </span>
+                <span class="progress-value">{{ game.progress }}%</span>
+              </span>
             </span>
-            <span class="game-progress">{{ game.progress }}%</span>
+            <span class="game-actions">
+              <span
+                v-if="game.trophies.platinum > 0"
+                class="game-platinum"
+                aria-label="已获得白金奖杯"
+                title="已获得白金奖杯"
+              >🏆</span>
+              <span class="game-arrow" aria-hidden="true">→</span>
+            </span>
           </a>
         </li>
       </ol>
@@ -158,7 +159,6 @@ const errorMessage = computed(() => {
   gap: 0.35rem;
   color: var(--ink-muted);
   font-size: 0.72rem;
-  text-decoration: none;
 }
 
 .platinum-trophy {
@@ -171,8 +171,8 @@ const errorMessage = computed(() => {
   min-height: 4.5rem;
   margin: 0;
   padding: 1rem 0;
-  border-top: 1px solid var(--profile-rule);
-  border-bottom: 1px solid var(--profile-rule);
+  border-top: 1px dashed var(--profile-rule);
+  border-bottom: 1px dashed var(--profile-rule);
   color: var(--ink-muted);
   font-size: 0.75rem;
 }
@@ -180,24 +180,23 @@ const errorMessage = computed(() => {
 .psn-game-list {
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--profile-rule);
+  border-top: 1px dashed var(--profile-rule);
   list-style: none;
 }
 
 .psn-game-list li {
-  border-bottom: 1px solid var(--profile-rule);
+  border-bottom: 1px dashed var(--profile-rule);
 }
 
 .psn-game-list a {
   display: grid;
   min-height: 4.75rem;
-  grid-template-columns: 3.5rem minmax(0, 1fr) 2.75rem;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
   gap: 0.8rem;
   align-items: center;
   padding: 0.55rem 0.2rem;
   color: inherit;
   text-decoration: none;
-  transition: background-color 180ms ease-out;
 }
 
 .psn-game-list img,
@@ -216,13 +215,6 @@ const errorMessage = computed(() => {
   gap: 0.25rem;
 }
 
-.game-title-row {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0.45rem;
-}
-
 .game-copy strong {
   min-width: 0;
   color: var(--ink-strong);
@@ -231,35 +223,89 @@ const errorMessage = computed(() => {
   overflow-wrap: anywhere;
 }
 
-.game-platinum {
-  flex: 0 0 auto;
-}
-
 .game-copy small,
-.game-progress {
+.progress-value {
   color: var(--ink-muted);
   font-size: 0.68rem;
 }
 
-.game-progress {
+.progress-row {
+  display: grid;
+  grid-template-columns: minmax(3.5rem, 7rem) auto;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 0.12rem;
+}
+
+.progress-track {
+  position: relative;
+  display: block;
+  height: 0.32rem;
+  overflow: hidden;
+  border-radius: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--paper-rule) 0,
+    var(--paper-rule) 0.45rem,
+    transparent 0.45rem,
+    transparent 0.56rem
+  );
+}
+
+.progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--ink-link);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink-link) 12%, transparent);
+}
+
+.progress-value {
   font-variant-numeric: tabular-nums;
   text-align: right;
 }
 
+.game-actions {
+  display: grid;
+  min-width: 3.75rem;
+  grid-template-columns: 2.1rem 1rem;
+  gap: 0.55rem;
+  align-items: center;
+  justify-items: end;
+}
+
+.game-platinum {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ink-muted) 58%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--paper-fill) 65%, transparent);
+  filter: grayscale(0.55) saturate(0.6);
+  font-size: 0.94rem;
+  line-height: 1;
+}
+
+.game-arrow {
+  grid-column: 2;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 @media (hover: hover) {
-  .psn-game-list a:hover {
-    background: var(--paper-fill);
+  .psn-game-list a:hover strong {
+    color: var(--ink-link);
   }
 
-  .psn-game-list a:hover strong,
-  .platinum-count:hover {
-    color: var(--ink-link);
+  .psn-game-list a:hover .game-arrow {
+    transform: translateX(0.16rem);
   }
 }
 
 @media (max-width: 480px) {
   .psn-game-list a {
-    grid-template-columns: 3.25rem minmax(0, 1fr) 2.5rem;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto;
     gap: 0.65rem;
     padding-inline: 0.1rem;
   }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { GameEntry } from '~/data/games'
-import { gameGroups, games } from '~/data/games'
+import { games } from '~/data/games'
 
 withDefaults(defineProps<{
   compact?: boolean
@@ -8,21 +7,7 @@ withDefaults(defineProps<{
   compact: false
 })
 
-const gamesByStatus = computed(() => {
-  return Object.fromEntries(gameGroups.map(group => [
-    group.status,
-    games.filter(game => game.status === group.status)
-  ])) as Record<GameEntry['status'], GameEntry[]>
-})
-
 const formatDate = (date: string) => date.replaceAll('-', '.')
-
-const useFallbackCover = (event: Event) => {
-  const image = event.currentTarget as HTMLImageElement
-  const fallback = image.dataset.fallback
-
-  if (fallback && !image.src.endsWith(fallback)) image.src = fallback
-}
 </script>
 
 <template>
@@ -32,56 +17,39 @@ const useFallbackCover = (event: Event) => {
       <h1>游戏档案</h1>
     </header>
 
-    <section
-      v-for="group in gameGroups"
-      :key="group.status"
-      class="game-group"
-      :aria-labelledby="`game-group-${group.status}`"
-    >
-      <header class="game-group-heading">
-        <div>
-          <h2 :id="`game-group-${group.status}`">{{ group.title }}</h2>
-          <span v-if="!compact">{{ group.label }}</span>
-        </div>
-        <span v-if="!compact" class="game-group-count">
-          {{ gamesByStatus[group.status].length }}
-        </span>
-      </header>
+    <ol class="game-list">
+      <li v-for="game in games" :key="game.id">
+        <a
+          class="game-entry"
+          :href="game.sourceUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="game-cover-frame">
+            <img
+              class="game-cover"
+              :src="game.coverUrl"
+              :alt="`${game.nameZh}游戏封面`"
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+            >
+          </span>
 
-      <ol class="game-list">
-        <li v-for="game in gamesByStatus[group.status]" :key="game.id">
-          <NuxtLink
-            class="game-entry"
-            :to="game.sourceUrl"
-          >
-            <span class="game-cover-frame">
-              <img
-                class="game-cover"
-                :src="game.coverUrl"
-                :data-fallback="game.fallbackCover"
-                :alt="`${game.nameZh}游戏封面`"
-                loading="lazy"
-                decoding="async"
-                @error="useFallbackCover"
-              >
+          <span class="game-information">
+            <strong class="game-name-zh">{{ game.nameZh }}</strong>
+            <span class="game-name-en" lang="en">{{ game.nameEn }}</span>
+            <span class="game-meta">
+              <time :datetime="game.releaseDate">{{ formatDate(game.releaseDate) }}</time>
+              <span aria-hidden="true">·</span>
+              <span>{{ game.genres.join(' / ') }}</span>
             </span>
+          </span>
 
-            <span class="game-information">
-              <strong class="game-name-zh">{{ game.nameZh }}</strong>
-              <span class="game-name-en" lang="en">{{ game.nameEn }}</span>
-              <span class="game-meta">
-                <time :datetime="game.releaseDate">{{ formatDate(game.releaseDate) }}</time>
-                <span aria-hidden="true">·</span>
-                <span>{{ game.genres.join(' / ') }}</span>
-              </span>
-            </span>
-
-            <span class="game-source-arrow" aria-hidden="true">→</span>
-          </NuxtLink>
-        </li>
-      </ol>
-    </section>
-
+          <span class="game-source-arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+    </ol>
   </div>
 </template>
 
@@ -113,56 +81,14 @@ const useFallbackCover = (event: Event) => {
   line-height: 1.15;
 }
 
-.game-group {
-  margin-top: 2.35rem;
-}
-
 .is-compact {
   padding: 0;
-}
-
-.is-compact .game-group:first-of-type {
-  margin-top: 0;
-}
-
-.is-compact .game-group {
-  margin-top: 2rem;
-}
-
-.game-group-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  padding-bottom: 0.65rem;
-}
-
-.game-group-heading > div {
-  display: flex;
-  align-items: baseline;
-  gap: 0.55rem;
-}
-
-.game-group-heading h2 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.game-group-heading span {
-  color: var(--ink-muted);
-  font-size: 0.7rem;
-}
-
-.game-group-count {
-  font-variant-numeric: tabular-nums;
 }
 
 .game-list {
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--paper-rule);
+  border-top: 1px dashed var(--profile-rule, var(--paper-rule));
   list-style: none;
 }
 
@@ -173,13 +99,9 @@ const useFallbackCover = (event: Event) => {
   gap: 0.9rem;
   align-items: center;
   padding: 0.8rem 0.2rem;
-  border-bottom: 1px dashed var(--paper-rule);
+  border-bottom: 1px dashed var(--profile-rule, var(--paper-rule));
   color: inherit;
   text-decoration: none;
-}
-
-.game-entry:hover {
-  background: var(--paper-fill);
 }
 
 .game-cover-frame {
@@ -238,6 +160,17 @@ const useFallbackCover = (event: Event) => {
 .game-source-arrow {
   color: var(--ink-muted);
   font-size: 0.8rem;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .game-entry:hover .game-name-zh {
+    color: var(--ink-link);
+  }
+
+  .game-entry:hover .game-source-arrow {
+    transform: translateX(0.16rem);
+  }
 }
 
 @media (max-width: 480px) {

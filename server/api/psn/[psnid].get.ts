@@ -10,6 +10,7 @@ interface TrophyCounts {
 const PSN_ID_PATTERN = /^[a-z][a-z0-9_-]{2,15}$/i
 const PSNINE_ORIGIN = 'https://psnine.com'
 const MINIMUM_DURATION_DAYS = 5
+const MINIMUM_PROGRESS = 9
 const PROFILE_CACHE_SECONDS = 30 * 24 * 60 * 60
 const PROFILE_REVALIDATE_SECONDS = 7 * 24 * 60 * 60
 const ALLOWED_IMAGE_HOSTS = new Set([
@@ -65,11 +66,6 @@ const safeImageUrl = (value?: string) => {
   }
 }
 
-const imageProxyUrl = (value: string) => {
-  const token = btoa(value).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
-  return `/media/psn/${token}.png`
-}
-
 const fetchPage = async (url: string) => {
   let response: Response
 
@@ -110,11 +106,12 @@ const parseGameRows = (root: HTMLElement) => {
       .map(node => node.textContent)
       .join(''))
     const durationDays = durationInDays(duration)
+    const progress = numberFrom(text(row.querySelector('.progress div')?.textContent))
 
-    if (durationDays < MINIMUM_DURATION_DAYS) return []
+    if (durationDays < MINIMUM_DURATION_DAYS || progress < MINIMUM_PROGRESS) return []
 
     const href = link.getAttribute('href') ?? ''
-    const imageUrl = safeImageUrl(row.querySelector('img.imgbgnb')?.getAttribute('src'))
+    const imageUrl = row.querySelector('img.imgbgnb')?.getAttribute('src') ?? ''
     const trophyValues = row.querySelectorAll('small span').map(node => text(node.textContent))
 
     return [{
@@ -124,10 +121,10 @@ const parseGameRows = (root: HTMLElement) => {
       updatedAt: text(row.querySelector('td:nth-child(2) small')?.textContent),
       duration,
       durationDays,
-      progress: numberFrom(text(row.querySelector('.progress div')?.textContent)),
-      image: imageUrl ? imageProxyUrl(imageUrl) : '',
+      progress,
+      image: safeImageUrl(imageUrl),
       trophies: parseTrophies(trophyValues),
-      url: href.startsWith('http') ? href : `${PSNINE_ORIGIN}${href}`
+      url: `https://zh.wikipedia.org/w/index.php?search=${encodeURIComponent(text(titleLink.textContent))}`
     }]
   })
 }
@@ -184,7 +181,6 @@ export default defineEventHandler(async (event) => {
     trophies: parseTrophies(
       profileRoot.querySelectorAll('.psntrophy span').map(node => text(node.textContent))
     ),
-    games: [...gamesById.values()],
-    profileUrl
+    games: [...gamesById.values()]
   }
 })

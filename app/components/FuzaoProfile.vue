@@ -68,12 +68,10 @@ const projects: Project[] = [
   }
 ]
 
-const hideBrokenIcon = (event: Event) => {
+const useSiteIcon = (event: Event) => {
   const image = event.currentTarget as HTMLImageElement
-  image.hidden = true
+  if (!image.src.endsWith('/favicon.svg')) image.src = '/favicon.svg'
 }
-
-const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(noteId)}`
 </script>
 
 <template>
@@ -91,8 +89,7 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
             :rel="project.href.startsWith('http') ? 'noopener noreferrer' : undefined"
           >
             <span class="project-icon" aria-hidden="true">
-              <span>{{ project.name.charAt(0) }}</span>
-              <img :src="project.icon" alt="" width="32" height="32" loading="lazy" @error="hideBrokenIcon">
+              <img :src="project.icon" alt="" width="32" height="32" loading="lazy" @error="useSiteIcon">
             </span>
             <span class="project-copy">
               <strong>{{ project.name }}</strong>
@@ -110,16 +107,26 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
         <h1 id="books-heading">读过的书</h1>
       </header>
       <ul class="book-list">
-        <li v-for="book in readingBooks" :key="book.noteId">
-          <NuxtLink :to="bookHref(book.noteId)">
-            <span class="book-mark" aria-hidden="true">书</span>
+        <li v-for="book in readingBooks" :key="book.title">
+          <a :href="book.wikipediaUrl" target="_blank" rel="noopener noreferrer">
+            <span class="book-cover-frame" aria-hidden="true">
+              <img
+                v-if="book.coverUrl"
+                :src="book.coverUrl"
+                alt=""
+                width="42"
+                height="56"
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+              >
+            </span>
             <span class="book-copy">
               <strong>{{ book.title }}</strong>
               <small>{{ book.author }}</small>
             </span>
-            <span class="book-note">读书笔记</span>
             <span class="book-arrow" aria-hidden="true">→</span>
-          </NuxtLink>
+          </a>
         </li>
       </ul>
     </section>
@@ -157,12 +164,12 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
 .project-list {
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--profile-rule);
+  border-top: 1px dashed var(--profile-rule);
   list-style: none;
 }
 
 .project-list li {
-  border-bottom: 1px solid var(--profile-rule);
+  border-bottom: 1px dashed var(--profile-rule);
 }
 
 .project-list a {
@@ -175,7 +182,6 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
   padding: 0.65rem 0.25rem;
   color: inherit;
   text-decoration: none;
-  transition: background-color 180ms ease-out;
 }
 
 .project-icon {
@@ -191,7 +197,6 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
   color: var(--ink-muted);
   font-size: 0.7rem;
   font-weight: 700;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .project-icon img {
@@ -237,38 +242,40 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
 .book-list {
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--profile-rule);
+  border-top: 1px dashed var(--profile-rule);
   list-style: none;
 }
 
 .book-list li {
-  border-bottom: 1px solid var(--profile-rule);
+  border-bottom: 1px dashed var(--profile-rule);
 }
 
 .book-list a {
   display: grid;
-  min-height: 3.85rem;
-  grid-template-columns: 1.75rem minmax(0, 1fr) auto 1rem;
+  min-height: 4.75rem;
+  grid-template-columns: 2.625rem minmax(0, 1fr) 1rem;
   gap: 0.75rem;
   align-items: center;
-  padding: 0.55rem 0.25rem;
+  padding: 0.6rem 0.25rem;
   color: inherit;
   text-decoration: none;
-  transition: background-color 180ms ease-out;
 }
 
-.book-mark {
-  display: grid;
-  width: 1.6rem;
-  height: 2rem;
-  place-items: center;
+.book-cover-frame {
+  display: block;
+  width: 2.625rem;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
   border: 1px solid var(--profile-rule);
-  border-radius: 1px 0.2rem 0.2rem 1px;
+  border-radius: 2px;
   background: var(--paper-fill);
-  color: var(--ink-muted);
-  font-size: 0.62rem;
-  font-weight: 700;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.book-cover-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .book-copy {
@@ -285,7 +292,6 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
 }
 
 .book-copy small,
-.book-note,
 .book-arrow {
   color: var(--ink-muted);
   font-size: 0.7rem;
@@ -297,28 +303,12 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
 }
 
 @media (hover: hover) {
-  .project-list a:hover {
-    background: var(--paper-fill);
-  }
-
-  .project-list a:hover .project-icon {
-    transform: translateX(0.15rem) scale(1.04);
-  }
-
   .project-list a:hover .project-copy strong {
     color: var(--ink-link);
   }
 
   .project-list a:hover .project-arrow {
     transform: translate(0.15rem, -0.15rem);
-  }
-
-  .book-list a:hover {
-    background: var(--paper-fill);
-  }
-
-  .book-list a:hover .book-mark {
-    transform: translateX(0.12rem) rotate(-2deg);
   }
 
   .book-list a:hover .book-copy strong {
@@ -336,12 +326,7 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-  .project-list a,
-  .project-icon,
   .project-arrow,
-  .book-list a,
-  .book-mark,
   .book-arrow {
     transition: none;
   }
@@ -367,12 +352,8 @@ const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(not
   }
 
   .book-list a {
-    grid-template-columns: 1.75rem minmax(0, 1fr) 1rem;
+    grid-template-columns: 2.625rem minmax(0, 1fr) 1rem;
     gap: 0.65rem;
-  }
-
-  .book-note {
-    display: none;
   }
 }
 </style>
