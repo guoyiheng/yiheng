@@ -4,10 +4,10 @@ import { wanderingEntries } from '~/data/wandering'
 
 <template>
   <ol class="wandering-archive">
-    <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title}`">
+    <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title ?? ''}`">
       <article class="wandering-entry">
         <header class="wandering-heading">
-          <h2 class="wandering-title">{{ entry.title }}</h2>
+          <h2 v-if="entry.title" class="wandering-title">{{ entry.title }}</h2>
           <time class="wandering-date">{{ entry.date }}</time>
         </header>
 

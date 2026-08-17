@@ -15,26 +15,25 @@ export interface WanderingBlock {
 }
 
 export interface WanderingEntry {
-  title: string
+  title?: string
   date: string
   blocks: WanderingBlock[]
 }
 
 export const wanderingEntries: WanderingEntry[] = [
   {
-    title: '新年',
     date: '2026-01-01',
-    blocks: []
+    blocks: [
+      { type: 'paragraph', text: '心有利刃，手无寸铁' }
+    ]
   },
   {
-    title: '新年',
     date: '2025-01-01',
     blocks: [
       { type: 'paragraph', text: '以有涯随无涯' }
     ]
   },
   {
-    title: '新年',
     date: '2024-01-01',
     blocks: [
       { type: 'paragraph', text: '你衣衫褴褛，不停旋转，浩瀚又悲伤' }
@@ -69,7 +68,6 @@ export const wanderingEntries: WanderingEntry[] = [
     ]
   },
   {
-    title: '新年',
     date: '2023-01-01',
     blocks: [
       { type: 'paragraph', text: '唵嘛呢叭咪吽' }
@@ -146,7 +144,6 @@ export const wanderingEntries: WanderingEntry[] = [
     ]
   },
   {
-    title: '新年',
     date: '2022-01-01',
     blocks: [
       { type: 'paragraph', text: '我们在天上的父 愿人都尊你的名为圣' },
@@ -205,7 +202,6 @@ export const wanderingEntries: WanderingEntry[] = [
     ]
   },
   {
-    title: '新年',
     date: '2021-01-01',
     blocks: [
       {
