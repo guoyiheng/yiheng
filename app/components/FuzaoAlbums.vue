@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import { favouriteAlbums } from '~/data/albums'
+
+const unavailableCovers = reactive(new Set<string>())
+const albumKey = (artist: string, name: string) => `${artist}-${name}`
+const markCoverUnavailable = (artist: string, name: string) => {
+  unavailableCovers.add(albumKey(artist, name))
+}
 </script>
 
 <template>
@@ -9,20 +15,27 @@ import { favouriteAlbums } from '~/data/albums'
     </header>
 
     <ol class="album-list">
-      <li v-for="album in favouriteAlbums" :key="`${album.artist}-${album.name}`">
+      <li v-for="album in favouriteAlbums" :key="albumKey(album.artist, album.name)">
         <a
           :href="album.appleMusicUrl"
           target="_blank"
           rel="noopener noreferrer"
           :aria-label="`${album.artist}《${album.name}》，在 Apple Music 中打开`"
         >
-          <img
-            :src="album.cover"
-            :alt="`${album.name} 专辑封面`"
-            width="52"
-            height="52"
-            loading="lazy"
-          >
+          <span class="album-cover">
+            <img
+              v-if="!unavailableCovers.has(albumKey(album.artist, album.name))"
+              :src="album.cover"
+              :alt="`${album.name} 专辑封面`"
+              width="52"
+              height="52"
+              loading="lazy"
+              @error="markCoverUnavailable(album.artist, album.name)"
+            >
+            <span v-else class="album-cover-fallback" role="img" :aria-label="`${album.name} 专辑封面`">
+              {{ album.name.charAt(0) }}
+            </span>
+          </span>
           <span class="album-name">{{ album.name }}</span>
           <time :datetime="album.releasedAt">{{ album.releasedAt }}</time>
           <span class="album-arrow" aria-hidden="true">↗</span>
@@ -71,13 +84,30 @@ import { favouriteAlbums } from '~/data/albums'
   text-decoration: none;
 }
 
-.album-list img {
+.album-cover,
+.album-list img,
+.album-cover-fallback {
+  display: grid;
   width: 3.25rem;
   height: 3.25rem;
+  place-items: center;
+}
+
+.album-cover {
   border: 1px solid color-mix(in srgb, var(--paper-rule) 45%, transparent);
   border-radius: 0.2rem;
+  overflow: hidden;
+  background: var(--paper-fill);
+}
+
+.album-list img {
   object-fit: cover;
-  background: var(--paper-rule);
+}
+
+.album-cover-fallback {
+  color: var(--ink-muted);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .album-name {
@@ -116,7 +146,9 @@ import { favouriteAlbums } from '~/data/albums'
     gap: 0.7rem;
   }
 
-  .album-list img {
+  .album-cover,
+  .album-list img,
+  .album-cover-fallback {
     width: 3rem;
     height: 3rem;
   }

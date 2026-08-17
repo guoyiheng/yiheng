@@ -179,7 +179,7 @@ export const favouriteAlbums: FavouriteAlbum[] = [
     name: '冀西南林路行',
     artist: '万能青年旅店',
     releasedAt: '2020-12-22',
-    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/cf/df/2a/cfdf2a8a-0298-ef1d-02a2-f605586b75d4/cover.jpg/600x600bb.jpg',
+    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music113/v4/c5/bd/a6/c5bda6ad-0ed6-849d-dc07-c6b527c0b5aa/cover.jpg/600x600bb.jpg',
     appleMusicUrl: 'https://music.apple.com/hk/album/%E5%86%80%E8%A5%BF%E5%8D%97%E6%9E%97%E8%B7%AF%E8%A1%8C/1545534900'
   },
   {
@@ -326,7 +326,7 @@ export const favouriteAlbums: FavouriteAlbum[] = [
     name: '天空',
     artist: '王菲',
     releasedAt: '1994-11-10',
-    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/67/67/2f/67672fd2-2592-3cca-2829-1ce28c775992/00044003839229.rgb.jpg/600x600bb.jpg',
+    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/8c/ac/bb/8cacbb3e-7102-5965-96e7-fe55d2188c8f/00602498212141.rgb.jpg/600x600bb.jpg',
     appleMusicUrl: 'https://music.apple.com/cn/album/%E5%A4%A9%E7%A9%BA/1443363496'
   },
   {
@@ -361,7 +361,7 @@ export const favouriteAlbums: FavouriteAlbum[] = [
     name: '丑奴儿',
     artist: '草东没有派对',
     releasedAt: '2016-02-19',
-    cover: 'https://coverartarchive.org/release-group/0436f306-0993-4e12-acfa-4b725163b9bd/front-500',
+    cover: 'https://upload.wikimedia.org/wikipedia/zh/7/75/The_Servile2017.jpg',
     appleMusicUrl: 'https://music.apple.com/cn/search?term=%E4%B8%91%E5%A5%B4%E5%84%BF%20%E8%8D%89%E4%B8%9C%E6%B2%A1%E6%9C%89%E6%B4%BE%E5%AF%B9'
   },
   {
