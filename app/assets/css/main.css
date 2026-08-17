@@ -121,14 +121,24 @@ a:focus-visible {
 
 .wrapper {
   --printer-height: 80px;
-  --paper-width: 90%;
+  --paper-rest-offset: 18px;
+  --paper-width: min(810px, calc((100vw - 0.75rem) * 0.9));
 
   position: relative;
   width: min(900px, calc(100vw - 0.75rem));
-  height: 80px;
+  height: calc(var(--printer-height) + var(--paper-rest-offset) + var(--paper-width) * 297 / 210);
   flex: 0 0 auto;
   font-size: 14px;
   user-select: none;
+}
+
+@media (min-width: 601px) and (min-height: 601px) {
+  .receipt-page {
+    height: auto;
+    min-height: 100svh;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
 }
 
 .printer {
@@ -206,8 +216,6 @@ a:focus-visible {
 }
 
 .receipt-wrapper {
-  --paper-rest-offset: 18px;
-
   position: absolute;
   top: 0;
   left: 50%;
