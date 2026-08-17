@@ -284,7 +284,7 @@ onBeforeUnmount(() => {
     </div>
 
     <footer class="site-copyright">
-      2020-PRESENT © YIHENG
+      © 2026 yiheng
     </footer>
   </main>
 </template>
