@@ -9,6 +9,7 @@ const menuItems = [
   { label: '彷徨', to: '/' },
   { label: '关于', to: '/about' }
 ]
+const menuGridStyle = { '--site-menu-item-count': menuItems.length }
 
 const isItemActive = (path: string) => {
   if (path === '/') return route.path === '/'
@@ -49,7 +50,7 @@ watch(() => route.fullPath, () => {
       <span class="site-menu-toggle-icon" aria-hidden="true">⌄</span>
     </button>
 
-    <div id="site-menu-links" class="site-menu-links">
+    <div id="site-menu-links" class="site-menu-links" :style="menuGridStyle">
       <NuxtLink
         v-for="item in menuItems"
         :key="item.to"
