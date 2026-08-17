@@ -80,7 +80,7 @@ import { wanderingEntries } from '~/data/wandering'
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.75rem;
-  align-items: baseline;
+  align-items: start;
   margin-bottom: 0.85rem;
 }
 
@@ -180,13 +180,8 @@ import { wanderingEntries } from '~/data/wandering'
   }
 
   .wandering-heading {
-    grid-template-columns: minmax(0, 1fr);
     gap: 0.45rem;
     margin-bottom: 0.6rem;
-  }
-
-  .wandering-date {
-    grid-column: 1;
   }
 
   .wandering-code {
