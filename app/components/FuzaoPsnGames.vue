@@ -56,17 +56,8 @@ const errorMessage = computed(() => {
     <section class="game-platform" aria-labelledby="ps-games-heading">
       <header class="platform-heading">
         <h2 id="ps-games-heading">PS</h2>
-        <span
-          v-if="profile"
-          class="platinum-count"
-        >
-          <img
-            class="platinum-trophy"
-            src="/images/playstation-platinum.png"
-            alt=""
-            width="18"
-            height="18"
-          >
+        <span v-if="profile" class="platinum-count">
+          <img class="platinum-trophy" src="/images/playstation-platinum.png" alt="" width="18" height="18">
           <span>白金 {{ profile.trophies.platinum }}</span>
         </span>
       </header>
@@ -80,31 +71,17 @@ const errorMessage = computed(() => {
       <ol v-else-if="profile" class="psn-game-list">
         <li v-for="game in profile.games" :key="game.id">
           <a :href="game.url" target="_blank" rel="noopener noreferrer">
-            <img
-              v-if="game.image"
-              :src="game.image"
-              :alt="`${game.title} 游戏封面`"
-              width="64"
-              height="64"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            >
+            <img v-if="game.image" :src="game.image" :alt="`${game.title} 游戏封面`" width="64" height="64" loading="lazy"
+              referrerpolicy="no-referrer">
             <span v-else class="game-image-placeholder" aria-hidden="true" />
             <span class="game-copy">
               <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
-              <small v-if="game.updatedAt">最近游玩 {{ game.updatedAt }}</small>
+              <small v-if="game.updatedAt">{{ game.updatedAt }}</small>
             </span>
             <span class="game-actions">
-              <img
-                v-if="game.trophies.platinum > 0"
-                class="game-platinum"
-                src="/images/playstation-platinum.png"
-                alt="已获得白金奖杯"
-                width="14"
-                height="14"
-                title="已获得白金奖杯"
-              >
+              <img v-if="game.trophies.platinum > 0" class="game-platinum" src="/images/playstation-platinum.png"
+                alt="已获得白金奖杯" width="14" height="14" title="已获得白金奖杯">
               <span class="game-arrow" aria-hidden="true">↗</span>
             </span>
           </a>
@@ -134,7 +111,7 @@ const errorMessage = computed(() => {
   line-height: 1.15;
 }
 
-.game-platform + .game-platform {
+.game-platform+.game-platform {
   margin-top: 2.75rem;
 }
 
