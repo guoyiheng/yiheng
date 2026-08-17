@@ -10,6 +10,8 @@ interface TrophyCounts {
 const PSN_ID_PATTERN = /^[a-z][a-z0-9_-]{2,15}$/i
 const PSNINE_ORIGIN = 'https://psnine.com'
 const MINIMUM_DURATION_DAYS = 5
+const PROFILE_CACHE_SECONDS = 30 * 24 * 60 * 60
+const PROFILE_REVALIDATE_SECONDS = 7 * 24 * 60 * 60
 const ALLOWED_IMAGE_HOSTS = new Set([
   'image.api.playstation.com',
   'psn-rsc.prod.dl.playstation.net',
@@ -168,7 +170,13 @@ export default defineEventHandler(async (event) => {
   setResponseHeader(
     event,
     'Cache-Control',
-    'public, max-age=300, s-maxage=3600, stale-while-revalidate=86400'
+    [
+      'public',
+      'max-age=300',
+      `s-maxage=${PROFILE_CACHE_SECONDS}`,
+      `stale-while-revalidate=${PROFILE_REVALIDATE_SECONDS}`,
+      `stale-if-error=${PROFILE_CACHE_SECONDS}`
+    ].join(', ')
   )
 
   return {
