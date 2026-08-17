@@ -41,8 +41,8 @@ const projects: Project[] = [
   {
     name: 'Lossless Merge',
     description: '视频无损合并工具',
-    href: '/projects/lossless-merge',
-    linkLabel: '项目说明',
+    href: 'https://github.com/guoyiheng/lossless-merge',
+    linkLabel: 'github.com',
     icon: '/favicon.svg'
   },
   {
