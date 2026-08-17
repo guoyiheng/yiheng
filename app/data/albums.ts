@@ -239,11 +239,11 @@ export const favouriteAlbums: FavouriteAlbum[] = [
     appleMusicUrl: 'https://music.apple.com/us/album/carrie-lowell-10th-anniversary-edition/1794841863'
   },
   {
-    name: '北方北方',
-    artist: '文静',
-    releasedAt: '2019-01-09',
-    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/0e/08/db/0e08db66-cca6-8282-6618-b07da1e23b77/4894944788638.jpg/600x600bb.jpg',
-    appleMusicUrl: 'https://music.apple.com/cn/album/%E5%8C%97%E6%96%B9%E5%8C%97%E6%96%B9-ep/1775663495'
+    name: '北方的北方',
+    artist: '万晓利',
+    releasedAt: '2010-01-01',
+    cover: 'https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/b7/91/a1/b791a1cf-38ac-52e9-0164-48d4717869d8/4711508067629.jpg/600x600bb.jpg',
+    appleMusicUrl: 'https://music.apple.com/cn/album/%E5%8C%97%E6%96%B9%E7%9A%84%E5%8C%97%E6%96%B9/1736475007'
   },
   {
     name: '独立日',
