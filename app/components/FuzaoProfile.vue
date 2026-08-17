@@ -75,8 +75,7 @@ const projects: Project[] = [
 ]
 
 const collections = [
-  { index: '01', title: '读过的书', label: 'Books' },
-  { index: '03', title: '喜欢的音乐', label: 'Music' }
+  { index: '01', title: '读过的书', label: 'Books' }
 ]
 </script>
 
@@ -149,12 +148,7 @@ const collections = [
           <span class="collection-mark" aria-hidden="true">—</span>
         </li>
         <FuzaoPsnGames />
-        <li>
-          <span class="collection-index">{{ collections[1]!.index }}</span>
-          <span class="collection-title">{{ collections[1]!.title }}</span>
-          <span class="collection-label">{{ collections[1]!.label }}</span>
-          <span class="collection-mark" aria-hidden="true">—</span>
-        </li>
+        <FuzaoAlbums />
       </ul>
     </section>
   </div>
