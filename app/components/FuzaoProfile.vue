@@ -15,62 +15,62 @@ const projects: Project[] = [
     description: '用自然语言或 SQL 查询数据库',
     href: 'https://nova.yiheng.run',
     linkLabel: 'nova.yiheng.run',
-    icon: '/media/project-icons/nova.svg'
+    icon: 'https://nova.yiheng.run/favicon.svg'
   },
   {
     name: 'Typura',
     description: '在线语言学习与打字练习',
     href: 'https://typura.yiheng.run',
     linkLabel: 'typura.yiheng.run',
-    icon: '/media/project-icons/typura.svg'
+    icon: 'https://typura.yiheng.run/typura-mark.svg'
   },
   {
     name: 'Relay Lab',
     description: '测试中继站的模型表现',
     href: 'https://relay.yiheng.run',
     linkLabel: 'relay.yiheng.run',
-    icon: '/media/project-icons/relay-lab.svg'
+    icon: 'https://relay.yiheng.run/favicon.svg'
   },
   {
     name: 'Voca',
     description: '48 个英语音标的互动指南',
     href: 'https://voca.yiheng.run',
     linkLabel: 'voca.yiheng.run',
-    icon: '/media/project-icons/voca.svg'
+    icon: 'https://voca.yiheng.run/favicon.svg'
   },
   {
     name: 'Lossless Merge',
     description: '视频无损合并工具',
     href: 'https://github.com/guoyiheng/lossless-merge',
     linkLabel: 'github.com',
-    icon: '/favicon.svg'
+    icon: 'https://github.com/favicon.ico'
   },
   {
     name: 'Design',
     description: '设计规范与实践',
     href: 'https://design.yiheng.run',
     linkLabel: 'design.yiheng.run',
-    icon: '/media/project-icons/design.svg'
+    icon: 'https://api.iconify.design/carbon:ibm-engineering-systems-design-rhapsody.svg'
   },
   {
     name: 'Handle',
     description: '汉字 Wordle',
     href: 'https://handle.yiheng.run',
     linkLabel: 'handle.yiheng.run',
-    icon: '/media/project-icons/handle.svg'
+    icon: 'https://handle.yiheng.run/favicon.svg'
   },
   {
     name: 'Pronunciation Corrector',
     description: '英语发音校正练习',
     href: 'https://pronunciation.yiheng.run',
     linkLabel: 'pronunciation.yiheng.run',
-    icon: '/media/project-icons/pronunciation-corrector.svg'
+    icon: 'https://pronunciation.yiheng.run/favicon.svg'
   }
 ]
 
 const useSiteIcon = (event: Event) => {
   const image = event.currentTarget as HTMLImageElement
-  if (!image.src.endsWith('/favicon.svg')) image.src = '/favicon.svg'
+  image.hidden = true
 }
 </script>
 

@@ -61,7 +61,13 @@ const errorMessage = computed(() => {
           v-if="profile"
           class="platinum-count"
         >
-          <span class="platinum-trophy" aria-hidden="true">🏆</span>
+          <img
+            class="platinum-trophy"
+            src="/images/playstation-trophy.svg"
+            alt=""
+            width="18"
+            height="18"
+          >
           <span>白金 {{ profile.trophies.platinum }}</span>
         </span>
       </header>
@@ -88,20 +94,22 @@ const errorMessage = computed(() => {
             <span class="game-copy">
               <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
-              <span class="progress-row">
-                <span class="progress-track" aria-hidden="true">
+              <span class="progress-row" :aria-label="`游戏进度 ${game.progress}%`">
+                <span class="progress-track">
                   <span class="progress-fill" :style="{ width: `${game.progress}%` }" />
                 </span>
-                <span class="progress-value">{{ game.progress }}%</span>
               </span>
             </span>
             <span class="game-actions">
-              <span
+              <img
                 v-if="game.trophies.platinum > 0"
                 class="game-platinum"
-                aria-label="已获得白金奖杯"
+                src="/images/playstation-trophy.svg"
+                alt="已获得白金奖杯"
+                width="32"
+                height="32"
                 title="已获得白金奖杯"
-              >🏆</span>
+              >
               <span class="game-arrow" aria-hidden="true">→</span>
             </span>
           </a>
@@ -162,9 +170,9 @@ const errorMessage = computed(() => {
 }
 
 .platinum-trophy {
-  filter: grayscale(1) sepia(0.12) saturate(0.6);
-  font-size: 0.82rem;
-  line-height: 1;
+  display: block;
+  width: 1rem;
+  height: 1rem;
 }
 
 .psn-feedback {
@@ -223,17 +231,14 @@ const errorMessage = computed(() => {
   overflow-wrap: anywhere;
 }
 
-.game-copy small,
-.progress-value {
+.game-copy small {
   color: var(--ink-muted);
   font-size: 0.68rem;
 }
 
 .progress-row {
-  display: grid;
-  grid-template-columns: minmax(3.5rem, 7rem) auto;
-  gap: 0.55rem;
-  align-items: center;
+  display: block;
+  width: min(7rem, 100%);
   margin-top: 0.12rem;
 }
 
@@ -259,11 +264,6 @@ const errorMessage = computed(() => {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink-link) 12%, transparent);
 }
 
-.progress-value {
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-}
-
 .game-actions {
   display: grid;
   min-width: 3.75rem;
@@ -274,16 +274,14 @@ const errorMessage = computed(() => {
 }
 
 .game-platinum {
-  display: grid;
+  display: block;
   width: 2rem;
   height: 2rem;
-  place-items: center;
+  padding: 0.35rem;
   border: 1px solid color-mix(in srgb, var(--ink-muted) 58%, transparent);
   border-radius: 50%;
   background: color-mix(in srgb, var(--paper-fill) 65%, transparent);
-  filter: grayscale(0.55) saturate(0.6);
-  font-size: 0.94rem;
-  line-height: 1;
+  object-fit: contain;
 }
 
 .game-arrow {

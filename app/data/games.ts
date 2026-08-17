@@ -116,5 +116,122 @@ export const games: GameEntry[] = [
     genres: ['动作冒险', '开放世界'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg',
     sourceUrl: 'https://zh.wikipedia.org/wiki/塞尔达传说_旷野之息'
+  },
+  {
+    id: 'half-life-alyx',
+    nameZh: '半衰期：爱莉克斯',
+    nameEn: 'Half-Life: Alyx',
+    releaseDate: '2020-03-23',
+    genres: ['VR', '第一人称射击'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/4/49/Half-Life_Alyx_Cover_Art.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Half-Life:_Alyx'
+  },
+  {
+    id: 'elven-assassin',
+    nameZh: '精灵刺客',
+    nameEn: 'Elven Assassin',
+    releaseDate: '2016-09-10',
+    genres: ['VR', '动作'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/503770/library_600x900.jpg',
+    sourceUrl: 'https://en.wikipedia.org/w/index.php?search=Elven+Assassin'
+  },
+  {
+    id: 'the-stanley-parable',
+    nameZh: '史丹利的寓言',
+    nameEn: 'The Stanley Parable',
+    releaseDate: '2013-10-17',
+    genres: ['冒险', '互动叙事'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/ce/Stanley_parable_cover.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/The_Stanley_Parable'
+  },
+  {
+    id: 'tale-of-immortal',
+    nameZh: '鬼谷八荒',
+    nameEn: 'Tale of Immortal',
+    releaseDate: '2023-05-26',
+    genres: ['动作角色扮演', '沙盒'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/d/d9/Tale_of_Immortal_Steam_header_2026.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Tale_of_Immortal'
+  },
+  {
+    id: 'animal-crossing-new-horizons',
+    nameZh: '集合啦！动物森友会',
+    nameEn: 'Animal Crossing: New Horizons',
+    releaseDate: '2020-03-20',
+    genres: ['生活模拟'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1f/Animal_Crossing_New_Horizons.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons'
+  },
+  {
+    id: 'cyberpunk-2077',
+    nameZh: '赛博朋克 2077',
+    nameEn: 'Cyberpunk 2077',
+    releaseDate: '2020-12-10',
+    genres: ['动作角色扮演', '开放世界'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Cyberpunk_2077'
+  },
+  {
+    id: 'super-mario-odyssey',
+    nameZh: '超级马力欧 奥德赛',
+    nameEn: 'Super Mario Odyssey',
+    releaseDate: '2017-10-27',
+    genres: ['平台', '动作冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_Odyssey'
+  },
+  {
+    id: 'celeste',
+    nameZh: '蔚蓝',
+    nameEn: 'Celeste',
+    releaseDate: '2018-01-25',
+    genres: ['平台'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Celeste_(video_game)'
+  },
+  {
+    id: 'tears-of-the-kingdom',
+    nameZh: '塞尔达传说 王国之泪',
+    nameEn: 'The Legend of Zelda: Tears of the Kingdom',
+    releaseDate: '2023-05-12',
+    genres: ['动作冒险', '开放世界'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Tears_of_the_Kingdom'
+  },
+  {
+    id: 'the-legend-of-tianding',
+    nameZh: '廖添丁：绝代凶贼之末日',
+    nameEn: 'The Legend of Tianding',
+    releaseDate: '2021-11-01',
+    genres: ['横向卷轴', '动作'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/3/37/The_Legend_of_Tianding_cover_art.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Tianding'
+  },
+  {
+    id: 'black-myth-wukong',
+    nameZh: '黑神话：悟空',
+    nameEn: 'Black Myth: Wukong',
+    releaseDate: '2024-08-20',
+    genres: ['动作角色扮演'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a6/Black_Myth_Wukong_cover_art.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Black_Myth:_Wukong'
+  },
+  {
+    id: 'little-kitty-big-city',
+    nameZh: '小猫咪大城市',
+    nameEn: 'Little Kitty, Big City',
+    releaseDate: '2024-05-09',
+    genres: ['冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/01/Little_Kitty_Big_City_Cover.png',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Little_Kitty,_Big_City'
+  },
+  {
+    id: 'hollow-knight-silksong',
+    nameZh: '空洞骑士：丝之歌',
+    nameEn: 'Hollow Knight: Silksong',
+    releaseDate: '2025-09-04',
+    genres: ['银河战士恶魔城', '动作冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/05/Silksong.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Hollow_Knight:_Silksong'
   }
 ]
