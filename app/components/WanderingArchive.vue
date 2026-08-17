@@ -95,9 +95,12 @@ import { wanderingEntries } from '~/data/wandering'
 }
 
 .wandering-date {
+  grid-column: 2;
+  justify-self: end;
   color: var(--ink-muted);
   font-size: 0.76em;
   font-variant-numeric: tabular-nums;
+  text-align: right;
   white-space: nowrap;
 }
 
