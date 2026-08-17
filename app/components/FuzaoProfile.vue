@@ -193,7 +193,7 @@ const useSiteIcon = (event: Event) => {
   overflow: hidden;
   border: 1px solid var(--profile-rule);
   border-radius: 0.25rem;
-  background: var(--paper-fill);
+  background: #f2f1ed;
   color: var(--ink-muted);
   font-size: 0.7rem;
   font-weight: 700;
@@ -205,7 +205,7 @@ const useSiteIcon = (event: Event) => {
   width: 100%;
   height: 100%;
   padding: 0.18rem;
-  background: var(--paper-bg, transparent);
+  background: transparent;
   object-fit: contain;
 }
 
