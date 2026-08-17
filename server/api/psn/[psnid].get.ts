@@ -11,6 +11,7 @@ const PSN_ID_PATTERN = /^[a-z][a-z0-9_-]{2,15}$/i
 const PSNINE_ORIGIN = 'https://psnine.com'
 const MINIMUM_DURATION_DAYS = 5
 const MINIMUM_PROGRESS = 9
+const RECENT_GAMES_WITHOUT_FILTER = 3
 const PROFILE_CACHE_SECONDS = 30 * 24 * 60 * 60
 const PROFILE_REVALIDATE_SECONDS = 7 * 24 * 60 * 60
 const ALLOWED_IMAGE_HOSTS = new Set([
@@ -33,6 +34,55 @@ const parseTrophies = (values: string[]): TrophyCounts => ({
   silver: numberFrom(values.find(value => value.startsWith('银'))),
   bronze: numberFrom(values.find(value => value.startsWith('铜')))
 })
+
+const GAME_TITLE_OVERRIDES: Record<string, string> = {
+  '天国 拯救': '天国：拯救',
+  '明末 渊虚之羽': '明末：渊虚之羽',
+  '卧龙 苍天陨落': '卧龙：苍天陨落',
+  '漫威蜘蛛侠 Remastered': '漫威蜘蛛侠：重制版',
+  '刺客信条 幻景': '刺客信条：幻景',
+  '只狼 影逝二度': '只狼：影逝二度',
+  '黑暗之魂3': '黑暗之魂 III',
+  '波斯王子 Rogue': '波斯王子：Rogue',
+  '黑暗之魂2 原罪学者': '黑暗之魂 II：原罪学者',
+  '最终幻想7 重制版': '最终幻想 VII：重制版',
+  '侠盗猎车手3 最终版': '侠盗猎车手 III：最终版',
+  '渡神纪 芬尼斯崛起': '渡神纪：芬尼斯崛起',
+  '索尼克 未知边境': '索尼克：未知边境',
+  '星球大战 绝地 幸存者': '星球大战 绝地：幸存者',
+  '波斯王子 失落的王冠': '波斯王子：失落的王冠',
+  '刺客信条 兄弟会': '刺客信条：兄弟会',
+  '上古卷轴5 天际': '上古卷轴 V：天际',
+  '战神 诸神黄昏': '战神：诸神黄昏',
+  '战神3 Remastered': '战神 III：重制版',
+  '漫威蜘蛛侠2': '漫威蜘蛛侠 2',
+  '仁王2': '仁王 2',
+  '漫威蜘蛛侠 迈尔斯 莫拉莱斯': '漫威蜘蛛侠：迈尔斯·莫拉莱斯',
+  '如龙 维新 极': '如龙 维新！极',
+  '瑞奇与叮当 时空跳转': '瑞奇与叮当：时空跳转',
+  '血污 夜之仪式': '血污：夜之仪式',
+  '龙珠Z 卡卡洛特': '龙珠 Z：卡卡洛特',
+  '怪物猎人 崛起': '怪物猎人：崛起',
+  '死亡搁浅 导演剪辑版': '死亡搁浅：导演剪辑版',
+  '侠盗猎车手5': '侠盗猎车手 V',
+  '最后生还者 第一幕': '最后生还者：第一部',
+  '影子战术 将军之刃': '影子战术：将军之刃',
+  '柯娜 精神之桥': '柯娜：精神之桥',
+  '黑暗之魂 Remastered': '黑暗之魂：重制版',
+  '荒野大镖客 救赎2': '荒野大镖客：救赎 2',
+  '小骨 英雄杀手': '小骨：英雄杀手',
+  '地平线 西之绝境': '地平线：西之绝境',
+  '这是我的战争 最终剪辑版': '这是我的战争：最终剪辑版',
+  '巫师3 狂猎': '巫师 3：狂猎',
+  '神秘海域 盗贼传奇合辑': '神秘海域：盗贼传奇合辑',
+  '底特律 化身为人': '底特律：化身为人',
+  '刺客信条2': '刺客信条 II',
+  '神秘海域4 盗贼末路': '神秘海域 4：盗贼末路',
+  '刺客信条 英灵殿': '刺客信条：英灵殿',
+  '最后生还者 Remastered': '最后生还者：重制版'
+}
+
+const canonicalGameTitle = (title: string) => GAME_TITLE_OVERRIDES[title] ?? title
 
 const durationInDays = (value: string) => {
   const amount = numberFrom(value)
@@ -108,15 +158,13 @@ const parseGameRows = (root: HTMLElement) => {
     const durationDays = durationInDays(duration)
     const progress = numberFrom(text(row.querySelector('.progress div')?.textContent))
 
-    if (durationDays < MINIMUM_DURATION_DAYS || progress < MINIMUM_PROGRESS) return []
-
     const href = link.getAttribute('href') ?? ''
     const imageUrl = row.querySelector('img.imgbgnb')?.getAttribute('src') ?? ''
     const trophyValues = row.querySelectorAll('small span').map(node => text(node.textContent))
 
     return [{
       id: href.match(/\/psngame\/(\d+)/)?.[1] ?? href,
-      title: text(titleLink.textContent),
+      title: canonicalGameTitle(text(titleLink.textContent)),
       platform: text(row.querySelector('td:nth-child(2) > span')?.textContent),
       updatedAt: text(row.querySelector('td:nth-child(2) small')?.textContent),
       duration,
@@ -164,6 +212,11 @@ export default defineEventHandler(async (event) => {
     for (const game of parseGameRows(root)) gamesById.set(game.id, game)
   }
 
+  const games = [...gamesById.values()].filter((game, index) => {
+    if (index < RECENT_GAMES_WITHOUT_FILTER) return true
+    return game.durationDays >= MINIMUM_DURATION_DAYS && game.progress >= MINIMUM_PROGRESS
+  })
+
   setResponseHeader(
     event,
     'Cache-Control',
@@ -181,6 +234,6 @@ export default defineEventHandler(async (event) => {
     trophies: parseTrophies(
       profileRoot.querySelectorAll('.psntrophy span').map(node => text(node.textContent))
     ),
-    games: [...gamesById.values()]
+    games
   }
 })

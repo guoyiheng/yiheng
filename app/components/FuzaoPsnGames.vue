@@ -13,7 +13,6 @@ interface PsnGame {
   updatedAt: string
   duration: string
   durationDays: number
-  progress: number
   image: string
   trophies: TrophyCounts
   url: string
@@ -94,11 +93,6 @@ const errorMessage = computed(() => {
             <span class="game-copy">
               <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
-              <span class="progress-row" :aria-label="`游戏进度 ${game.progress}%`">
-                <span class="progress-track">
-                  <span class="progress-fill" :style="{ width: `${game.progress}%` }" />
-                </span>
-              </span>
             </span>
             <span class="game-actions">
               <img
@@ -106,8 +100,8 @@ const errorMessage = computed(() => {
                 class="game-platinum"
                 src="/images/playstation-platinum.png"
                 alt="已获得白金奖杯"
-                width="32"
-                height="32"
+                width="20"
+                height="20"
                 title="已获得白金奖杯"
               >
               <span class="game-arrow" aria-hidden="true">→</span>
@@ -171,8 +165,8 @@ const errorMessage = computed(() => {
 
 .platinum-trophy {
   display: block;
-  width: 1rem;
-  height: 1rem;
+  width: 0.875rem;
+  height: 0.875rem;
 }
 
 .psn-feedback {
@@ -236,51 +230,19 @@ const errorMessage = computed(() => {
   font-size: 0.68rem;
 }
 
-.progress-row {
-  display: block;
-  width: min(7rem, 100%);
-  margin-top: 0.12rem;
-}
-
-.progress-track {
-  position: relative;
-  display: block;
-  height: 0.32rem;
-  overflow: hidden;
-  border-radius: 1px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--paper-rule) 0,
-    var(--paper-rule) 0.45rem,
-    transparent 0.45rem,
-    transparent 0.56rem
-  );
-}
-
-.progress-fill {
-  display: block;
-  height: 100%;
-  background: var(--ink-link);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink-link) 12%, transparent);
-}
-
 .game-actions {
   display: grid;
-  min-width: 3.75rem;
-  grid-template-columns: 2.1rem 1rem;
-  gap: 0.55rem;
+  min-width: 2.75rem;
+  grid-template-columns: 1.25rem 1rem;
+  gap: 0.5rem;
   align-items: center;
   justify-items: end;
 }
 
 .game-platinum {
   display: block;
-  width: 2rem;
-  height: 2rem;
-  padding: 0.35rem;
-  border: 1px solid color-mix(in srgb, var(--ink-muted) 58%, transparent);
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--paper-fill) 65%, transparent);
+  width: 1.25rem;
+  height: 1.25rem;
   object-fit: contain;
 }
 

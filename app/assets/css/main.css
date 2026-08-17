@@ -121,12 +121,12 @@ a:focus-visible {
 
 .wrapper {
   --printer-height: 80px;
-  --paper-width: min(620px,
+  --paper-width: min(700px,
       calc(100vw - 2rem),
-      max(220px, calc((100svh - 12.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297)));
+      max(240px, calc((100svh - 9.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297)));
 
   position: relative;
-  width: min(680px, calc(100vw - 1rem));
+  width: min(760px, calc(100vw - 1rem));
   height: 80px;
   flex: 0 0 auto;
   font-size: 14px;
