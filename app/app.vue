@@ -11,6 +11,14 @@ useHead(() => ({
       name: 'theme-color',
       content: theme.value === 'dark' ? '#000000' : '#171512'
     }
+  ],
+  link: [
+    {
+      key: 'favicon',
+      rel: 'icon',
+      type: 'image/svg+xml',
+      href: theme.value === 'dark' ? '/favicon-dark.svg' : '/favicon-light.svg'
+    }
   ]
 }))
 

@@ -11,7 +11,6 @@ export default defineNuxtConfig({
         { name: 'description', content: '一恒的个人网站。' }
       ],
       link: [
-        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
         { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' },
         {
