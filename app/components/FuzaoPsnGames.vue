@@ -50,7 +50,7 @@ const errorMessage = computed(() => {
 <template>
   <section class="psn-section fuzao-section" aria-labelledby="games-heading">
     <header class="section-heading">
-      <h1 id="games-heading">Game</h1>
+      <h1 id="games-heading">Games</h1>
     </header>
 
     <section class="game-platform" aria-labelledby="ps-games-heading">

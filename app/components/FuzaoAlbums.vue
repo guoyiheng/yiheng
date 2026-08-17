@@ -11,7 +11,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 <template>
   <section class="album-section fuzao-section" aria-labelledby="albums-heading">
     <header class="section-heading">
-      <h1 id="albums-heading">Album</h1>
+      <h1 id="albums-heading">Albums</h1>
     </header>
 
     <ol class="album-list">
