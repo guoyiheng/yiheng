@@ -114,6 +114,10 @@ import { wanderingEntries } from '~/data/wandering'
   margin: 0;
 }
 
+.wandering-paragraph {
+  white-space: pre-line;
+}
+
 .wandering-list {
   padding-left: 1.25rem;
 }

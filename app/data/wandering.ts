@@ -22,6 +22,25 @@ export interface WanderingEntry {
 
 export const wanderingEntries: WanderingEntry[] = [
   {
+    title: '新年',
+    date: '2026-01-01',
+    blocks: []
+  },
+  {
+    title: '新年',
+    date: '2025-01-01',
+    blocks: [
+      { type: 'paragraph', text: '以有涯随无涯' }
+    ]
+  },
+  {
+    title: '新年',
+    date: '2024-01-01',
+    blocks: [
+      { type: 'paragraph', text: '你衣衫褴褛，不停旋转，浩瀚又悲伤' }
+    ]
+  },
+  {
     title: 'Bundler Build Feature Flags',
     date: '2023-07-27',
     blocks: [
@@ -47,6 +66,13 @@ export const wanderingEntries: WanderingEntry[] = [
         text: 'GitHub issue #234',
         href: 'https://github.com/stephenou/fruitionsite/issues/234'
       }
+    ]
+  },
+  {
+    title: '新年',
+    date: '2023-01-01',
+    blocks: [
+      { type: 'paragraph', text: '唵嘛呢叭咪吽' }
     ]
   },
   {
@@ -120,6 +146,16 @@ export const wanderingEntries: WanderingEntry[] = [
     ]
   },
   {
+    title: '新年',
+    date: '2022-01-01',
+    blocks: [
+      { type: 'paragraph', text: '我们在天上的父 愿人都尊你的名为圣' },
+      { type: 'paragraph', text: '愿你的国降临 愿你的旨意行在地上 如同行在天上' },
+      { type: 'paragraph', text: '我们日用的饮食 今日赐给我们 免我们的债 如同我们免了人的债' },
+      { type: 'paragraph', text: '不叫我们遇见试探 救我们脱离凶恶 因为国度 权柄 荣耀 全是你的直到永远 阿门' }
+    ]
+  },
+  {
     title: 'git-stash',
     date: '2021-12-20',
     blocks: [
@@ -166,6 +202,17 @@ export const wanderingEntries: WanderingEntry[] = [
         type: 'code',
         code: 'find ~/Folder/ -type f -print0 | xargs -0 mv -t ~/dl\n\n# e.g\nfind ./ -type f -iname "*.mp4" -exec mv {} ./dl \\;\nfind ./ -type f -iname "*.mkv" -exec mv {} ./dl \\;\n\n# -type with the argument -type you can specify type file.on this statement that is the mean file.if using of -d that means directory.\n# -iname: the most common and obvious method to look for a file is using its -name argument.if you are not sure about its case-sensitivity you can use of -iname argument\n# - mv {} and finally to specify target directory and then moving the files on there using mv {} argument\n\n# media type\n# video\n# mp4,wmv,rmvb,avi,rm,mov,flv,mkv\n# zip\n# *.rar *.zip *.7z *.iso *.wav *.flac *.mp3 *.aac\n# image\n# *.png *.jpg *.gif *.jpeg *.bmp'
       }
+    ]
+  },
+  {
+    title: '新年',
+    date: '2021-01-01',
+    blocks: [
+      {
+        type: 'paragraph',
+        text: '寻梦！撑一支长篙，\n向青草更青处漫溯；\n满载一船星辉，\n在星辉斑斓里放歌。'
+      },
+      { type: 'paragraph', text: '愿我们平日都快乐。' }
     ]
   },
   {
