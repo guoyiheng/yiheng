@@ -63,7 +63,7 @@ const errorMessage = computed(() => {
         >
           <img
             class="platinum-trophy"
-            src="/images/playstation-trophy.svg"
+            src="/images/playstation-platinum.png"
             alt=""
             width="18"
             height="18"
@@ -104,7 +104,7 @@ const errorMessage = computed(() => {
               <img
                 v-if="game.trophies.platinum > 0"
                 class="game-platinum"
-                src="/images/playstation-trophy.svg"
+                src="/images/playstation-platinum.png"
                 alt="已获得白金奖杯"
                 width="32"
                 height="32"
