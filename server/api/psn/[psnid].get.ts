@@ -63,6 +63,11 @@ const safeImageUrl = (value?: string) => {
   }
 }
 
+const imageProxyUrl = (value: string) => {
+  const token = btoa(value).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
+  return `/media/psn/${token}.png`
+}
+
 const fetchPage = async (url: string) => {
   let response: Response
 
@@ -107,7 +112,7 @@ const parseGameRows = (root: HTMLElement) => {
     if (durationDays < MINIMUM_DURATION_DAYS) return []
 
     const href = link.getAttribute('href') ?? ''
-    const imageUrl = row.querySelector('img.imgbgnb')?.getAttribute('src') ?? ''
+    const imageUrl = safeImageUrl(row.querySelector('img.imgbgnb')?.getAttribute('src'))
     const trophyValues = row.querySelectorAll('small span').map(node => text(node.textContent))
 
     return [{
@@ -118,7 +123,7 @@ const parseGameRows = (root: HTMLElement) => {
       duration,
       durationDays,
       progress: numberFrom(text(row.querySelector('.progress div')?.textContent)),
-      image: safeImageUrl(imageUrl),
+      image: imageUrl ? imageProxyUrl(imageUrl) : '',
       trophies: parseTrophies(trophyValues),
       url: href.startsWith('http') ? href : `${PSNINE_ORIGIN}${href}`
     }]

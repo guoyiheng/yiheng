@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { readingBooks } from '~/data/books'
+
 interface Project {
   name: string
   description: string
@@ -13,56 +15,56 @@ const projects: Project[] = [
     description: '用自然语言或 SQL 查询数据库',
     href: 'https://nova.yiheng.run',
     linkLabel: 'nova.yiheng.run',
-    icon: 'https://nova.yiheng.run/favicon.svg'
+    icon: '/media/project-icons/nova.svg'
   },
   {
     name: 'Typura',
     description: '在线语言学习与打字练习',
     href: 'https://typura.yiheng.run',
     linkLabel: 'typura.yiheng.run',
-    icon: 'https://typura.yiheng.run/favicon.ico'
+    icon: '/media/project-icons/typura.svg'
   },
   {
     name: 'Relay Lab',
     description: '测试中继站的模型表现',
     href: 'https://relay.yiheng.run',
     linkLabel: 'relay.yiheng.run',
-    icon: 'https://relay.yiheng.run/favicon.ico'
+    icon: '/media/project-icons/relay-lab.svg'
   },
   {
     name: 'Voca',
     description: '48 个英语音标的互动指南',
     href: 'https://voca.yiheng.run',
     linkLabel: 'voca.yiheng.run',
-    icon: 'https://voca.yiheng.run/favicon.svg'
+    icon: '/media/project-icons/voca.svg'
   },
   {
     name: 'Lossless Merge',
     description: '视频无损合并工具',
-    href: 'https://github.com/guoyiheng/lossless-merge',
-    linkLabel: 'GitHub',
-    icon: 'https://github.githubassets.com/favicons/favicon.svg'
+    href: '/projects/lossless-merge',
+    linkLabel: '项目说明',
+    icon: '/favicon.svg'
   },
   {
     name: 'Design',
     description: '设计规范与实践',
     href: 'https://design.yiheng.run',
     linkLabel: 'design.yiheng.run',
-    icon: 'https://api.iconify.design/carbon:ibm-engineering-systems-design-rhapsody.svg'
+    icon: '/media/project-icons/design.svg'
   },
   {
     name: 'Handle',
     description: '汉字 Wordle',
     href: 'https://handle.yiheng.run',
     linkLabel: 'handle.yiheng.run',
-    icon: 'https://handle.yiheng.run/favicon.svg'
+    icon: '/media/project-icons/handle.svg'
   },
   {
     name: 'Pronunciation Corrector',
     description: '英语发音校正练习',
     href: 'https://pronunciation.yiheng.run',
     linkLabel: 'pronunciation.yiheng.run',
-    icon: 'https://pronunciation.yiheng.run/favicon.svg'
+    icon: '/media/project-icons/pronunciation-corrector.svg'
   }
 ]
 
@@ -70,6 +72,8 @@ const hideBrokenIcon = (event: Event) => {
   const image = event.currentTarget as HTMLImageElement
   image.hidden = true
 }
+
+const bookHref = (noteId: string) => `/nanqiang-beidiao/${encodeURIComponent(noteId)}`
 </script>
 
 <template>
@@ -81,17 +85,14 @@ const hideBrokenIcon = (event: Event) => {
 
       <ul class="project-list">
         <li v-for="project in projects" :key="project.name">
-          <a :href="project.href" target="_blank" rel="noopener noreferrer">
+          <a
+            :href="project.href"
+            :target="project.href.startsWith('http') ? '_blank' : undefined"
+            :rel="project.href.startsWith('http') ? 'noopener noreferrer' : undefined"
+          >
             <span class="project-icon" aria-hidden="true">
               <span>{{ project.name.charAt(0) }}</span>
-              <img
-                :src="project.icon"
-                alt=""
-                width="32"
-                height="32"
-                loading="lazy"
-                @error="hideBrokenIcon"
-              >
+              <img :src="project.icon" alt="" width="32" height="32" loading="lazy" @error="hideBrokenIcon">
             </span>
             <span class="project-copy">
               <strong>{{ project.name }}</strong>
@@ -108,7 +109,19 @@ const hideBrokenIcon = (event: Event) => {
       <header class="section-heading">
         <h1 id="books-heading">读过的书</h1>
       </header>
-      <div class="empty-rule" aria-hidden="true">—</div>
+      <ul class="book-list">
+        <li v-for="book in readingBooks" :key="book.noteId">
+          <NuxtLink :to="bookHref(book.noteId)">
+            <span class="book-mark" aria-hidden="true">书</span>
+            <span class="book-copy">
+              <strong>{{ book.title }}</strong>
+              <small>{{ book.author }}</small>
+            </span>
+            <span class="book-note">读书笔记</span>
+            <span class="book-arrow" aria-hidden="true">→</span>
+          </NuxtLink>
+        </li>
+      </ul>
     </section>
 
     <FuzaoPsnGames />
@@ -125,7 +138,7 @@ const hideBrokenIcon = (event: Event) => {
   font-size: 1rem;
 }
 
-.fuzao-section + .fuzao-section {
+.fuzao-section+.fuzao-section {
   margin-top: 4rem;
 }
 
@@ -221,13 +234,66 @@ const hideBrokenIcon = (event: Event) => {
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.empty-rule {
-  min-height: 4rem;
-  padding-top: 1.25rem;
+.book-list {
+  margin: 0;
+  padding: 0;
   border-top: 1px solid var(--profile-rule);
+  list-style: none;
+}
+
+.book-list li {
   border-bottom: 1px solid var(--profile-rule);
+}
+
+.book-list a {
+  display: grid;
+  min-height: 3.85rem;
+  grid-template-columns: 1.75rem minmax(0, 1fr) auto 1rem;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.55rem 0.25rem;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 180ms ease-out;
+}
+
+.book-mark {
+  display: grid;
+  width: 1.6rem;
+  height: 2rem;
+  place-items: center;
+  border: 1px solid var(--profile-rule);
+  border-radius: 1px 0.2rem 0.2rem 1px;
+  background: var(--paper-fill);
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.book-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+.book-copy strong {
+  color: var(--ink-strong);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.book-copy small,
+.book-note,
+.book-arrow {
+  color: var(--ink-muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.book-arrow {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (hover: hover) {
@@ -246,6 +312,22 @@ const hideBrokenIcon = (event: Event) => {
   .project-list a:hover .project-arrow {
     transform: translate(0.15rem, -0.15rem);
   }
+
+  .book-list a:hover {
+    background: var(--paper-fill);
+  }
+
+  .book-list a:hover .book-mark {
+    transform: translateX(0.12rem) rotate(-2deg);
+  }
+
+  .book-list a:hover .book-copy strong {
+    color: var(--ink-link);
+  }
+
+  .book-list a:hover .book-arrow {
+    transform: translateX(0.16rem);
+  }
 }
 
 .project-list a:focus-visible {
@@ -254,19 +336,24 @@ const hideBrokenIcon = (event: Event) => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .project-list a,
   .project-icon,
-  .project-arrow {
+  .project-arrow,
+  .book-list a,
+  .book-mark,
+  .book-arrow {
     transition: none;
   }
 }
 
-@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
+@media (max-width: 600px),
+(orientation: landscape) and (max-height: 600px) {
   .fuzao-profile {
     padding-inline: 0;
   }
 
-  .fuzao-section + .fuzao-section {
+  .fuzao-section+.fuzao-section {
     margin-top: 3.25rem;
   }
 
@@ -276,6 +363,15 @@ const hideBrokenIcon = (event: Event) => {
   }
 
   .project-destination {
+    display: none;
+  }
+
+  .book-list a {
+    grid-template-columns: 1.75rem minmax(0, 1fr) 1rem;
+    gap: 0.65rem;
+  }
+
+  .book-note {
     display: none;
   }
 }

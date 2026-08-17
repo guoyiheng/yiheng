@@ -28,7 +28,7 @@ const useFallbackCover = (event: Event) => {
 <template>
   <div class="game-archive" :class="{ 'is-compact': compact }">
     <header v-if="!compact" class="game-archive-heading">
-      <span class="game-archive-kicker">Game archive · {{ games.length }}</span>
+      <span class="game-archive-kicker">Game archive</span>
       <h1>游戏档案</h1>
     </header>
 
@@ -50,11 +50,9 @@ const useFallbackCover = (event: Event) => {
 
       <ol class="game-list">
         <li v-for="game in gamesByStatus[group.status]" :key="game.id">
-          <a
+          <NuxtLink
             class="game-entry"
-            :href="game.sourceUrl"
-            target="_blank"
-            rel="noopener noreferrer"
+            :to="game.sourceUrl"
           >
             <span class="game-cover-frame">
               <img
@@ -78,18 +76,12 @@ const useFallbackCover = (event: Event) => {
               </span>
             </span>
 
-            <span class="game-source-arrow" aria-hidden="true">↗</span>
-          </a>
+            <span class="game-source-arrow" aria-hidden="true">→</span>
+          </NuxtLink>
         </li>
       </ol>
     </section>
 
-    <p v-if="!compact" class="game-source">
-      资料与封面来源
-      <a href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer">
-        Wikipedia<span aria-hidden="true"> ↗</span>
-      </a>
-    </p>
   </div>
 </template>
 
@@ -246,18 +238,6 @@ const useFallbackCover = (event: Event) => {
 .game-source-arrow {
   color: var(--ink-muted);
   font-size: 0.8rem;
-}
-
-.game-source {
-  margin: 2.5rem 0 0;
-  color: var(--ink-muted);
-  font-size: 0.7rem;
-  text-align: right;
-}
-
-.game-source a {
-  color: var(--ink-link);
-  text-underline-offset: 0.2em;
 }
 
 @media (max-width: 480px) {

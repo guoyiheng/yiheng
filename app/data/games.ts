@@ -32,9 +32,9 @@ export const games: GameEntry[] = [
     nameEn: 'Octopath Traveler',
     releaseDate: '2018-07-13',
     genres: ['日式角色扮演'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/3/34/Octopath_Traveler.jpg',
+    coverUrl: '/images/games/octopath-traveler.png',
     fallbackCover: '/images/games/octopath-traveler.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/歧路旅人'
+    sourceUrl: '/game/octopath-traveler'
   },
   {
     id: 'skyward-sword-hd',
@@ -43,9 +43,9 @@ export const games: GameEntry[] = [
     nameEn: 'The Legend of Zelda: Skyward Sword HD',
     releaseDate: '2021-07-16',
     genres: ['动作冒险'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/zh/d/d7/Legend_of_Zelda_Skyward_Sword_boxart.jpg',
+    coverUrl: '/images/games/skyward-sword-hd.png',
     fallbackCover: '/images/games/skyward-sword-hd.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/薩爾達傳說_禦天之劍'
+    sourceUrl: '/game/skyward-sword-hd'
   },
   {
     id: 'metroid-dread',
@@ -54,9 +54,9 @@ export const games: GameEntry[] = [
     nameEn: 'Metroid Dread',
     releaseDate: '2021-10-08',
     genres: ['动作冒险', '银河战士恶魔城'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/zh/a/a3/Metroid_Dread_cover.png',
+    coverUrl: '/images/games/metroid-dread.png',
     fallbackCover: '/images/games/metroid-dread.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/密特罗德_生存恐惧'
+    sourceUrl: '/game/metroid-dread'
   },
   {
     id: 'disco-elysium',
@@ -65,9 +65,9 @@ export const games: GameEntry[] = [
     nameEn: 'Disco Elysium',
     releaseDate: '2019-10-15',
     genres: ['角色扮演'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0d/Disco_Elysium_Poster.jpeg',
+    coverUrl: '/images/games/disco-elysium.png',
     fallbackCover: '/images/games/disco-elysium.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/極樂迪斯科'
+    sourceUrl: '/game/disco-elysium'
   },
   {
     id: 'hades',
@@ -76,9 +76,9 @@ export const games: GameEntry[] = [
     nameEn: 'Hades',
     releaseDate: '2020-09-17',
     genres: ['Roguelike', '动作角色扮演'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/cc/Hades_cover_art.jpg',
+    coverUrl: '/images/games/hades.png',
     fallbackCover: '/images/games/hades.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/黑帝斯_(遊戲)'
+    sourceUrl: '/game/hades'
   },
   {
     id: 'hollow-knight',
@@ -87,9 +87,9 @@ export const games: GameEntry[] = [
     nameEn: 'Hollow Knight',
     releaseDate: '2017-02-24',
     genres: ['银河战士恶魔城', '动作冒险'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/zh/8/86/Hollow_Knight_promo_image.jpg',
+    coverUrl: '/images/games/hollow-knight.png',
     fallbackCover: '/images/games/hollow-knight.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/空洞騎士'
+    sourceUrl: '/game/hollow-knight'
   },
   {
     id: 'red-dead-redemption-2',
@@ -98,9 +98,9 @@ export const games: GameEntry[] = [
     nameEn: 'Red Dead Redemption 2',
     releaseDate: '2018-10-26',
     genres: ['动作冒险', '开放世界'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg',
+    coverUrl: '/images/games/red-dead-redemption-2.png',
     fallbackCover: '/images/games/red-dead-redemption-2.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/碧血狂殺2'
+    sourceUrl: '/game/red-dead-redemption-2'
   },
   {
     id: 'sekiro',
@@ -109,9 +109,9 @@ export const games: GameEntry[] = [
     nameEn: 'Sekiro: Shadows Die Twice',
     releaseDate: '2019-03-22',
     genres: ['动作冒险', '类魂'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg',
+    coverUrl: '/images/games/sekiro.png',
     fallbackCover: '/images/games/sekiro.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/隻狼：暗影雙死'
+    sourceUrl: '/game/sekiro'
   },
   {
     id: 'skyrim',
@@ -120,9 +120,9 @@ export const games: GameEntry[] = [
     nameEn: 'The Elder Scrolls V: Skyrim',
     releaseDate: '2011-11-11',
     genres: ['动作角色扮演', '开放世界'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/1/15/The_Elder_Scrolls_V_Skyrim_cover.png',
+    coverUrl: '/images/games/skyrim.png',
     fallbackCover: '/images/games/skyrim.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/上古卷轴V：天际'
+    sourceUrl: '/game/skyrim'
   },
   {
     id: 'katana-zero',
@@ -131,9 +131,9 @@ export const games: GameEntry[] = [
     nameEn: 'Katana ZERO',
     releaseDate: '2019-04-18',
     genres: ['动作平台', '砍杀'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/d/da/Katana_Zero_cover.png',
+    coverUrl: '/images/games/katana-zero.png',
     fallbackCover: '/images/games/katana-zero.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Katana_Zero'
+    sourceUrl: '/game/katana-zero'
   },
   {
     id: 'dark-souls',
@@ -142,9 +142,9 @@ export const games: GameEntry[] = [
     nameEn: 'Dark Souls',
     releaseDate: '2011-09-22',
     genres: ['动作角色扮演', '类魂'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8d/Dark_Souls_Cover_Art.jpg',
+    coverUrl: '/images/games/dark-souls.png',
     fallbackCover: '/images/games/dark-souls.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/黑暗靈魂'
+    sourceUrl: '/game/dark-souls'
   },
   {
     id: 'breath-of-the-wild',
@@ -153,8 +153,8 @@ export const games: GameEntry[] = [
     nameEn: 'The Legend of Zelda: Breath of the Wild',
     releaseDate: '2017-03-03',
     genres: ['动作冒险', '开放世界'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg',
+    coverUrl: '/images/games/breath-of-the-wild.png',
     fallbackCover: '/images/games/breath-of-the-wild.png',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/塞尔达传说_旷野之息'
+    sourceUrl: '/game/breath-of-the-wild'
   }
 ]
