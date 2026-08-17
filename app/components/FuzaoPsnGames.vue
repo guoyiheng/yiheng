@@ -91,7 +91,7 @@ const errorMessage = computed(() => {
 
     <section class="game-platform other-games" aria-labelledby="other-games-heading">
       <header class="platform-heading">
-        <h2 id="other-games-heading">其他</h2>
+        <h2 id="other-games-heading">Other</h2>
       </header>
       <GameArchive compact />
     </section>
