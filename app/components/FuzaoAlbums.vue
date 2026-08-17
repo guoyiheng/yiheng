@@ -5,7 +5,6 @@ import { favouriteAlbums } from '~/data/albums'
 <template>
   <section class="album-section fuzao-section" aria-labelledby="albums-heading">
     <header class="section-heading">
-      <span class="section-kicker">Music · 04</span>
       <h1 id="albums-heading">喜欢的音乐</h1>
     </header>
 
@@ -35,16 +34,7 @@ import { favouriteAlbums } from '~/data/albums'
 
 <style scoped>
 .section-heading {
-  display: grid;
-  gap: 0.45rem;
   margin-bottom: 1.25rem;
-}
-
-.section-kicker {
-  color: var(--ink-muted);
-  font-size: 0.75rem;
-  line-height: 1;
-  text-transform: uppercase;
 }
 
 .section-heading h1 {

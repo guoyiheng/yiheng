@@ -11,6 +11,8 @@ interface PsnGame {
   title: string
   platform: string
   updatedAt: string
+  duration: string
+  durationDays: number
   progress: number
   image: string
   trophies: TrophyCounts
@@ -18,166 +20,106 @@ interface PsnGame {
 }
 
 interface PsnProfile {
-  id: string
-  avatar: string
-  level: number
   trophies: TrophyCounts
-  gameCount: number
-  completionCount: number
-  completionRate: number
   games: PsnGame[]
   profileUrl: string
 }
 
-const psnId = ref('')
-const profile = ref<PsnProfile | null>(null)
-const isLoading = ref(false)
-const errorMessage = ref('')
+const PSN_ID = 'shallwetalk2022'
 
-const searchProfile = async () => {
-  const normalizedId = psnId.value.trim()
-  if (!normalizedId || isLoading.value) return
+const { data: profile, status, error } = await useFetch<PsnProfile>(
+  `/api/psn/${PSN_ID}`,
+  { key: `psn-profile-${PSN_ID}` }
+)
 
-  isLoading.value = true
-  errorMessage.value = ''
+const errorMessage = computed(() => {
+  if (!error.value) return ''
 
-  try {
-    profile.value = await $fetch<PsnProfile>(`/api/psn/${encodeURIComponent(normalizedId)}`)
-  } catch (error) {
-    profile.value = null
-    const requestError = error as {
-      message?: string
-      statusMessage?: string
-      data?: { message?: string, statusMessage?: string }
-    }
-    const message = requestError.data?.message
-      ?? requestError.data?.statusMessage
-      ?? requestError.statusMessage
-      ?? requestError.message
-      ?? '账号资料暂时无法读取'
-    errorMessage.value = message === '没有找到这个公开账号'
-      ? '未找到公开档案，请先在 PSNINE 激活账号'
-      : message
-  } finally {
-    isLoading.value = false
+  const requestError = error.value as {
+    message?: string
+    statusMessage?: string
+    data?: { message?: string, statusMessage?: string }
   }
-}
+
+  return requestError.data?.message
+    ?? requestError.data?.statusMessage
+    ?? requestError.statusMessage
+    ?? requestError.message
+    ?? 'PS 档案暂时无法读取'
+})
 </script>
 
 <template>
   <section class="psn-section fuzao-section" aria-labelledby="games-heading">
     <header class="section-heading">
-      <span class="section-kicker">Games · 03</span>
       <h1 id="games-heading">玩过的游戏</h1>
     </header>
 
-    <form class="psn-search" @submit.prevent="searchProfile">
-      <label for="psn-id">PSN ID</label>
-      <div class="psn-search-control">
-        <input
-          id="psn-id"
-          v-model="psnId"
-          name="psn-id"
-          type="text"
-          inputmode="text"
-          autocomplete="off"
-          autocapitalize="none"
-          spellcheck="false"
-          minlength="3"
-          maxlength="16"
-          pattern="[A-Za-z][A-Za-z0-9_-]{2,15}"
-          placeholder="输入 PSN ID"
-          required
+    <section class="game-platform" aria-labelledby="ps-games-heading">
+      <header class="platform-heading">
+        <h2 id="ps-games-heading">PS</h2>
+        <a
+          v-if="profile"
+          class="platinum-count"
+          :href="profile.profileUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="在 PSNINE 查看完整档案"
         >
-        <button type="submit" :disabled="isLoading">
-          {{ isLoading ? '查询中' : '查询' }}
-        </button>
-      </div>
-      <p class="psn-feedback" aria-live="polite">
-        {{ errorMessage }}
-      </p>
-    </form>
-
-    <div v-if="profile" class="psn-result">
-      <header class="psn-profile">
-        <img
-          v-if="profile.avatar"
-          :src="profile.avatar"
-          :alt="`${profile.id} 的头像`"
-          width="56"
-          height="56"
-          referrerpolicy="no-referrer"
-        >
-        <div class="psn-identity">
-          <strong>{{ profile.id }}</strong>
-          <span>Lv {{ profile.level }}</span>
-        </div>
-        <dl class="psn-summary">
-          <div>
-            <dt>游戏</dt>
-            <dd>{{ profile.gameCount }}</dd>
-          </div>
-          <div>
-            <dt>完美</dt>
-            <dd>{{ profile.completionCount }}</dd>
-          </div>
-          <div>
-            <dt>完成率</dt>
-            <dd>{{ profile.completionRate }}%</dd>
-          </div>
-          <div>
-            <dt>白金</dt>
-            <dd>{{ profile.trophies.platinum }}</dd>
-          </div>
-        </dl>
+          <span class="platinum-trophy" aria-hidden="true">🏆</span>
+          <span>白金 {{ profile.trophies.platinum }}</span>
+          <span aria-hidden="true">↗</span>
+        </a>
       </header>
 
-      <ol class="psn-game-list">
+      <p v-if="status === 'pending'" class="psn-feedback" aria-live="polite">
+        正在读取 PS 档案…
+      </p>
+      <p v-else-if="errorMessage" class="psn-feedback" aria-live="polite">
+        {{ errorMessage }}
+      </p>
+      <ol v-else-if="profile" class="psn-game-list">
         <li v-for="game in profile.games" :key="game.id">
           <a :href="game.url" target="_blank" rel="noopener noreferrer">
             <img
               v-if="game.image"
               :src="game.image"
-              :alt="game.title"
-              width="91"
-              height="50"
+              :alt="`${game.title} 游戏封面`"
+              width="64"
+              height="64"
               loading="lazy"
               referrerpolicy="no-referrer"
             >
             <span v-else class="game-image-placeholder" aria-hidden="true" />
             <span class="game-copy">
-              <strong>{{ game.title }}</strong>
-              <small>{{ [game.platform, game.updatedAt].filter(Boolean).join(' · ') }}</small>
+              <span class="game-title-row">
+                <strong>{{ game.title }}</strong>
+                <span
+                  v-if="game.trophies.platinum > 0"
+                  class="platinum-trophy game-platinum"
+                  aria-label="已获得白金奖杯"
+                >🏆</span>
+              </span>
+              <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
             </span>
             <span class="game-progress">{{ game.progress }}%</span>
           </a>
         </li>
       </ol>
+    </section>
 
-      <a
-        class="psn-profile-link"
-        :href="profile.profileUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        查看完整档案 <span aria-hidden="true">↗</span>
-      </a>
-    </div>
+    <section class="game-platform other-games" aria-labelledby="other-games-heading">
+      <header class="platform-heading">
+        <h2 id="other-games-heading">其他</h2>
+      </header>
+      <GameArchive compact />
+    </section>
   </section>
 </template>
 
 <style scoped>
 .section-heading {
-  display: grid;
-  gap: 0.45rem;
-  margin-bottom: 1.25rem;
-}
-
-.section-kicker {
-  color: var(--ink-muted);
-  font-size: 0.75rem;
-  line-height: 1;
-  text-transform: uppercase;
+  margin-bottom: 1.6rem;
 }
 
 .section-heading h1 {
@@ -188,134 +130,51 @@ const searchProfile = async () => {
   line-height: 1.15;
 }
 
-.psn-search {
-  display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr);
-  gap: 0.7rem 0.85rem;
-  padding: 1rem 0;
-  border-top: 1px solid var(--profile-rule);
-  border-bottom: 1px solid var(--profile-rule);
+.game-platform + .game-platform {
+  margin-top: 2.75rem;
 }
 
-.psn-search label {
-  align-self: center;
+.platform-heading {
+  display: flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.65rem;
+}
+
+.platform-heading h2 {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.platinum-count {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+.platinum-trophy {
+  filter: grayscale(1) sepia(0.12) saturate(0.6);
+  font-size: 0.82rem;
   line-height: 1;
 }
 
-.psn-search-control {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
-.psn-search input,
-.psn-search button {
-  height: 2.75rem;
-  border: 1px solid var(--paper-rule);
-  border-radius: 0;
-  background: transparent;
-  color: var(--ink-strong);
-}
-
-.psn-search input {
-  min-width: 0;
-  padding: 0 0.75rem;
-  border-right: 0;
-  outline: none;
-}
-
-.psn-search input::placeholder {
-  color: var(--ink-muted);
-  opacity: 0.8;
-}
-
-.psn-search input:focus {
-  border-color: var(--ink-link);
-}
-
-.psn-search button {
-  min-width: 4.5rem;
-  padding: 0 0.9rem;
-  cursor: pointer;
-}
-
-.psn-search button:hover,
-.psn-search button:focus-visible {
-  background: var(--paper-fill);
-}
-
-.psn-search button:disabled {
-  cursor: wait;
-  opacity: 0.55;
-}
-
 .psn-feedback {
-  min-height: 1rem;
-  grid-column: 2;
+  min-height: 4.5rem;
   margin: 0;
-  color: var(--ink-link);
-  font-size: 0.75rem;
-  line-height: 1.35;
-}
-
-.psn-result {
-  padding: 1rem 0 0;
-}
-
-.psn-profile {
-  display: grid;
-  grid-template-columns: 3.5rem minmax(5.5rem, 0.7fr) minmax(13rem, 1.3fr);
-  gap: 0.85rem;
-  align-items: center;
-  padding-bottom: 1rem;
-}
-
-.psn-profile > img {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 2px;
-  object-fit: cover;
-}
-
-.psn-identity {
-  display: grid;
-  min-width: 0;
-  gap: 0.25rem;
-}
-
-.psn-identity strong {
-  color: var(--ink-strong);
-  overflow-wrap: anywhere;
-}
-
-.psn-identity span {
+  padding: 1rem 0;
+  border-top: 1px solid var(--profile-rule);
+  border-bottom: 1px solid var(--profile-rule);
   color: var(--ink-muted);
   font-size: 0.75rem;
-}
-
-.psn-summary {
-  display: grid;
-  margin: 0;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.psn-summary div {
-  display: grid;
-  gap: 0.2rem;
-  text-align: right;
-}
-
-.psn-summary dt {
-  color: var(--ink-muted);
-  font-size: 0.65rem;
-}
-
-.psn-summary dd {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 0.875rem;
-  font-variant-numeric: tabular-nums;
 }
 
 .psn-game-list {
@@ -325,23 +184,28 @@ const searchProfile = async () => {
   list-style: none;
 }
 
+.psn-game-list li {
+  border-bottom: 1px solid var(--profile-rule);
+}
+
 .psn-game-list a {
   display: grid;
-  min-height: 4.25rem;
-  grid-template-columns: 4.75rem minmax(0, 1fr) 2.75rem;
-  gap: 0.75rem;
+  min-height: 4.75rem;
+  grid-template-columns: 3.5rem minmax(0, 1fr) 2.75rem;
+  gap: 0.8rem;
   align-items: center;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid var(--profile-rule);
+  padding: 0.55rem 0.2rem;
   color: inherit;
   text-decoration: none;
+  transition: background-color 180ms ease-out;
 }
 
 .psn-game-list img,
 .game-image-placeholder {
   display: block;
-  width: 4.75rem;
-  height: 2.65rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.18rem;
   background: var(--paper-fill);
   object-fit: cover;
 }
@@ -352,73 +216,58 @@ const searchProfile = async () => {
   gap: 0.25rem;
 }
 
+.game-title-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.45rem;
+}
+
 .game-copy strong {
+  min-width: 0;
   color: var(--ink-strong);
   font-size: 0.875rem;
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
 
-.game-copy small {
+.game-platinum {
+  flex: 0 0 auto;
+}
+
+.game-copy small,
+.game-progress {
   color: var(--ink-muted);
-  font-size: 0.65rem;
+  font-size: 0.68rem;
 }
 
 .game-progress {
-  color: var(--ink-muted);
-  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
-}
-
-.psn-profile-link {
-  display: inline-flex;
-  min-height: 2.75rem;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: 0.5rem;
-  color: var(--ink-link);
-  font-size: 0.75rem;
-  text-underline-offset: 0.2em;
 }
 
 @media (hover: hover) {
   .psn-game-list a:hover {
     background: var(--paper-fill);
   }
+
+  .psn-game-list a:hover strong,
+  .platinum-count:hover {
+    color: var(--ink-link);
+  }
 }
 
-@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
-  .psn-search {
-    grid-template-columns: 4rem minmax(0, 1fr);
-    gap: 0.7rem;
-  }
-
-  .psn-result {
-    padding-left: 0;
-  }
-
-  .psn-profile {
-    grid-template-columns: 3.5rem minmax(0, 1fr);
-  }
-
-  .psn-summary {
-    grid-column: 1 / -1;
-  }
-
-  .psn-summary div {
-    text-align: left;
-  }
-
+@media (max-width: 480px) {
   .psn-game-list a {
-    grid-template-columns: 4.5rem minmax(0, 1fr) 2.5rem;
-    gap: 0.6rem;
+    grid-template-columns: 3.25rem minmax(0, 1fr) 2.5rem;
+    gap: 0.65rem;
+    padding-inline: 0.1rem;
   }
 
   .psn-game-list img,
   .game-image-placeholder {
-    width: 4.5rem;
-    height: 2.5rem;
+    width: 3.25rem;
+    height: 3.25rem;
   }
 }
 </style>

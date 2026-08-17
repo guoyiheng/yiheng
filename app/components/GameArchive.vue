@@ -2,6 +2,12 @@
 import type { GameEntry } from '~/data/games'
 import { gameGroups, games } from '~/data/games'
 
+withDefaults(defineProps<{
+  compact?: boolean
+}>(), {
+  compact: false
+})
+
 const gamesByStatus = computed(() => {
   return Object.fromEntries(gameGroups.map(group => [
     group.status,
@@ -20,8 +26,8 @@ const useFallbackCover = (event: Event) => {
 </script>
 
 <template>
-  <div class="game-archive">
-    <header class="game-archive-heading">
+  <div class="game-archive" :class="{ 'is-compact': compact }">
+    <header v-if="!compact" class="game-archive-heading">
       <span class="game-archive-kicker">Game archive · {{ games.length }}</span>
       <h1>游戏档案</h1>
     </header>
@@ -35,9 +41,11 @@ const useFallbackCover = (event: Event) => {
       <header class="game-group-heading">
         <div>
           <h2 :id="`game-group-${group.status}`">{{ group.title }}</h2>
-          <span>{{ group.label }}</span>
+          <span v-if="!compact">{{ group.label }}</span>
         </div>
-        <span class="game-group-count">{{ gamesByStatus[group.status].length }}</span>
+        <span v-if="!compact" class="game-group-count">
+          {{ gamesByStatus[group.status].length }}
+        </span>
       </header>
 
       <ol class="game-list">
@@ -76,7 +84,7 @@ const useFallbackCover = (event: Event) => {
       </ol>
     </section>
 
-    <p class="game-source">
+    <p v-if="!compact" class="game-source">
       资料与封面来源
       <a href="https://www.wikipedia.org/" target="_blank" rel="noopener noreferrer">
         Wikipedia<span aria-hidden="true"> ↗</span>
@@ -115,6 +123,18 @@ const useFallbackCover = (event: Event) => {
 
 .game-group {
   margin-top: 2.35rem;
+}
+
+.is-compact {
+  padding: 0;
+}
+
+.is-compact .game-group:first-of-type {
+  margin-top: 0;
+}
+
+.is-compact .game-group {
+  margin-top: 2rem;
 }
 
 .game-group-heading {
