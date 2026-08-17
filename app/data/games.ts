@@ -217,13 +217,13 @@ export const games: GameEntry[] = [
     sourceUrl: 'https://en.wikipedia.org/wiki/Black_Myth:_Wukong'
   },
   {
-    id: 'little-kitty-big-city',
-    nameZh: '小猫咪大城市',
-    nameEn: 'Little Kitty, Big City',
-    releaseDate: '2024-05-09',
-    genres: ['冒险'],
-    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/01/Little_Kitty_Big_City_Cover.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Little_Kitty,_Big_City'
+    id: 'the-minish-cap',
+    nameZh: '塞尔达传说 缩小帽',
+    nameEn: 'The Legend of Zelda: The Minish Cap',
+    releaseDate: '2004-11-04',
+    genres: ['动作冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png',
+    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_The_Minish_Cap'
   },
   {
     id: 'hollow-knight-silksong',
