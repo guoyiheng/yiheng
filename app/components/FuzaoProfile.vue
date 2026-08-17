@@ -76,7 +76,6 @@ const projects: Project[] = [
 
 const collections = [
   { index: '01', title: '读过的书', label: 'Books' },
-  { index: '02', title: '玩过的游戏', label: 'Games' },
   { index: '03', title: '喜欢的音乐', label: 'Music' }
 ]
 </script>
@@ -143,10 +142,17 @@ const collections = [
       </header>
 
       <ul class="collection-list">
-        <li v-for="collection in collections" :key="collection.title">
-          <span class="collection-index">{{ collection.index }}</span>
-          <span class="collection-title">{{ collection.title }}</span>
-          <span class="collection-label">{{ collection.label }}</span>
+        <li>
+          <span class="collection-index">{{ collections[0]!.index }}</span>
+          <span class="collection-title">{{ collections[0]!.title }}</span>
+          <span class="collection-label">{{ collections[0]!.label }}</span>
+          <span class="collection-mark" aria-hidden="true">—</span>
+        </li>
+        <FuzaoPsnGames />
+        <li>
+          <span class="collection-index">{{ collections[1]!.index }}</span>
+          <span class="collection-title">{{ collections[1]!.title }}</span>
+          <span class="collection-label">{{ collections[1]!.label }}</span>
           <span class="collection-mark" aria-hidden="true">—</span>
         </li>
       </ul>
