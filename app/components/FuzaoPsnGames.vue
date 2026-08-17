@@ -93,6 +93,7 @@ const errorMessage = computed(() => {
             <span class="game-copy">
               <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
+              <small v-if="game.updatedAt">最近游玩 {{ game.updatedAt }}</small>
             </span>
             <span class="game-actions">
               <img
@@ -100,8 +101,8 @@ const errorMessage = computed(() => {
                 class="game-platinum"
                 src="/images/playstation-platinum.png"
                 alt="已获得白金奖杯"
-                width="20"
-                height="20"
+                width="14"
+                height="14"
                 title="已获得白金奖杯"
               >
               <span class="game-arrow" aria-hidden="true">→</span>
@@ -165,8 +166,10 @@ const errorMessage = computed(() => {
 
 .platinum-trophy {
   display: block;
-  width: 0.875rem;
-  height: 0.875rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: transparent;
+  object-fit: contain;
 }
 
 .psn-feedback {
@@ -239,10 +242,12 @@ const errorMessage = computed(() => {
   justify-items: end;
 }
 
-.game-platinum {
+.psn-game-list .game-platinum {
   display: block;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 0;
+  background: transparent;
   object-fit: contain;
 }
 

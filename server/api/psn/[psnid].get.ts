@@ -11,7 +11,8 @@ const PSN_ID_PATTERN = /^[a-z][a-z0-9_-]{2,15}$/i
 const PSNINE_ORIGIN = 'https://psnine.com'
 const MINIMUM_DURATION_DAYS = 5
 const MINIMUM_PROGRESS = 9
-const RECENT_GAMES_WITHOUT_FILTER = 3
+const RECENT_PLAYED_DAYS_WITHOUT_FILTER = 7
+const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 const PROFILE_CACHE_SECONDS = 30 * 24 * 60 * 60
 const PROFILE_REVALIDATE_SECONDS = 7 * 24 * 60 * 60
 const ALLOWED_IMAGE_HOSTS = new Set([
@@ -93,6 +94,67 @@ const durationInDays = (value: string) => {
   if (value.includes('小时')) return amount / 24
   if (value.includes('分钟')) return amount / 1440
   return 0
+}
+
+const playedAtFrom = (value: string, now = new Date()) => {
+  const chinaNow = new Date(now.getTime() + 8 * 60 * 60 * 1000)
+  const currentYear = chinaNow.getUTCFullYear()
+  const currentMonth = chinaNow.getUTCMonth() + 1
+  const currentDay = chinaNow.getUTCDate()
+  const time = value.match(/(\d{1,2}):(\d{2})/)
+  const hour = Number(time?.[1] ?? 0)
+  const minute = Number(time?.[2] ?? 0)
+  const relativeDay = value.startsWith('今天')
+    ? 0
+    : value.startsWith('昨天')
+      ? 1
+      : value.startsWith('前天')
+        ? 2
+        : undefined
+
+  if (relativeDay !== undefined) {
+    return new Date(Date.UTC(
+      currentYear,
+      currentMonth - 1,
+      currentDay - relativeDay,
+      hour - 8,
+      minute
+    ))
+  }
+
+  const fullDate = value.match(/(\d{4})-(\d{1,2})-(\d{1,2})/)
+  if (fullDate) {
+    return new Date(Date.UTC(
+      Number(fullDate[1]),
+      Number(fullDate[2]) - 1,
+      Number(fullDate[3]),
+      hour - 8,
+      minute
+    ))
+  }
+
+  const shortDate = value.match(/(\d{1,2})-(\d{1,2})/)
+  if (!shortDate) return null
+
+  const month = Number(shortDate[1])
+  const day = Number(shortDate[2])
+  let year = currentYear
+  let playedAt = new Date(Date.UTC(year, month - 1, day, hour - 8, minute))
+
+  if (playedAt.getTime() > now.getTime() + DAY_IN_MILLISECONDS) {
+    year -= 1
+    playedAt = new Date(Date.UTC(year, month - 1, day, hour - 8, minute))
+  }
+
+  return playedAt
+}
+
+const wasPlayedRecently = (value: string, now = new Date()) => {
+  const playedAt = playedAtFrom(value, now)
+  if (!playedAt || Number.isNaN(playedAt.getTime())) return false
+
+  const elapsed = now.getTime() - playedAt.getTime()
+  return elapsed >= 0 && elapsed <= RECENT_PLAYED_DAYS_WITHOUT_FILTER * DAY_IN_MILLISECONDS
 }
 
 const pageFrom = (value?: string) => {
@@ -212,8 +274,8 @@ export default defineEventHandler(async (event) => {
     for (const game of parseGameRows(root)) gamesById.set(game.id, game)
   }
 
-  const games = [...gamesById.values()].filter((game, index) => {
-    if (index < RECENT_GAMES_WITHOUT_FILTER) return true
+  const games = [...gamesById.values()].filter((game) => {
+    if (wasPlayedRecently(game.updatedAt)) return true
     return game.durationDays >= MINIMUM_DURATION_DAYS && game.progress >= MINIMUM_PROGRESS
   })
 
