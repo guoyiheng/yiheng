@@ -1,6 +1,6 @@
 export interface ReadingBook {
   title: string
-  author: string
+  author?: string
   wikipediaUrl: string
   coverUrl?: string
 }
@@ -23,11 +23,37 @@ export const readingBooks: ReadingBook[] = [
   { title: '史蒂夫·乔布斯传', author: '沃尔特·艾萨克森', wikipediaUrl: 'https://zh.wikipedia.org/wiki/史蒂夫·乔布斯传' },
   { title: '写给大家看的设计书', author: 'Robin Williams', wikipediaUrl: wikipediaSearch('写给大家看的设计书') },
   {
-    title: '红楼梦',
+    title: '红楼梦（脂评汇校版）',
     author: '曹雪芹',
     wikipediaUrl: 'https://zh.wikipedia.org/wiki/红楼梦',
     coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/JiaXu01.jpg/250px-JiaXu01.jpg'
   },
+  { title: 'JavaScript高级程序设计（第4版）', author: 'Matt Frisbie', wikipediaUrl: wikipediaSearch('JavaScript高级程序设计 第4版') },
+  { title: '梦的解析', author: '西格蒙德·弗洛伊德', wikipediaUrl: 'https://zh.wikipedia.org/wiki/夢的解析' },
+  { title: '手把手教你玩脱口秀', author: 'Greg Dean', wikipediaUrl: wikipediaSearch('手把手教你玩脱口秀') },
+  { title: '彷徨', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/彷徨' },
+  { title: '野草', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/野草_(文學)' },
+  { title: '朝花夕拾', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/朝花夕拾' },
+  { title: '故事新编', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/故事新编' },
+  { title: '坟', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/坟_(鲁迅)' },
+  { title: '热风', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/热风' },
+  { title: '1919', wikipediaUrl: wikipediaSearch('1919 书籍') },
+  { title: '1921', wikipediaUrl: wikipediaSearch('1921 书籍') },
+  { title: '1922', wikipediaUrl: wikipediaSearch('1922 书籍') },
+  { title: '1924', wikipediaUrl: wikipediaSearch('1924 书籍') },
+  { title: '呐喊', author: '鲁迅', wikipediaUrl: 'https://zh.wikipedia.org/wiki/吶喊' },
+  { title: '性史（1926）', author: '张竞生', wikipediaUrl: wikipediaSearch('性史 张竞生') },
+  { title: '基督山伯爵', author: '亚历山大·仲马', wikipediaUrl: 'https://zh.wikipedia.org/wiki/基督山伯爵' },
+  { title: '许三观卖血记', author: '余华', wikipediaUrl: 'https://zh.wikipedia.org/wiki/许三观卖血记' },
+  { title: '小王子', author: '安托万·德·圣埃克苏佩里', wikipediaUrl: 'https://zh.wikipedia.org/wiki/小王子' },
+  { title: '书剑恩仇录', author: '金庸', wikipediaUrl: 'https://zh.wikipedia.org/wiki/書劍恩仇錄' },
+  { title: '青铜时代', author: '王小波', wikipediaUrl: wikipediaSearch('青铜时代 王小波') },
+  { title: '白银时代', author: '王小波', wikipediaUrl: wikipediaSearch('白银时代 王小波') },
+  { title: '黄金时代', author: '王小波', wikipediaUrl: 'https://zh.wikipedia.org/wiki/黄金时代_(小说)' },
+  { title: '三国演义', author: '罗贯中', wikipediaUrl: 'https://zh.wikipedia.org/wiki/三国演义' },
+  { title: '围城', author: '钱钟书', wikipediaUrl: 'https://zh.wikipedia.org/wiki/围城' },
+  { title: '癸酉本石头记', wikipediaUrl: wikipediaSearch('癸酉本石头记') },
+  { title: '红楼梦（程高本）', author: '曹雪芹、高鹗', wikipediaUrl: wikipediaSearch('程高本 红楼梦') },
   {
     title: '西游记',
     author: '吴承恩',

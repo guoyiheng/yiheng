@@ -123,7 +123,7 @@ const useSiteIcon = (event: Event) => {
             </span>
             <span class="book-copy">
               <strong>{{ book.title }}</strong>
-              <small>{{ book.author }}</small>
+              <small v-if="book.author">{{ book.author }}</small>
             </span>
             <span class="book-arrow" aria-hidden="true">→</span>
           </a>
