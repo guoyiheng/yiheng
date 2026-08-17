@@ -121,9 +121,7 @@ a:focus-visible {
 
 .wrapper {
   --printer-height: 80px;
-  --paper-width: min(820px,
-      calc(100vw - 1.5rem),
-      max(260px, calc((100svh - 9.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)) * 210 / 297)));
+  --paper-width: 90%;
 
   position: relative;
   width: min(900px, calc(100vw - 0.75rem));
