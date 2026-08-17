@@ -125,7 +125,7 @@ const useSiteIcon = (event: Event) => {
               <strong>{{ book.title }}</strong>
               <small v-if="book.author">{{ book.author }}</small>
             </span>
-            <span class="book-arrow" aria-hidden="true">→</span>
+            <span class="book-arrow" aria-hidden="true">↗</span>
           </a>
         </li>
       </ul>
@@ -316,7 +316,7 @@ const useSiteIcon = (event: Event) => {
   }
 
   .book-list a:hover .book-arrow {
-    transform: translateX(0.16rem);
+    transform: translate(0.15rem, -0.15rem);
   }
 }
 

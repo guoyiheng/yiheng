@@ -105,7 +105,7 @@ const errorMessage = computed(() => {
                 height="14"
                 title="已获得白金奖杯"
               >
-              <span class="game-arrow" aria-hidden="true">→</span>
+              <span class="game-arrow" aria-hidden="true">↗</span>
             </span>
           </a>
         </li>
@@ -264,7 +264,7 @@ const errorMessage = computed(() => {
   }
 
   .psn-game-list a:hover .game-arrow {
-    transform: translateX(0.16rem);
+    transform: translate(0.15rem, -0.15rem);
   }
 }
 
