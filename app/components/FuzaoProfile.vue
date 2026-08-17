@@ -73,10 +73,6 @@ const projects: Project[] = [
     ]
   }
 ]
-
-const collections = [
-  { index: '01', title: '读过的书', label: 'Books' }
-]
 </script>
 
 <template>
@@ -85,7 +81,7 @@ const collections = [
       <header class="section-heading project-heading">
         <div>
           <span class="section-kicker">Selected work · 01</span>
-          <h1 id="projects-heading">开源项目</h1>
+          <h1 id="projects-heading">作品</h1>
         </div>
         <a
           class="github-account"
@@ -98,13 +94,15 @@ const collections = [
         </a>
       </header>
 
-      <ol class="project-list">
+      <ol class="project-grid">
         <li v-for="(project, index) in projects" :key="project.name" class="project-item">
-          <span class="project-index" aria-hidden="true">
-            {{ String(index + 1).padStart(2, '0') }}
-          </span>
-          <div class="project-main">
+          <div class="project-card-heading">
+            <span class="project-index" aria-hidden="true">
+              {{ String(index + 1).padStart(2, '0') }}
+            </span>
             <h2>{{ project.name }}</h2>
+          </div>
+          <div class="project-main">
             <p>{{ project.description }}</p>
           </div>
           <div class="project-links" :aria-label="`${project.name} 链接`">
@@ -123,34 +121,16 @@ const collections = [
       </ol>
     </section>
 
-    <section class="fuzao-section about-section" aria-labelledby="about-heading">
+    <section class="fuzao-section books-section" aria-labelledby="books-heading">
       <header class="section-heading">
-        <span class="section-kicker">About · 02</span>
-        <h2 id="about-heading">几句话</h2>
+        <span class="section-kicker">Books · 02</span>
+        <h1 id="books-heading">读过的书</h1>
       </header>
-      <div class="about-copy">
-        <p>我是 yiheng，一个写代码、做工具，也在意文字与设计的人。</p>
-        <p>这里收着我长期维护的小项目，也慢慢记下读过的书、玩过的游戏和反复听的音乐。</p>
-      </div>
+      <div class="empty-rule" aria-hidden="true">—</div>
     </section>
 
-    <section class="fuzao-section collection-section" aria-labelledby="collections-heading">
-      <header class="section-heading">
-        <span class="section-kicker">Favourites · 03</span>
-        <h2 id="collections-heading">喜欢的内容</h2>
-      </header>
-
-      <ul class="collection-list">
-        <li>
-          <span class="collection-index">{{ collections[0]!.index }}</span>
-          <span class="collection-title">{{ collections[0]!.title }}</span>
-          <span class="collection-label">{{ collections[0]!.label }}</span>
-          <span class="collection-mark" aria-hidden="true">—</span>
-        </li>
-        <FuzaoPsnGames />
-        <FuzaoAlbums />
-      </ul>
-    </section>
+    <FuzaoPsnGames />
+    <FuzaoAlbums />
   </div>
 </template>
 
@@ -180,8 +160,7 @@ const collections = [
   text-transform: uppercase;
 }
 
-.section-heading h1,
-.section-heading h2 {
+.section-heading h1 {
   margin: 0;
   color: var(--ink-strong);
   font-weight: 700;
@@ -190,10 +169,6 @@ const collections = [
 
 .section-heading h1 {
   font-size: 1.75rem;
-}
-
-.section-heading h2 {
-  font-size: 1.25rem;
 }
 
 .project-heading {
@@ -212,29 +187,33 @@ const collections = [
   text-underline-offset: 0.2em;
 }
 
-.project-list,
-.collection-list {
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .project-item {
-  display: grid;
-  min-height: 5.25rem;
-  grid-template-columns: 2rem minmax(0, 1fr) minmax(9.5rem, 0.8fr);
-  gap: 0.85rem;
-  align-items: start;
-  padding: 1rem 0;
-  border-top: 1px solid var(--profile-rule);
+  display: flex;
+  min-width: 0;
+  min-height: 8.25rem;
+  flex-direction: column;
+  padding: 0.9rem;
+  border: 1px solid var(--profile-rule);
+  border-radius: 0.25rem;
 }
 
-.project-item:last-child {
-  border-bottom: 1px solid var(--profile-rule);
+.project-card-heading {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: baseline;
 }
 
 .project-index {
-  padding-top: 0.15rem;
   color: var(--ink-muted);
   font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
@@ -242,9 +221,11 @@ const collections = [
 
 .project-main {
   min-width: 0;
+  flex: 1;
+  padding-left: 2rem;
 }
 
-.project-main h2 {
+.project-card-heading h2 {
   margin: 0;
   color: var(--ink-strong);
   font-size: 1rem;
@@ -253,17 +234,18 @@ const collections = [
 }
 
 .project-main p {
-  margin: 0.35rem 0 0;
+  margin: 0.4rem 0 0;
   color: var(--ink-muted);
   font-size: 0.75rem;
   line-height: 1.5;
 }
 
 .project-links {
-  display: grid;
+  display: flex;
   min-width: 0;
-  justify-items: start;
-  gap: 0.35rem;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.75rem;
+  padding-left: 2rem;
 }
 
 .project-links a {
@@ -285,67 +267,13 @@ const collections = [
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.about-section {
-  display: grid;
-  grid-template-columns: minmax(8rem, 0.65fr) minmax(0, 1.35fr);
-  gap: 2rem;
-}
-
-.about-section .section-heading {
-  margin: 0;
-}
-
-.about-copy {
-  max-width: 30rem;
-}
-
-.about-copy p {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1rem;
-  line-height: 1.85;
-}
-
-.about-copy p + p {
-  margin-top: 0.8rem;
-  color: var(--ink);
-}
-
-.collection-list {
-  border-top: 1px solid var(--profile-rule);
-}
-
-.collection-list li {
-  display: grid;
+.empty-rule {
   min-height: 4rem;
-  grid-template-columns: 2rem minmax(0, 1fr) 5rem 1rem;
-  gap: 0.85rem;
-  align-items: center;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--profile-rule);
   border-bottom: 1px solid var(--profile-rule);
-}
-
-.collection-index,
-.collection-label,
-.collection-mark {
   color: var(--ink-muted);
   font-size: 0.75rem;
-}
-
-.collection-index {
-  font-variant-numeric: tabular-nums;
-}
-
-.collection-title {
-  color: var(--ink-strong);
-  font-size: 1rem;
-}
-
-.collection-label {
-  text-align: right;
-}
-
-.collection-mark {
-  text-align: right;
 }
 
 @media (hover: hover) {
@@ -371,35 +299,37 @@ const collections = [
   }
 
   .project-item {
-    min-height: 0;
-    grid-template-columns: 1.65rem minmax(0, 1fr);
-    gap: 0.7rem;
-    padding: 1rem 0;
+    min-height: 7.75rem;
+    padding: 0.8rem;
   }
 
+  .project-card-heading {
+    grid-template-columns: 1.35rem minmax(0, 1fr);
+    gap: 0.4rem;
+  }
+
+  .project-main,
   .project-links {
-    grid-column: 2;
-    grid-template-columns: repeat(2, minmax(0, auto));
-    column-gap: 0.9rem;
+    padding-left: 1.75rem;
   }
 
   .project-links a {
-    min-height: 2.75rem;
+    min-height: 2.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .project-grid {
+    gap: 0.4rem;
   }
 
-  .about-section {
-    grid-template-columns: 1fr;
-    gap: 1.15rem;
+  .project-item {
+    padding: 0.65rem;
   }
 
-  .collection-list li {
-    min-height: 4.25rem;
-    grid-template-columns: 1.65rem minmax(0, 1fr) auto;
-    gap: 0.7rem;
-  }
-
-  .collection-label {
-    display: none;
+  .project-main,
+  .project-links {
+    padding-left: 0;
   }
 }
 </style>

@@ -3,13 +3,11 @@ import { favouriteAlbums } from '~/data/albums'
 </script>
 
 <template>
-  <li class="album-collection">
-    <div class="album-heading">
-      <span class="collection-index">03</span>
-      <span class="collection-title">喜欢的音乐</span>
-      <span class="collection-label">Music</span>
-      <span class="collection-mark" aria-hidden="true">—</span>
-    </div>
+  <section class="album-section fuzao-section" aria-labelledby="albums-heading">
+    <header class="section-heading">
+      <span class="section-kicker">Music · 04</span>
+      <h1 id="albums-heading">喜欢的音乐</h1>
+    </header>
 
     <ol class="album-list">
       <li v-for="album in favouriteAlbums" :key="`${album.artist}-${album.name}`">
@@ -32,46 +30,37 @@ import { favouriteAlbums } from '~/data/albums'
         </a>
       </li>
     </ol>
-  </li>
+  </section>
 </template>
 
 <style scoped>
-.album-collection {
-  border-bottom: 1px solid var(--profile-rule);
-}
-
-.album-heading {
+.section-heading {
   display: grid;
-  min-height: 4rem;
-  grid-template-columns: 2rem minmax(0, 1fr) 5rem 1rem;
-  gap: 0.85rem;
-  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
 }
 
-.collection-index,
-.collection-label,
-.collection-mark {
+.section-kicker {
   color: var(--ink-muted);
   font-size: 0.75rem;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.collection-index,
+.section-heading h1 {
+  margin: 0;
+  color: var(--ink-strong);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
 .album-list time {
   font-variant-numeric: tabular-nums;
 }
 
-.collection-title {
-  color: var(--ink-strong);
-  font-size: 1rem;
-}
-
-.collection-label,
-.collection-mark {
-  text-align: right;
-}
-
 .album-list {
-  margin: 0 0 0 2.85rem;
+  margin: 0;
   padding: 0;
   border-top: 1px solid var(--profile-rule);
   list-style: none;
@@ -132,20 +121,6 @@ import { favouriteAlbums } from '~/data/albums'
 }
 
 @media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
-  .album-heading {
-    min-height: 4.25rem;
-    grid-template-columns: 1.65rem minmax(0, 1fr) auto;
-    gap: 0.7rem;
-  }
-
-  .collection-label {
-    display: none;
-  }
-
-  .album-list {
-    margin-left: 2.35rem;
-  }
-
   .album-list a {
     grid-template-columns: 3rem minmax(0, 1fr) auto;
     gap: 0.7rem;

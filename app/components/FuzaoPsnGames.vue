@@ -65,13 +65,11 @@ const searchProfile = async () => {
 </script>
 
 <template>
-  <li class="psn-collection">
-    <div class="psn-heading">
-      <span class="collection-index">02</span>
-      <span class="collection-title">玩过的游戏</span>
-      <span class="collection-label">Games</span>
-      <span class="collection-mark" aria-hidden="true">—</span>
-    </div>
+  <section class="psn-section fuzao-section" aria-labelledby="games-heading">
+    <header class="section-heading">
+      <span class="section-kicker">Games · 03</span>
+      <h1 id="games-heading">玩过的游戏</h1>
+    </header>
 
     <form class="psn-search" @submit.prevent="searchProfile">
       <label for="psn-id">PSN ID</label>
@@ -165,48 +163,38 @@ const searchProfile = async () => {
         查看完整档案 <span aria-hidden="true">↗</span>
       </a>
     </div>
-  </li>
+  </section>
 </template>
 
 <style scoped>
-.psn-collection {
-  border-bottom: 1px solid var(--profile-rule);
-}
-
-.psn-heading {
+.section-heading {
   display: grid;
-  min-height: 4rem;
-  grid-template-columns: 2rem minmax(0, 1fr) 5rem 1rem;
-  gap: 0.85rem;
-  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.25rem;
 }
 
-.collection-index,
-.collection-label,
-.collection-mark {
+.section-kicker {
   color: var(--ink-muted);
   font-size: 0.75rem;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
-.collection-index {
-  font-variant-numeric: tabular-nums;
-}
-
-.collection-title {
+.section-heading h1 {
+  margin: 0;
   color: var(--ink-strong);
-  font-size: 1rem;
-}
-
-.collection-label,
-.collection-mark {
-  text-align: right;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .psn-search {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr);
+  grid-template-columns: 4.5rem minmax(0, 1fr);
   gap: 0.7rem 0.85rem;
-  padding: 0 0 1rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--profile-rule);
+  border-bottom: 1px solid var(--profile-rule);
 }
 
 .psn-search label {
@@ -272,7 +260,7 @@ const searchProfile = async () => {
 }
 
 .psn-result {
-  padding: 0.5rem 0 1.25rem 2.85rem;
+  padding: 1rem 0 0;
 }
 
 .psn-profile {
@@ -401,22 +389,13 @@ const searchProfile = async () => {
 }
 
 @media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
-  .psn-heading {
-    grid-template-columns: 1.65rem minmax(0, 1fr) auto;
-    gap: 0.7rem;
-  }
-
-  .collection-label {
-    display: none;
-  }
-
   .psn-search {
-    grid-template-columns: 1.65rem minmax(0, 1fr);
+    grid-template-columns: 4rem minmax(0, 1fr);
     gap: 0.7rem;
   }
 
   .psn-result {
-    padding-left: 2.35rem;
+    padding-left: 0;
   }
 
   .psn-profile {
