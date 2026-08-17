@@ -78,7 +78,7 @@ const useSiteIcon = (event: Event) => {
   <div class="fuzao-profile">
     <section class="fuzao-section project-section" aria-labelledby="projects-heading">
       <header class="section-heading">
-        <h1 id="projects-heading">作品</h1>
+        <h1 id="projects-heading">Work</h1>
       </header>
 
       <ul class="project-list">
@@ -104,7 +104,7 @@ const useSiteIcon = (event: Event) => {
 
     <section class="fuzao-section books-section" aria-labelledby="books-heading">
       <header class="section-heading">
-        <h1 id="books-heading">读过的书</h1>
+        <h1 id="books-heading">Book</h1>
       </header>
       <ul class="book-list">
         <li v-for="book in readingBooks" :key="book.title">

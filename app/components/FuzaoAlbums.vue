@@ -5,7 +5,7 @@ import { favouriteAlbums } from '~/data/albums'
 <template>
   <section class="album-section fuzao-section" aria-labelledby="albums-heading">
     <header class="section-heading">
-      <h1 id="albums-heading">喜欢的音乐</h1>
+      <h1 id="albums-heading">Album</h1>
     </header>
 
     <ol class="album-list">
