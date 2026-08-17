@@ -48,6 +48,7 @@ const documentHref = (id: string) => `/nanqiang-beidiao/${encodeURIComponent(id)
 }
 
 .nanqiang-index-date {
+  grid-column: 2;
   color: var(--ink-muted);
   font-size: 0.72em;
   font-variant-numeric: tabular-nums;
@@ -55,12 +56,14 @@ const documentHref = (id: string) => `/nanqiang-beidiao/${encodeURIComponent(id)
 }
 
 .nanqiang-index-title {
+  grid-column: 1;
   min-width: 0;
   overflow-wrap: anywhere;
   line-height: 1.3;
 }
 
 .nanqiang-index-arrow {
+  grid-column: 3;
   color: var(--ink-muted);
 }
 
