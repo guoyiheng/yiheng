@@ -108,7 +108,7 @@ import { wanderingEntries } from '~/data/wandering'
   display: grid;
   gap: 0.65rem;
   color: var(--ink);
-  font-size: 0.96em;
+  font-size: 1em;
   line-height: 1.62;
 }
 

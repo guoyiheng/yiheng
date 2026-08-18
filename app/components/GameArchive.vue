@@ -130,7 +130,7 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
 
 .game-name-zh {
   color: var(--ink-strong);
-  font-size: 0.98rem;
+  font-size: var(--content-font-size);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }

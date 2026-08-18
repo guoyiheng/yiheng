@@ -116,7 +116,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 .album-name {
   min-width: 0;
   color: var(--ink-strong);
-  font-size: 0.875rem;
+  font-size: var(--content-font-size);
   font-weight: 600;
   line-height: 1.4;
   overflow-wrap: anywhere;

@@ -27,6 +27,7 @@
   --inverse-text-strong: #fff7e8;
   --site-footer-ink: #d8cbb5;
   --site-font: "LXGW WenKai", "STKaiti", "KaiTi", serif;
+  --content-font-size: 0.9rem;
   font-synthesis: weight;
   text-rendering: optimizeLegibility;
 }
@@ -261,7 +262,7 @@ a:focus-visible {
   box-shadow: 0 12px 12px 0 #0001, 0 24px 24px 0 #0001, 0 36px 36px 0 #0001;
   color: var(--ink);
   font-family: var(--site-font);
-  font-size: 0.82em;
+  font-size: var(--content-font-size);
   font-weight: 400;
 }
 

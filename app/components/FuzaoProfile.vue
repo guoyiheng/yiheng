@@ -142,7 +142,7 @@ const useSiteIcon = (event: Event) => {
 
   padding: 0.35rem 0.15rem 2rem;
   color: var(--ink);
-  font-size: 1rem;
+  font-size: var(--content-font-size);
 }
 
 .fuzao-section+.fuzao-section {
@@ -217,7 +217,7 @@ const useSiteIcon = (event: Event) => {
 
 .project-copy strong {
   color: var(--ink-strong);
-  font-size: 0.95rem;
+  font-size: var(--content-font-size);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
@@ -286,7 +286,7 @@ const useSiteIcon = (event: Event) => {
 
 .book-copy strong {
   color: var(--ink-strong);
-  font-size: 0.9rem;
+  font-size: var(--content-font-size);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }

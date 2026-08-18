@@ -200,7 +200,7 @@ const errorMessage = computed(() => {
 .game-copy strong {
   min-width: 0;
   color: var(--ink-strong);
-  font-size: 0.875rem;
+  font-size: var(--content-font-size);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }

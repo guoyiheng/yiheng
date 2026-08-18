@@ -33,7 +33,7 @@ useSeoMeta({ title: '关于 · yiheng' })
 }
 
 .about-copy {
-  max-width: 32rem;
+  width: 100%;
   padding-top: 1.25rem;
   border-top: 1px solid color-mix(in srgb, var(--paper-rule) 72%, transparent);
 }
@@ -41,7 +41,7 @@ useSeoMeta({ title: '关于 · yiheng' })
 .about-copy p {
   margin: 0;
   color: var(--ink-strong);
-  font-size: 1rem;
+  font-size: var(--content-font-size);
   line-height: 1.85;
 }
 
