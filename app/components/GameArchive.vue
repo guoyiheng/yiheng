@@ -46,7 +46,7 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
             </span>
           </span>
 
-          <span class="game-source-arrow" aria-hidden="true">→</span>
+          <span class="game-source-arrow" aria-hidden="true">↗</span>
         </a>
       </li>
     </ol>
@@ -169,7 +169,7 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
   }
 
   .game-entry:hover .game-source-arrow {
-    transform: translateX(0.16rem);
+    transform: translate(0.12rem, -0.12rem);
   }
 }
 
