@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { NanqiangIndexItem } from '~/data/nanqiang'
-import { nanqiangIndex } from '~/data/nanqiang'
+import type { NanqiangIndexItem } from '~/data/nanqiang-index'
+import { nanqiangIndex } from '~/data/nanqiang-index'
 
 const items = useState<NanqiangIndexItem[]>('nanqiang-index', () => nanqiangIndex)
 

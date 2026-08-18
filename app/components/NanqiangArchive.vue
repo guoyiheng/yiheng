@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { NanqiangIndexItem } from '~/data/nanqiang'
+import type { NanqiangIndexItem } from '~/data/nanqiang-index'
 
 defineProps<{
   items: NanqiangIndexItem[]
@@ -11,7 +11,7 @@ const documentHref = (id: string) => `/nanqiang-beidiao/${encodeURIComponent(id)
 <template>
   <ol class="nanqiang-archive">
     <li v-for="item in items" :key="item.id">
-      <NuxtLink class="nanqiang-index-link" :to="documentHref(item.id)">
+      <NuxtLink class="nanqiang-index-link" :to="documentHref(item.id)" no-prefetch>
         <strong v-if="item.featured" class="nanqiang-index-title">{{ item.title }}</strong>
         <span v-else class="nanqiang-index-title">{{ item.title }}</span>
         <time v-if="item.date" class="nanqiang-index-date" :datetime="item.date">
