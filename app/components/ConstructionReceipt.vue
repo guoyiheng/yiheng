@@ -59,7 +59,7 @@ const schedulePrintTimer = () => {
     return
   }
 
-  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3000
+  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1200
   printTimer = setTimeout(stopPrinting, duration)
 }
 
