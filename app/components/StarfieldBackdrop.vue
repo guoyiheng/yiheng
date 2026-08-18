@@ -2,6 +2,7 @@
   <div class="starfield" aria-hidden="true">
     <span class="starfield-layer starfield-layer-far" />
     <span class="starfield-layer starfield-layer-near" />
+    <span class="starfield-clear-zone" />
     <img class="ursa-major" src="/images/ursa-major-and-polaris.svg" alt="" />
   </div>
 </template>
@@ -25,12 +26,36 @@
 
 .starfield-layer-far,
 .starfield-layer-near,
+.starfield-clear-zone,
 .ursa-major {
   z-index: 1;
 }
 
+.starfield-clear-zone {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--starfield-background);
+  background-blend-mode: var(--starfield-blend-mode);
+  mask-image: radial-gradient(
+    ellipse clamp(9rem, calc(6vw + 4rem), 13rem) clamp(7rem, calc(4vw + 3rem), 10rem)
+      at calc(100% - clamp(7rem, 11vw, 11rem)) clamp(15rem, calc(18vh + 6rem), 21rem),
+    #000 0 52%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse clamp(9rem, calc(6vw + 4rem), 13rem) clamp(7rem, calc(4vw + 3rem), 10rem)
+      at calc(100% - clamp(7rem, 11vw, 11rem)) clamp(15rem, calc(18vh + 6rem), 21rem),
+    #000 0 52%,
+    transparent 100%
+  );
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
 .ursa-major {
   position: absolute;
+  z-index: 3;
   top: clamp(7rem, 18vh, 11rem);
   right: max(1.25rem, env(safe-area-inset-right));
   width: clamp(150px, calc((100vw - min(900px, calc(100vw - 0.75rem))) / 2 - 1.75rem), 320px);
@@ -86,6 +111,11 @@
 }
 
 @media (max-width: 640px) {
+  .starfield-clear-zone {
+    mask-image: radial-gradient(ellipse 8rem 6rem at calc(100% - 6rem) 11rem, #000 0 52%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 8rem 6rem at calc(100% - 6rem) 11rem, #000 0 52%, transparent 100%);
+  }
+
   .ursa-major {
     top: calc(7rem + env(safe-area-inset-top));
     right: 0.75rem;
