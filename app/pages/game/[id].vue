@@ -16,7 +16,7 @@ useSeoMeta({
 <template>
   <ConstructionReceipt v-if="game" :title="game.nameZh">
     <article class="game-detail">
-      <NuxtLink class="back-link" to="/fuzao">← 返回浮躁</NuxtLink>
+      <NuxtLink class="back-link" to="/">← 返回浮躁</NuxtLink>
       <div class="game-overview">
         <img
           :src="game.coverUrl"

@@ -8,7 +8,7 @@ useSeoMeta({
 <template>
   <ConstructionReceipt title="Lossless Merge">
     <article class="project-detail">
-      <NuxtLink class="back-link" to="/fuzao">← 返回作品</NuxtLink>
+      <NuxtLink class="back-link" to="/">← 返回作品</NuxtLink>
       <header>
         <span class="project-mark" aria-hidden="true">L</span>
         <div>

@@ -4,9 +4,9 @@ const { requestPrint } = usePrinterNavigation()
 const isMenuOpen = ref(false)
 
 const menuItems = [
-  { label: '浮躁', to: '/fuzao' },
+  { label: '浮躁', to: '/' },
   { label: '南腔北调', to: '/nanqiang-beidiao' },
-  { label: '彷徨', to: '/' },
+  { label: '彷徨', to: '/wandering' },
   { label: '关于', to: '/about' }
 ]
 const menuGridStyle = { '--site-menu-item-count': menuItems.length }
