@@ -26,21 +26,21 @@ const projects: Project[] = [
   },
   {
     name: 'Relay Lab',
-    description: '测试中继站的模型表现',
+    description: '测试中转站的模型表现',
     href: 'https://relay.yiheng.run',
     linkLabel: 'relay.yiheng.run',
     icon: 'https://relay.yiheng.run/favicon.svg'
   },
   {
     name: 'Voca',
-    description: '48 个英语音标的互动指南',
+    description: '48个英语音标的发音指南',
     href: 'https://voca.yiheng.run',
     linkLabel: 'voca.yiheng.run',
     icon: 'https://voca.yiheng.run/favicon.svg'
   },
   {
     name: 'Lossless Merge',
-    description: '视频无损合并工具',
+    description: '视频无损合并自动脚本',
     href: 'https://github.com/guoyiheng/lossless-merge',
     linkLabel: 'github.com',
     icon: 'https://github.com/favicon.ico'
@@ -54,14 +54,14 @@ const projects: Project[] = [
   },
   {
     name: 'Handle',
-    description: '汉字 Wordle',
+    description: '自定义题目的汉字 Wordle',
     href: 'https://handle.yiheng.run',
     linkLabel: 'handle.yiheng.run',
     icon: 'https://handle.yiheng.run/favicon.svg'
   },
   {
     name: 'Pronunciation Corrector',
-    description: '英语发音校正练习',
+    description: '常用单词易错英语发音校正',
     href: 'https://pronunciation.yiheng.run',
     linkLabel: 'pronunciation.yiheng.run',
     icon: 'https://pronunciation.yiheng.run/favicon.svg'
@@ -83,11 +83,8 @@ const useSiteIcon = (event: Event) => {
 
       <ul class="project-list">
         <li v-for="project in projects" :key="project.name">
-          <a
-            :href="project.href"
-            :target="project.href.startsWith('http') ? '_blank' : undefined"
-            :rel="project.href.startsWith('http') ? 'noopener noreferrer' : undefined"
-          >
+          <a :href="project.href" :target="project.href.startsWith('http') ? '_blank' : undefined"
+            :rel="project.href.startsWith('http') ? 'noopener noreferrer' : undefined">
             <span class="project-icon" aria-hidden="true">
               <img :src="project.icon" alt="" width="32" height="32" loading="lazy" @error="useSiteIcon">
             </span>
@@ -110,16 +107,8 @@ const useSiteIcon = (event: Event) => {
         <li v-for="book in readingBooks" :key="book.title">
           <a :href="book.wikipediaUrl" target="_blank" rel="noopener noreferrer">
             <span class="book-cover-frame" aria-hidden="true">
-              <img
-                v-if="book.coverUrl"
-                :src="book.coverUrl"
-                alt=""
-                width="42"
-                height="56"
-                loading="lazy"
-                decoding="async"
-                referrerpolicy="no-referrer"
-              >
+              <img v-if="book.coverUrl" :src="book.coverUrl" alt="" width="42" height="56" loading="lazy"
+                decoding="async" referrerpolicy="no-referrer">
             </span>
             <span class="book-copy">
               <strong>{{ book.title }}</strong>
@@ -326,6 +315,7 @@ const useSiteIcon = (event: Event) => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .project-arrow,
   .book-arrow {
     transition: none;
