@@ -33,7 +33,7 @@
   position: absolute;
   top: clamp(7rem, 18vh, 11rem);
   right: max(1.25rem, env(safe-area-inset-right));
-  width: clamp(160px, calc((100vw - 680px) / 2 - 1.25rem), 360px);
+  width: clamp(150px, calc((100vw - min(900px, calc(100vw - 0.75rem))) / 2 - 1.75rem), 320px);
   height: auto;
   opacity: 0.7;
   filter: drop-shadow(0 0 0.55rem #e6b06b2b);
@@ -89,7 +89,7 @@
   .ursa-major {
     top: calc(7rem + env(safe-area-inset-top));
     right: 0.75rem;
-    width: 150px;
+    width: 140px;
     opacity: 0.66;
   }
 }
