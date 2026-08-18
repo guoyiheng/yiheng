@@ -99,6 +99,8 @@ const useSiteIcon = (event: Event) => {
       </ul>
     </section>
 
+    <FuzaoPsnGames />
+
     <section class="fuzao-section books-section" aria-labelledby="books-heading">
       <header class="section-heading">
         <h1 id="books-heading">Books</h1>
@@ -120,7 +122,6 @@ const useSiteIcon = (event: Event) => {
       </ul>
     </section>
 
-    <FuzaoPsnGames />
     <FuzaoAlbums />
   </div>
 </template>
