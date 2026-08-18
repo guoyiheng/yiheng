@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { favouriteAlbums } from '~/data/albums'
 
+const albumsByReleaseDate = computed(() => [...favouriteAlbums].sort((albumA, albumB) => {
+  return albumB.releasedAt.localeCompare(albumA.releasedAt)
+}))
 const unavailableCovers = reactive(new Set<string>())
 const albumKey = (artist: string, name: string) => `${artist}-${name}`
 const markCoverUnavailable = (artist: string, name: string) => {
@@ -15,7 +18,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
     </header>
 
     <ol class="album-list">
-      <li v-for="album in favouriteAlbums" :key="albumKey(album.artist, album.name)">
+      <li v-for="album in albumsByReleaseDate" :key="albumKey(album.artist, album.name)">
         <a
           :href="album.appleMusicUrl"
           target="_blank"
