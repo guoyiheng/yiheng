@@ -129,18 +129,16 @@ const markCoverUnavailable = (artist: string, name: string) => {
   overflow-wrap: anywhere;
 }
 
-.album-list time,
-.album-arrow {
-  color: var(--ink-muted);
-  font-size: 0.75rem;
-}
-
 .album-list time {
+  color: var(--ink-muted);
+  font-size: 0.68rem;
   justify-self: start;
   line-height: 1.35;
 }
 
 .album-arrow {
+  color: var(--ink-muted);
+  font-size: 0.75rem;
   text-align: right;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }

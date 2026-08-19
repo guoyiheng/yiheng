@@ -41,8 +41,10 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
             <span class="game-name-en" lang="en">{{ game.nameEn }}</span>
             <span class="game-meta">
               <time :datetime="game.releaseDate">发行于 {{ formatDate(game.releaseDate) }}</time>
-              <span aria-hidden="true">·</span>
-              <span>{{ game.genres.join(' / ') }}</span>
+              <template v-if="!compact">
+                <span aria-hidden="true">·</span>
+                <span>{{ game.genres.join(' / ') }}</span>
+              </template>
             </span>
           </span>
 
@@ -155,6 +157,12 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
 .game-meta time {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.is-compact .game-meta {
+  display: block;
+  color: var(--ink-muted);
+  font-size: 0.68rem;
 }
 
 .game-source-arrow {
