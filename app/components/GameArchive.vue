@@ -40,7 +40,7 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
             <strong class="game-name-zh">{{ game.nameZh }}</strong>
             <span class="game-name-en" lang="en">{{ game.nameEn }}</span>
             <span class="game-meta">
-              <time :datetime="game.releaseDate">{{ formatDate(game.releaseDate) }}</time>
+              <time :datetime="game.releaseDate">发行于 {{ formatDate(game.releaseDate) }}</time>
               <span aria-hidden="true">·</span>
               <span>{{ game.genres.join(' / ') }}</span>
             </span>

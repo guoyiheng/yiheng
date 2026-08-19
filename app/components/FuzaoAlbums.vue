@@ -39,8 +39,10 @@ const markCoverUnavailable = (artist: string, name: string) => {
               {{ album.name.charAt(0) }}
             </span>
           </span>
-          <span class="album-name">{{ album.name }}</span>
-          <time :datetime="album.releasedAt">{{ album.releasedAt }}</time>
+          <span class="album-copy">
+            <span class="album-name">{{ album.name }}</span>
+            <time :datetime="album.releasedAt">发行于 {{ album.releasedAt }}</time>
+          </span>
           <span class="album-arrow" aria-hidden="true">↗</span>
         </a>
       </li>
@@ -79,7 +81,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 .album-list a {
   display: grid;
   min-height: 4.5rem;
-  grid-template-columns: 3.25rem minmax(0, 1fr) auto 1rem;
+  grid-template-columns: 3.25rem minmax(0, 1fr) 1rem;
   gap: 0.85rem;
   align-items: center;
   padding: 0.6rem 0;
@@ -113,8 +115,13 @@ const markCoverUnavailable = (artist: string, name: string) => {
   font-weight: 700;
 }
 
-.album-name {
+.album-copy {
+  display: grid;
   min-width: 0;
+  gap: 0.2rem;
+}
+
+.album-name {
   color: var(--ink-strong);
   font-size: var(--content-font-size);
   font-weight: 600;
@@ -126,6 +133,11 @@ const markCoverUnavailable = (artist: string, name: string) => {
 .album-arrow {
   color: var(--ink-muted);
   font-size: 0.75rem;
+}
+
+.album-list time {
+  justify-self: start;
+  line-height: 1.35;
 }
 
 .album-arrow {

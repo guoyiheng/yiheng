@@ -82,7 +82,7 @@ const errorMessage = computed(() => {
             <span class="game-copy">
               <strong>{{ game.title }}</strong>
               <small>{{ [game.platform, game.duration].filter(Boolean).join(' · ') }}</small>
-              <small v-if="game.updatedAt">{{ game.updatedAt }}</small>
+              <small v-if="game.updatedAt" class="game-played-at">游玩于 {{ game.updatedAt }}</small>
             </span>
             <span class="game-actions">
               <img v-if="game.trophies.platinum > 0" class="game-platinum" src="/images/playstation-platinum.png"
@@ -213,6 +213,10 @@ const errorMessage = computed(() => {
 .game-copy small {
   color: var(--ink-muted);
   font-size: 0.68rem;
+}
+
+.game-played-at {
+  font-variant-numeric: tabular-nums;
 }
 
 .game-actions {
