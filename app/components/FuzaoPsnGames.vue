@@ -1,3 +1,8 @@
+<!--
+  PSN 数据在服务端最多缓存 7 天，于北京时间每周日 23:59 统一过期并更新。
+  最近 7 天游玩的游戏直接展示；其余游戏需同时满足游玩至少 5 天、进度至少 9%。
+  多页记录按 PSN 游戏 ID 合并去重后再筛选。
+-->
 <script setup lang="ts">
 interface TrophyCounts {
   platinum: number

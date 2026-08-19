@@ -1,5 +1,12 @@
 import { parse, type HTMLElement } from 'node-html-parser'
 
+/**
+ * PSN game policy:
+ * - Edge responses expire together at 23:59 every Sunday in Asia/Shanghai, with a maximum TTL of 7 days.
+ * - Games played within 7 days are always shown; older games require at least 5 days played and 9% progress.
+ * - All game pages are merged by PSN game ID before filtering.
+ */
+
 interface TrophyCounts {
   platinum: number
   gold: number
@@ -13,8 +20,12 @@ const MINIMUM_DURATION_DAYS = 5
 const MINIMUM_PROGRESS = 9
 const RECENT_PLAYED_DAYS_WITHOUT_FILTER = 7
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
-const PROFILE_CACHE_SECONDS = 30 * 24 * 60 * 60
-const PROFILE_REVALIDATE_SECONDS = 7 * 24 * 60 * 60
+const PROFILE_CACHE_SECONDS = 7 * 24 * 60 * 60
+const PROFILE_REVALIDATE_SECONDS = 60 * 60
+const CHINA_TIME_OFFSET_HOURS = 8
+const WEEKLY_REFRESH_DAY = 0
+const WEEKLY_REFRESH_HOUR = 23
+const WEEKLY_REFRESH_MINUTE = 59
 const ALLOWED_IMAGE_HOSTS = new Set([
   'image.api.playstation.com',
   'psn-rsc.prod.dl.playstation.net',
@@ -84,6 +95,21 @@ const GAME_TITLE_OVERRIDES: Record<string, string> = {
 }
 
 const canonicalGameTitle = (title: string) => GAME_TITLE_OVERRIDES[title] ?? title
+
+const secondsUntilWeeklyRefresh = (now = new Date()) => {
+  const chinaNow = new Date(now.getTime() + CHINA_TIME_OFFSET_HOURS * 60 * 60 * 1000)
+  const day = chinaNow.getUTCDay()
+  const secondsToday = chinaNow.getUTCHours() * 60 * 60
+    + chinaNow.getUTCMinutes() * 60
+    + chinaNow.getUTCSeconds()
+  const refreshAt = WEEKLY_REFRESH_HOUR * 60 * 60 + WEEKLY_REFRESH_MINUTE * 60
+  const daysUntilRefresh = (WEEKLY_REFRESH_DAY - day + 7) % 7
+  let seconds = daysUntilRefresh * 24 * 60 * 60 + refreshAt - secondsToday
+
+  if (seconds <= 0) seconds += PROFILE_CACHE_SECONDS
+
+  return Math.min(seconds, PROFILE_CACHE_SECONDS)
+}
 
 const durationInDays = (value: string) => {
   const amount = numberFrom(value)
@@ -285,7 +311,7 @@ export default defineEventHandler(async (event) => {
     [
       'public',
       'max-age=300',
-      `s-maxage=${PROFILE_CACHE_SECONDS}`,
+      `s-maxage=${secondsUntilWeeklyRefresh()}`,
       `stale-while-revalidate=${PROFILE_REVALIDATE_SECONDS}`,
       `stale-if-error=${PROFILE_CACHE_SECONDS}`
     ].join(', ')
