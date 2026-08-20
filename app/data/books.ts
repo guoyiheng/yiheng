@@ -112,6 +112,12 @@ export const readingBooks: ReadingBook[] = [
   { title: '罗杰疑案', author: '阿加莎·克里斯蒂', wikipediaUrl: wikipediaSearch('罗杰疑案'), coverUrl: amazonCover('71dPawSd3ML') },
   { title: '尼罗河上的惨案', author: '阿加莎·克里斯蒂', wikipediaUrl: wikipediaSearch('尼罗河上的惨案'), coverUrl: amazonCover('81oT+iQ4A6L') },
   { title: 'ABC谋杀案', author: '阿加莎·克里斯蒂', wikipediaUrl: wikipediaSearch('ABC谋杀案'), coverUrl: amazonCover('81rgON54DTL') },
+  {
+    title: '鬼灭之刃',
+    author: '吾峠呼世晴',
+    wikipediaUrl: 'https://zh.wikipedia.org/wiki/鬼滅之刃',
+    coverUrl: 'https://covers.openlibrary.org/b/isbn/9781974700523-L.jpg'
+  },
   { title: '理想国', author: '柏拉图', wikipediaUrl: wikipediaSearch('理想国 柏拉图'), coverUrl: amazonCover('71MSsoa+7xL') },
   { title: '尼各马可伦理学', author: '亚里士多德', wikipediaUrl: wikipediaSearch('尼各马可伦理学'), coverUrl: amazonCover('91TQY-4TQOL') },
   { title: '纯粹理性批判', author: '伊曼努尔·康德', wikipediaUrl: wikipediaSearch('纯粹理性批判'), coverUrl: amazonCover('81HFexTeoXL') },
