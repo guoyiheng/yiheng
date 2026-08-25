@@ -8,7 +8,7 @@ export default defineNuxtConfig({
       title: 'yiheng',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-        { name: 'description', content: '一恒的个人网站。' }
+        { name: 'description', content: 'yiheng 的个人网站。' }
       ],
       link: [
         { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },

@@ -4,7 +4,7 @@ import { wanderingEntries } from '~/data/wandering'
 
 <template>
   <section class="wandering-section" aria-labelledby="wandering-page-heading">
-    <PageHeading id="wandering-page-heading" title="Notes" />
+    <PageHeading id="wandering-page-heading" title="Essays" />
 
     <ol class="wandering-archive">
       <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title ?? ''}`">
@@ -26,23 +26,13 @@ import { wanderingEntries } from '~/data/wandering'
 
               <pre v-else-if="block.type === 'code'" class="wandering-code"><code>{{ block.code }}</code></pre>
 
-              <a
-                v-else-if="block.type === 'link'"
-                class="wandering-link"
-                :href="block.href"
-                target="_blank"
-                rel="noreferrer"
-              >
+              <a v-else-if="block.type === 'link'" class="wandering-link" :href="block.href" target="_blank"
+                rel="noreferrer">
                 {{ block.text }} ↗
               </a>
 
-              <img
-                v-else-if="block.type === 'image'"
-                class="wandering-image"
-                :src="block.src"
-                :alt="block.alt"
-                loading="lazy"
-              >
+              <img v-else-if="block.type === 'image'" class="wandering-image" :src="block.src" :alt="block.alt"
+                loading="lazy">
 
               <div v-else-if="block.type === 'table' && block.table" class="wandering-table-wrap">
                 <table class="wandering-table">
@@ -185,7 +175,8 @@ import { wanderingEntries } from '~/data/wandering'
   background: var(--paper-fill);
 }
 
-@media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
+@media (max-width: 600px),
+(orientation: landscape) and (max-height: 600px) {
   .wandering-entry {
     padding: 1rem 0.1rem 1.2rem;
   }
