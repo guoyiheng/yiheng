@@ -15,6 +15,7 @@ interface Movie {
 
 const pageSize = 10
 const visibleCount = ref(pageSize)
+const showUnwatchedOnly = ref(false)
 const watchedIds = ref<Set<number>>(new Set())
 const hasLoadedWatched = ref(false)
 const watchedStorageKey = 'yiheng-douban-watched'
@@ -26,8 +27,11 @@ const { data, status, error, refresh } = await useFetch<Movie[]>('/api/douban/to
 })
 
 const movies = computed(() => data.value ?? [])
-const visibleMovies = computed(() => movies.value.slice(0, visibleCount.value))
-const hasMore = computed(() => visibleCount.value < movies.value.length)
+const filteredMovies = computed(() => showUnwatchedOnly.value
+  ? movies.value.filter(movie => !watchedIds.value.has(movie.rank))
+  : movies.value)
+const visibleMovies = computed(() => filteredMovies.value.slice(0, visibleCount.value))
+const hasMore = computed(() => visibleCount.value < filteredMovies.value.length)
 const watchedCount = computed(() => movies.value.filter(movie => watchedIds.value.has(movie.rank)).length)
 
 const formatVotes = (votes: number) => {
@@ -50,6 +54,11 @@ const posterSrc = (movie: Movie) => {
 
 const loadMore = () => {
   if (hasMore.value) visibleCount.value += pageSize
+}
+
+const toggleUnwatchedFilter = () => {
+  showUnwatchedOnly.value = !showUnwatchedOnly.value
+  visibleCount.value = pageSize
 }
 
 onMounted(() => {
@@ -76,8 +85,20 @@ onBeforeUnmount(() => observer?.disconnect())
 <template>
   <section class="douban-archive" aria-labelledby="douban-heading">
     <PageHeading id="douban-heading" title="Douban Movie Top250">
-      <template v-if="hasLoadedWatched" #aside>
-        <span class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+      <template #aside>
+        <div class="douban-heading-actions">
+          <button
+            class="douban-filter-toggle"
+            :class="{ 'is-active': showUnwatchedOnly }"
+            type="button"
+            :aria-pressed="showUnwatchedOnly"
+            @click="toggleUnwatchedFilter"
+          >
+            <span aria-hidden="true">{{ showUnwatchedOnly ? '●' : '○' }}</span>
+            {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
+          </button>
+          <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+        </div>
       </template>
     </PageHeading>
 
@@ -86,6 +107,7 @@ onBeforeUnmount(() => observer?.disconnect())
       <p>榜单暂时没能送达。</p>
       <button class="douban-retry" type="button" @click="refresh()">重新读取</button>
     </div>
+    <div v-else-if="!filteredMovies.length" class="douban-state" role="status">还没有标记过电影</div>
     <ol v-else class="douban-list">
       <li v-for="movie in visibleMovies" :key="movie.rank"
         :class="['douban-entry', { 'is-watched': watchedIds.has(movie.rank) }]">
@@ -129,6 +151,34 @@ onBeforeUnmount(() => observer?.disconnect())
 
 .douban-progress {
   white-space: nowrap;
+}
+
+.douban-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.douban-filter-toggle {
+  display: inline-flex;
+  padding: 0.3rem 0.45rem;
+  align-items: center;
+  gap: 0.2rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-muted);
+  cursor: pointer;
+  font-size: 0.68rem;
+  white-space: nowrap;
+  transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.douban-filter-toggle:hover,
+.douban-filter-toggle.is-active {
+  border-color: var(--ink-link);
+  background: var(--ink-link);
+  color: var(--receipt-color);
 }
 
 .douban-list {
