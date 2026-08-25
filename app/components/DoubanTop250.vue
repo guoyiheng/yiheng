@@ -14,12 +14,15 @@ interface Movie {
 }
 
 const pageSize = 10
+const watchedFadeDuration = 480
 const visibleCount = ref(pageSize)
 const showUnwatchedOnly = ref(false)
 const watchedIds = ref<Set<number>>(new Set())
+const hidingMovieIds = ref<Set<number>>(new Set())
 const hasLoadedWatched = ref(false)
 const watchedStorageKey = 'yiheng-douban-watched'
 const loadMoreTarget = ref<HTMLElement | null>(null)
+const hidingTimers = new Map<number, ReturnType<typeof setTimeout>>()
 let observer: IntersectionObserver | undefined
 
 const { data, status, error, refresh } = await useFetch<Movie[]>('/api/douban/top250', {
@@ -28,7 +31,7 @@ const { data, status, error, refresh } = await useFetch<Movie[]>('/api/douban/to
 
 const movies = computed(() => data.value ?? [])
 const filteredMovies = computed(() => showUnwatchedOnly.value
-  ? movies.value.filter(movie => !watchedIds.value.has(movie.rank))
+  ? movies.value.filter(movie => !watchedIds.value.has(movie.rank) || hidingMovieIds.value.has(movie.rank))
   : movies.value)
 const visibleMovies = computed(() => filteredMovies.value.slice(0, visibleCount.value))
 const hasMore = computed(() => visibleCount.value < filteredMovies.value.length)
@@ -39,10 +42,39 @@ const formatVotes = (votes: number) => {
   return votes >= 10000 ? `${(votes / 10000).toFixed(1)} 万人评价` : `${votes} 人评价`
 }
 
+const finishHidingMovie = (rank: number) => {
+  const timer = hidingTimers.get(rank)
+  if (timer) clearTimeout(timer)
+  hidingTimers.delete(rank)
+
+  const next = new Set(hidingMovieIds.value)
+  next.delete(rank)
+  hidingMovieIds.value = next
+}
+
+const clearHidingMovies = () => {
+  hidingTimers.forEach(timer => clearTimeout(timer))
+  hidingTimers.clear()
+  hidingMovieIds.value = new Set()
+}
+
+const startHidingMovie = (rank: number) => {
+  const next = new Set(hidingMovieIds.value)
+  next.add(rank)
+  hidingMovieIds.value = next
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const fallbackDelay = reduceMotion ? 0 : watchedFadeDuration + 80
+  hidingTimers.set(rank, setTimeout(() => finishHidingMovie(rank), fallbackDelay))
+}
+
 const toggleWatched = (movie: Movie) => {
   const next = new Set(watchedIds.value)
-  if (next.has(movie.rank)) next.delete(movie.rank)
-  else next.add(movie.rank)
+  const isMarkingWatched = !next.has(movie.rank)
+  if (isMarkingWatched) next.add(movie.rank)
+  else next.delete(movie.rank)
+
+  if (isMarkingWatched && showUnwatchedOnly.value) startHidingMovie(movie.rank)
   watchedIds.value = next
   if (import.meta.client) localStorage.setItem(watchedStorageKey, JSON.stringify([...next]))
 }
@@ -58,6 +90,7 @@ const loadMore = () => {
 
 const toggleUnwatchedFilter = () => {
   showUnwatchedOnly.value = !showUnwatchedOnly.value
+  if (!showUnwatchedOnly.value) clearHidingMovies()
   visibleCount.value = pageSize
 }
 
@@ -79,7 +112,10 @@ onMounted(() => {
   if (loadMoreTarget.value) observer.observe(loadMoreTarget.value)
 })
 
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  clearHidingMovies()
+})
 </script>
 
 <template>
@@ -110,7 +146,11 @@ onBeforeUnmount(() => observer?.disconnect())
     <div v-else-if="!filteredMovies.length" class="douban-state" role="status">还没有标记过电影</div>
     <ol v-else class="douban-list">
       <li v-for="movie in visibleMovies" :key="movie.rank"
-        :class="['douban-entry', { 'is-watched': watchedIds.has(movie.rank) }]">
+        :class="['douban-entry', {
+          'is-watched': watchedIds.has(movie.rank),
+          'is-hiding-watched': hidingMovieIds.has(movie.rank)
+        }]"
+        @animationend.self="finishHidingMovie(movie.rank)">
         <span class="douban-rank" aria-hidden="true">{{ String(movie.rank).padStart(3, '0') }}</span>
         <a class="douban-poster-frame" :href="movie.detailUrl" target="_blank" rel="noopener noreferrer">
           <img v-if="movie.posterUrl" class="douban-poster" :src="posterSrc(movie)" :alt="`${movie.title} 海报`"
@@ -132,7 +172,8 @@ onBeforeUnmount(() => observer?.disconnect())
         </div>
         <button class="douban-watched" type="button"
           :aria-label="watchedIds.has(movie.rank) ? `取消标记《${movie.title}》` : `标记《${movie.title}》已看过`"
-          :aria-pressed="watchedIds.has(movie.rank)" @click="toggleWatched(movie)">
+          :aria-pressed="watchedIds.has(movie.rank)" :disabled="hidingMovieIds.has(movie.rank)"
+          @click="toggleWatched(movie)">
           <span class="douban-check" aria-hidden="true">{{ watchedIds.has(movie.rank) ? '✓' : '○' }}</span>
           <span>{{ watchedIds.has(movie.rank) ? '已看' : '标记' }}</span>
         </button>
@@ -201,6 +242,21 @@ onBeforeUnmount(() => observer?.disconnect())
 
 .douban-entry.is-watched {
   opacity: 0.55;
+}
+
+.douban-entry.is-hiding-watched {
+  animation: hide-watched-movie 480ms cubic-bezier(0.45, 0, 0.55, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes hide-watched-movie {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
 }
 
 .douban-rank {
@@ -382,6 +438,12 @@ onBeforeUnmount(() => observer?.disconnect())
 
   .douban-poster-frame:hover {
     border-color: var(--ink-link);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .douban-entry.is-hiding-watched {
+    animation-duration: 0.01ms;
   }
 }
 
