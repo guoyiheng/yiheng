@@ -4,7 +4,7 @@ const { requestPrint } = usePrinterNavigation()
 const isMenuOpen = ref(false)
 
 const menuItems = [
-  { label: '浮躁', to: '/' },
+  { label: '而已', to: '/' },
   { label: '三闲', to: '/sanxian' },
   { label: '彷徨', to: '/wandering' },
   { label: '南腔', to: '/nanqiang' },
