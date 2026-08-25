@@ -13,9 +13,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 
 <template>
   <section class="album-section" aria-labelledby="albums-heading">
-    <header class="section-heading">
-      <h1 id="albums-heading">Albums</h1>
-    </header>
+    <PageHeading id="albums-heading" title="Albums" />
 
     <ol class="album-list">
       <li v-for="album in albumsByReleaseDate" :key="albumKey(album.artist, album.name)">
@@ -57,18 +55,6 @@ const markCoverUnavailable = (artist: string, name: string) => {
   padding: 0.35rem 0.15rem 2rem;
   color: var(--ink);
   font-size: var(--content-font-size);
-}
-
-.section-heading {
-  margin-bottom: 1.25rem;
-}
-
-.section-heading h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.15;
 }
 
 .album-list time {

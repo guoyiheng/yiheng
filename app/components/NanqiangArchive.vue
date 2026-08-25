@@ -9,21 +9,29 @@ const documentHref = (id: string) => `/nanqiang/${encodeURIComponent(id)}`
 </script>
 
 <template>
-  <ol class="nanqiang-archive">
-    <li v-for="item in items" :key="item.id">
-      <NuxtLink class="nanqiang-index-link" :to="documentHref(item.id)" no-prefetch>
-        <strong v-if="item.featured" class="nanqiang-index-title">{{ item.title }}</strong>
-        <span v-else class="nanqiang-index-title">{{ item.title }}</span>
-        <time v-if="item.date" class="nanqiang-index-date" :datetime="item.date">
-          {{ item.date }}
-        </time>
-        <span class="nanqiang-index-arrow" aria-hidden="true">→</span>
-      </NuxtLink>
-    </li>
-  </ol>
+  <section class="nanqiang-section" aria-labelledby="articles-heading">
+    <PageHeading id="articles-heading" title="Articles" />
+
+    <ol class="nanqiang-archive">
+      <li v-for="item in items" :key="item.id">
+        <NuxtLink class="nanqiang-index-link" :to="documentHref(item.id)" no-prefetch>
+          <strong v-if="item.featured" class="nanqiang-index-title">{{ item.title }}</strong>
+          <span v-else class="nanqiang-index-title">{{ item.title }}</span>
+          <time v-if="item.date" class="nanqiang-index-date" :datetime="item.date">
+            {{ item.date }}
+          </time>
+          <span class="nanqiang-index-arrow" aria-hidden="true">→</span>
+        </NuxtLink>
+      </li>
+    </ol>
+  </section>
 </template>
 
 <style scoped>
+.nanqiang-section {
+  padding: 0.35rem 0.15rem 2rem;
+}
+
 .nanqiang-archive {
   display: grid;
   margin: 0;
@@ -68,6 +76,10 @@ const documentHref = (id: string) => `/nanqiang/${encodeURIComponent(id)}`
 }
 
 @media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
+  .nanqiang-section {
+    padding-inline: 0;
+  }
+
   .nanqiang-index-link {
     min-height: 2.75rem;
     grid-template-columns: minmax(0, 1fr) auto;

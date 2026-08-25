@@ -5,6 +5,8 @@ useSeoMeta({ title: '关于 · yiheng' })
 <template>
   <ConstructionReceipt title="关于">
     <section class="about-profile" aria-labelledby="about-heading">
+      <PageHeading id="about-heading" title="About" />
+
       <div class="about-copy">
         <p>我是 yiheng，目前在杭州做产品。</p>
         <p>没什么偏好，平日里打打游戏，看看书，听听歌。以前也有过一些爱好，渐渐提不起兴趣了。最近喜欢游泳，弹琴，打网球，没有什么出色的，也谈不上迷恋，找点事情做。</p>
@@ -28,16 +30,8 @@ useSeoMeta({ title: '关于 · yiheng' })
   color: var(--ink);
 }
 
-.about-kicker {
-  color: var(--ink-muted);
-  font-size: 0.75rem;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
 .about-copy {
   width: 100%;
-  padding-top: 1.25rem;
 }
 
 .about-copy p {

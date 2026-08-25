@@ -3,66 +3,74 @@ import { wanderingEntries } from '~/data/wandering'
 </script>
 
 <template>
-  <ol class="wandering-archive">
-    <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title ?? ''}`">
-      <article class="wandering-entry">
-        <header class="wandering-heading">
-          <h2 v-if="entry.title" class="wandering-title">{{ entry.title }}</h2>
-          <time class="wandering-date">{{ entry.date }}</time>
-        </header>
+  <section class="wandering-section" aria-labelledby="wandering-page-heading">
+    <PageHeading id="wandering-page-heading" title="Notes" />
 
-        <div class="wandering-body">
-          <template v-for="(block, index) in entry.blocks" :key="index">
-            <p v-if="block.type === 'paragraph'" class="wandering-paragraph">
-              {{ block.text }}
-            </p>
+    <ol class="wandering-archive">
+      <li v-for="entry in wanderingEntries" :key="`${entry.date}-${entry.title ?? ''}`">
+        <article class="wandering-entry">
+          <header class="wandering-heading">
+            <h2 v-if="entry.title" class="wandering-title">{{ entry.title }}</h2>
+            <time class="wandering-date">{{ entry.date }}</time>
+          </header>
 
-            <ul v-else-if="block.type === 'list'" class="wandering-list">
-              <li v-for="item in block.items" :key="item">{{ item }}</li>
-            </ul>
+          <div class="wandering-body">
+            <template v-for="(block, index) in entry.blocks" :key="index">
+              <p v-if="block.type === 'paragraph'" class="wandering-paragraph">
+                {{ block.text }}
+              </p>
 
-            <pre v-else-if="block.type === 'code'" class="wandering-code"><code>{{ block.code }}</code></pre>
+              <ul v-else-if="block.type === 'list'" class="wandering-list">
+                <li v-for="item in block.items" :key="item">{{ item }}</li>
+              </ul>
 
-            <a
-              v-else-if="block.type === 'link'"
-              class="wandering-link"
-              :href="block.href"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {{ block.text }} ↗
-            </a>
+              <pre v-else-if="block.type === 'code'" class="wandering-code"><code>{{ block.code }}</code></pre>
 
-            <img
-              v-else-if="block.type === 'image'"
-              class="wandering-image"
-              :src="block.src"
-              :alt="block.alt"
-              loading="lazy"
-            >
+              <a
+                v-else-if="block.type === 'link'"
+                class="wandering-link"
+                :href="block.href"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {{ block.text }} ↗
+              </a>
 
-            <div v-else-if="block.type === 'table' && block.table" class="wandering-table-wrap">
-              <table class="wandering-table">
-                <thead>
-                  <tr>
-                    <th v-for="header in block.table.headers" :key="header">{{ header }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(row, rowIndex) in block.table.rows" :key="rowIndex">
-                    <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </template>
-        </div>
-      </article>
-    </li>
-  </ol>
+              <img
+                v-else-if="block.type === 'image'"
+                class="wandering-image"
+                :src="block.src"
+                :alt="block.alt"
+                loading="lazy"
+              >
+
+              <div v-else-if="block.type === 'table' && block.table" class="wandering-table-wrap">
+                <table class="wandering-table">
+                  <thead>
+                    <tr>
+                      <th v-for="header in block.table.headers" :key="header">{{ header }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(row, rowIndex) in block.table.rows" :key="rowIndex">
+                      <td v-for="(cell, cellIndex) in row" :key="cellIndex">{{ cell }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </template>
+          </div>
+        </article>
+      </li>
+    </ol>
+  </section>
 </template>
 
 <style scoped>
+.wandering-section {
+  padding: 0.35rem 0.15rem 2rem;
+}
+
 .wandering-archive {
   display: grid;
   gap: 0;
@@ -180,6 +188,10 @@ import { wanderingEntries } from '~/data/wandering'
 @media (max-width: 600px), (orientation: landscape) and (max-height: 600px) {
   .wandering-entry {
     padding: 1rem 0.1rem 1.2rem;
+  }
+
+  .wandering-section {
+    padding-inline: 0;
   }
 
   .wandering-heading {
