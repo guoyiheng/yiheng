@@ -6,9 +6,10 @@ const isMenuOpen = ref(false)
 const menuItems = [
   { label: '浮躁', to: '/' },
   { label: '三闲', to: '/sanxian' },
+  { label: '彷徨', to: '/wandering' },
   { label: '南腔', to: '/nanqiang' },
   { label: '北调', to: '/beidiao' },
-  { label: '彷徨', to: '/wandering' },
+  { label: '豆瓣', to: '/douban' },
   { label: '关于', to: '/about' }
 ]
 const menuGridStyle = { '--site-menu-item-count': menuItems.length }
@@ -33,34 +34,18 @@ watch(() => route.fullPath, () => {
 </script>
 
 <template>
-  <nav
-    class="print-button site-menu"
-    :class="{ 'is-open': isMenuOpen }"
-    aria-label="主要菜单"
-    @keydown.esc="isMenuOpen = false"
-  >
-    <button
-      class="site-menu-toggle"
-      :class="{ 'is-active': !isMenuOpen }"
-      type="button"
-      :aria-expanded="isMenuOpen"
-      aria-controls="site-menu-links"
-      :aria-label="isMenuOpen ? '关闭菜单' : '打开菜单'"
-      @click="isMenuOpen = !isMenuOpen"
-    >
+  <nav class="print-button site-menu" :class="{ 'is-open': isMenuOpen }" aria-label="主要菜单"
+    @keydown.esc="isMenuOpen = false">
+    <button class="site-menu-toggle" :class="{ 'is-active': !isMenuOpen }" type="button" :aria-expanded="isMenuOpen"
+      aria-controls="site-menu-links" :aria-label="isMenuOpen ? '关闭菜单' : '打开菜单'" @click="isMenuOpen = !isMenuOpen">
       <span class="site-menu-toggle-label">{{ activeMenuItem.label }}</span>
       <span class="site-menu-toggle-icon" aria-hidden="true">⌄</span>
     </button>
 
     <div id="site-menu-links" class="site-menu-links" :style="menuGridStyle">
-      <NuxtLink
-        v-for="item in menuItems"
-        :key="item.to"
-        :to="item.to"
+      <NuxtLink v-for="item in menuItems" :key="item.to" :to="item.to"
         :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
-        :aria-current="isItemActive(item.to) ? 'page' : undefined"
-        @click="handleMenuClick(item.to)"
-      >
+        :aria-current="isItemActive(item.to) ? 'page' : undefined" @click="handleMenuClick(item.to)">
         {{ item.label }}
       </NuxtLink>
     </div>
