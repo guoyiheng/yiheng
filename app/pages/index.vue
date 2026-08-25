@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
   title: '热风 · yiheng',
-  description: 'yiheng 的作品。'
+  description: 'yiheng 的作品与随笔。'
 })
 </script>
 

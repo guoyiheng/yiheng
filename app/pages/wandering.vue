@@ -1,9 +1,3 @@
 <script setup lang="ts">
-useSeoMeta({ title: '北调 · yiheng' })
+await navigateTo('/', { redirectCode: 301 })
 </script>
-
-<template>
-  <ConstructionReceipt title="北调">
-    <WanderingArchive />
-  </ConstructionReceipt>
-</template>

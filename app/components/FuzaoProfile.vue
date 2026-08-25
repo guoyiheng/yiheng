@@ -94,6 +94,10 @@ const useSiteIcon = (event: Event) => {
         </li>
       </ul>
     </section>
+
+    <div class="profile-notes">
+      <WanderingArchive />
+    </div>
   </div>
 </template>
 
@@ -111,6 +115,10 @@ const useSiteIcon = (event: Event) => {
   padding: 0;
   border-top: 1px dashed var(--profile-rule);
   list-style: none;
+}
+
+.profile-notes {
+  margin-top: 4rem;
 }
 
 .project-list li {
@@ -209,6 +217,10 @@ const useSiteIcon = (event: Event) => {
 (orientation: landscape) and (max-height: 600px) {
   .fuzao-profile {
     padding-inline: 0;
+  }
+
+  .profile-notes {
+    margin-top: 3.25rem;
   }
 
   .project-list a {

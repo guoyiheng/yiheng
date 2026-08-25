@@ -6,7 +6,6 @@ const isMenuOpen = ref(false)
 const menuItems = [
   { label: '热风', to: '/' },
   { label: '三闲', to: '/sanxian' },
-  { label: '北调', to: '/wandering' },
   { label: '南腔', to: '/nanqiang' },
   { label: '彷徨', to: '/douban' },
   { label: '而已', to: '/about' }
