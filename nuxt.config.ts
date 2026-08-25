@@ -1,26 +1,7 @@
-import { execFileSync } from 'node:child_process'
-
-const getCopyrightYear = () => {
-  try {
-    const years = execFileSync(
-      'git',
-      ['log', '--reverse', '--format=%ad', '--date=format:%Y'],
-      { encoding: 'utf8' }
-    ).trim()
-
-    return years.split('\n')[0] || '2026'
-  } catch {
-    return '2026'
-  }
-}
-
 export default defineNuxtConfig({
   compatibilityDate: '2026-08-06',
   css: ['~/assets/css/main.css'],
   devtools: { enabled: false },
-  appConfig: {
-    copyrightYear: getCopyrightYear()
-  },
   app: {
     head: {
       htmlAttrs: { lang: 'zh-CN' },

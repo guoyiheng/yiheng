@@ -5,7 +5,7 @@ const props = defineProps<{
   scrollKey?: string
 }>()
 
-const { copyrightYear } = useAppConfig()
+const copyrightYear = new Date().getFullYear()
 const route = useRoute()
 const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
