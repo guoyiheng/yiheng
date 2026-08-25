@@ -21,7 +21,7 @@ const { data: document } = await useAsyncData<NanqiangPageDocument | null>(
 
 useSeoMeta({
   title: () => document.value
-    ? `${document.value.title} · 南腔北调 · yiheng`
+    ? `${document.value.title} · 南腔 · yiheng`
     : '页面不存在 · yiheng'
 })
 </script>

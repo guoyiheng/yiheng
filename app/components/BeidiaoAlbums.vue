@@ -12,7 +12,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 </script>
 
 <template>
-  <section class="album-section fuzao-section" aria-labelledby="albums-heading">
+  <section class="album-section" aria-labelledby="albums-heading">
     <header class="section-heading">
       <h1 id="albums-heading">Albums</h1>
     </header>
@@ -51,6 +51,14 @@ const markCoverUnavailable = (artist: string, name: string) => {
 </template>
 
 <style scoped>
+.album-section {
+  --profile-rule: color-mix(in srgb, var(--paper-rule) 72%, transparent);
+
+  padding: 0.35rem 0.15rem 2rem;
+  color: var(--ink);
+  font-size: var(--content-font-size);
+}
+
 .section-heading {
   margin-bottom: 1.25rem;
 }

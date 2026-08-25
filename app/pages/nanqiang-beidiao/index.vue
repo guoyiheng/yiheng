@@ -4,11 +4,11 @@ import { nanqiangIndex } from '~/data/nanqiang-index'
 
 const items = useState<NanqiangIndexItem[]>('nanqiang-index', () => nanqiangIndex)
 
-useSeoMeta({ title: '南腔北调 · yiheng' })
+useSeoMeta({ title: '南腔 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="南腔北调" scroll-key="/nanqiang-beidiao">
+  <ConstructionReceipt title="南腔" scroll-key="/nanqiang-beidiao">
     <NanqiangArchive :items="items" />
   </ConstructionReceipt>
 </template>

@@ -121,8 +121,6 @@ const useSiteIcon = (event: Event) => {
         </li>
       </ul>
     </section>
-
-    <FuzaoAlbums />
   </div>
 </template>
 
