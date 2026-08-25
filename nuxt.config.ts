@@ -2,6 +2,14 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-08-06',
   css: ['~/assets/css/main.css'],
   devtools: { enabled: false },
+  nitro: {
+    storage: {
+      douban: {
+        driver: 'fs',
+        base: process.env.DOUBAN_CACHE_DIR || './.data/douban'
+      }
+    }
+  },
   app: {
     head: {
       htmlAttrs: { lang: 'zh-CN' },
