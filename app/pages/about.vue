@@ -1,9 +1,9 @@
 <script setup lang="ts">
-useSeoMeta({ title: '关于 · yiheng' })
+useSeoMeta({ title: '而已 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="关于">
+  <ConstructionReceipt title="而已">
     <section class="about-profile" aria-labelledby="about-heading">
       <PageHeading id="about-heading" title="About" />
 

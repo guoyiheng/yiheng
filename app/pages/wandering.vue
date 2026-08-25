@@ -1,9 +1,9 @@
 <script setup lang="ts">
-useSeoMeta({ title: '彷徨 · yiheng' })
+useSeoMeta({ title: '北调 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="彷徨">
+  <ConstructionReceipt title="北调">
     <WanderingArchive />
   </ConstructionReceipt>
 </template>
