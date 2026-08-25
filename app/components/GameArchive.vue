@@ -12,10 +12,7 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
 
 <template>
   <div class="game-archive" :class="{ 'is-compact': compact }">
-    <header v-if="!compact" class="game-archive-heading">
-      <span class="game-archive-kicker">Game archive</span>
-      <h1>游戏档案</h1>
-    </header>
+    <PageHeading v-if="!compact" id="game-archive-heading" title="Games" />
 
     <ol class="game-list">
       <li v-for="game in games" :key="game.id">
@@ -59,28 +56,6 @@ const formatDate = (date: string) => date.replaceAll('-', '.')
 .game-archive {
   padding: 0.35rem 0.15rem 2rem;
   color: var(--ink);
-}
-
-.game-archive-heading {
-  display: grid;
-  gap: 0.45rem;
-  padding: 0.25rem 0 1.5rem;
-  border-bottom: 1px solid var(--paper-rule);
-}
-
-.game-archive-kicker {
-  color: var(--ink-muted);
-  font-size: 0.72rem;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.game-archive-heading h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.15;
 }
 
 .is-compact {

@@ -199,7 +199,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
 </script>
 
 <template>
-  <article ref="documentRoot" class="nanqiang-document">
+  <article ref="documentRoot" class="nanqiang-document" aria-labelledby="nanqiang-document-heading">
     <div class="nanqiang-actions">
       <NuxtLink
         class="nanqiang-back"
@@ -224,6 +224,12 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
         </svg>
       </button>
     </div>
+
+    <PageHeading
+      id="nanqiang-document-heading"
+      class="nanqiang-page-heading"
+      :title="props.document.title"
+    />
 
     <NanqiangDocumentContent :document="props.document" />
 
@@ -253,6 +259,10 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
             @pointercancel="endInspectorDrag"
           >
             <div ref="inspectorContent" class="receipt-content inspector-content">
+              <PageHeading
+                id="nanqiang-inspector-document-heading"
+                :title="props.document.title"
+              />
               <NanqiangDocumentContent :document="props.document" />
             </div>
           </article>
@@ -290,6 +300,10 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   gap: 0.2rem;
   align-items: center;
   margin-top: calc((1.55em * 1.3 - 2rem) / 2);
+}
+
+.nanqiang-page-heading {
+  padding-right: 4.5rem;
 }
 
 .nanqiang-back,

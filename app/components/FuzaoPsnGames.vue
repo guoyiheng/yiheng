@@ -60,9 +60,7 @@ const errorMessage = computed(() => {
 
 <template>
   <section class="psn-section fuzao-section" :class="{ 'is-standalone': standalone }" aria-labelledby="games-heading">
-    <header class="section-heading">
-      <h1 id="games-heading">Games</h1>
-    </header>
+    <PageHeading id="games-heading" title="Games" />
 
     <section class="game-platform" aria-labelledby="ps-games-heading">
       <header class="platform-heading">
@@ -110,21 +108,9 @@ const errorMessage = computed(() => {
 </template>
 
 <style scoped>
-.section-heading {
-  margin-bottom: 1.6rem;
-}
-
 .is-standalone {
   padding: 0.35rem 0.15rem 2rem;
   color: var(--ink);
-}
-
-.section-heading h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.15;
 }
 
 .game-platform+.game-platform {

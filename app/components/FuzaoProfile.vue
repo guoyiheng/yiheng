@@ -77,9 +77,7 @@ const useSiteIcon = (event: Event) => {
 <template>
   <div class="fuzao-profile">
     <section class="fuzao-section project-section" aria-labelledby="projects-heading">
-      <header class="section-heading">
-        <h1 id="projects-heading">Works</h1>
-      </header>
+      <PageHeading id="projects-heading" title="Works" />
 
       <ul class="project-list">
         <li v-for="project in projects" :key="project.name">
@@ -100,9 +98,7 @@ const useSiteIcon = (event: Event) => {
     </section>
 
     <section class="fuzao-section books-section" aria-labelledby="books-heading">
-      <header class="section-heading">
-        <h1 id="books-heading">Books</h1>
-      </header>
+      <PageHeading id="books-heading" title="Books" />
       <ul class="book-list">
         <li v-for="book in readingBooks" :key="book.title">
           <a :href="book.wikipediaUrl" target="_blank" rel="noopener noreferrer">
@@ -133,18 +129,6 @@ const useSiteIcon = (event: Event) => {
 
 .fuzao-section+.fuzao-section {
   margin-top: 4rem;
-}
-
-.section-heading {
-  margin-bottom: 1.25rem;
-}
-
-.section-heading h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.15;
 }
 
 .project-list {

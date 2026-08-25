@@ -272,7 +272,15 @@ export const renderNanqiangMarkdown = async (document: NanqiangDocument) => {
     }
   })
 
-  return await parser.parse(document.content)
+  let removedDocumentTitle = false
+  const content = document.content.replace(/^#\s+(.+)$/gm, (heading, headingText: string) => {
+    if (removedDocumentTitle || stripMarkdown(headingText) !== document.title) return heading
+
+    removedDocumentTitle = true
+    return ''
+  })
+
+  return await parser.parse(content)
 }
 
 export const parseNanqiangCsv = (document: NanqiangDocument) => {

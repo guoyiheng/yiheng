@@ -15,8 +15,14 @@ useSeoMeta({
 
 <template>
   <ConstructionReceipt v-if="game" :title="game.nameZh">
-    <article class="game-detail">
+    <article class="game-detail" aria-labelledby="game-detail-heading">
       <NuxtLink class="back-link" to="/sanxian">← 返回三闲</NuxtLink>
+      <PageHeading id="game-detail-heading" :title="game.nameZh">
+        <template #subtitle>
+          <span lang="en">{{ game.nameEn }}</span>
+        </template>
+      </PageHeading>
+
       <div class="game-overview">
         <img
           :src="game.coverUrl"
@@ -25,8 +31,6 @@ useSeoMeta({
           height="240"
         >
         <div class="game-copy">
-          <h1>{{ game.nameZh }}</h1>
-          <p class="english-name" lang="en">{{ game.nameEn }}</p>
           <dl>
             <div>
               <dt>发行</dt>
@@ -78,20 +82,6 @@ useSeoMeta({
   object-fit: cover;
 }
 
-.game-copy h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.45rem;
-  line-height: 1.25;
-}
-
-.english-name {
-  margin: 0.4rem 0 1.5rem;
-  color: var(--ink-muted);
-  font-size: 0.78rem;
-  line-height: 1.45;
-}
-
 .game-copy dl {
   margin: 0;
 }
@@ -132,10 +122,6 @@ useSeoMeta({
 
   .game-overview img {
     width: 5.75rem;
-  }
-
-  .game-copy h1 {
-    font-size: 1.15rem;
   }
 }
 </style>

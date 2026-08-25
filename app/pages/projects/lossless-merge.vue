@@ -7,15 +7,16 @@ useSeoMeta({
 
 <template>
   <ConstructionReceipt title="Lossless Merge">
-    <article class="project-detail">
+    <article class="project-detail" aria-labelledby="project-heading">
       <NuxtLink class="back-link" to="/">← 返回作品</NuxtLink>
-      <header>
+      <div class="project-summary">
         <span class="project-mark" aria-hidden="true">L</span>
-        <div>
-          <h1>Lossless Merge</h1>
-          <p>面向 NAS 的定时视频无损合并服务。</p>
-        </div>
-      </header>
+        <PageHeading id="project-heading" class="project-heading" title="Lossless Merge">
+          <template #subtitle>
+            面向 NAS 的定时视频无损合并服务。
+          </template>
+        </PageHeading>
+      </div>
       <dl>
         <div>
           <dt>运行环境</dt>
@@ -52,7 +53,7 @@ useSeoMeta({
   text-decoration: none;
 }
 
-.project-detail header {
+.project-summary {
   display: grid;
   grid-template-columns: 3rem minmax(0, 1fr);
   gap: 1rem;
@@ -73,18 +74,8 @@ useSeoMeta({
   font-weight: 700;
 }
 
-.project-detail h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.45rem;
-  line-height: 1.2;
-}
-
-.project-detail header p {
-  margin: 0.4rem 0 0;
-  color: var(--ink-muted);
-  font-size: 0.82rem;
-  line-height: 1.5;
+.project-heading {
+  --page-heading-margin-bottom: 0;
 }
 
 .project-detail dl {

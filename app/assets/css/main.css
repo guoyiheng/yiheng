@@ -300,11 +300,11 @@ a:focus-visible {
   text-align: center;
 }
 
-.receipt-not-found h1 {
-  margin: 0;
-  font-size: 1em;
-  font-weight: 400;
-  line-height: inherit;
+.receipt-not-found .page-heading {
+  --page-heading-font-size: 1em;
+  --page-heading-font-weight: 400;
+  --page-heading-line-height: inherit;
+  --page-heading-margin-bottom: 0;
 }
 
 .receipt-content {

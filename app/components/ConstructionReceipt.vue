@@ -236,7 +236,7 @@ onBeforeUnmount(() => {
               @scroll.passive="rememberScrollPosition"
             >
               <div v-if="props.missing" class="receipt-not-found">
-                <h1>404</h1>
+                <PageHeading id="not-found-heading" title="404" />
               </div>
 
               <slot v-else>

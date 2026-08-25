@@ -75,12 +75,11 @@ onBeforeUnmount(() => observer?.disconnect())
 
 <template>
   <section class="douban-archive" aria-labelledby="douban-heading">
-    <header class="douban-heading">
-      <div>
-        <h1 id="douban-heading">Douban Movie Top250</h1>
-      </div>
-      <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
-    </header>
+    <PageHeading id="douban-heading" title="Douban Movie Top250">
+      <template v-if="hasLoadedWatched" #aside>
+        <span class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+      </template>
+    </PageHeading>
 
     <div v-if="status === 'pending'" class="douban-state" role="status">正在读取榜单</div>
     <div v-else-if="error" class="douban-state douban-state-error" role="alert">
@@ -128,37 +127,7 @@ onBeforeUnmount(() => observer?.disconnect())
   color: var(--ink);
 }
 
-.douban-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.25rem 0 1.35rem;
-  border-bottom: 1px solid var(--paper-rule);
-}
-
-.douban-kicker {
-  display: block;
-  margin-bottom: 0.45rem;
-  color: var(--ink-muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.douban-heading h1 {
-  margin: 0;
-  color: var(--ink-strong);
-  font-size: 1.55rem;
-  line-height: 1.15;
-}
-
 .douban-progress {
-  flex: 0 0 auto;
-  padding-bottom: 0.1rem;
-  color: var(--ink-muted);
-  font-size: 0.7rem;
   white-space: nowrap;
 }
 
