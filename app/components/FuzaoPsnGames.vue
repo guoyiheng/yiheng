@@ -28,12 +28,6 @@ interface PsnProfile {
   games: PsnGame[]
 }
 
-withDefaults(defineProps<{
-  standalone?: boolean
-}>(), {
-  standalone: false
-})
-
 const PSN_ID = 'shallwetalk2022'
 
 const { data: profile, status, error } = await useFetch<PsnProfile>(
@@ -59,7 +53,7 @@ const errorMessage = computed(() => {
 </script>
 
 <template>
-  <section class="psn-section fuzao-section" :class="{ 'is-standalone': standalone }" aria-labelledby="games-heading">
+  <section class="psn-section sanxian-section" aria-labelledby="games-heading">
     <PageHeading id="games-heading" title="Games" />
 
     <section class="game-platform" aria-labelledby="ps-games-heading">
@@ -108,11 +102,6 @@ const errorMessage = computed(() => {
 </template>
 
 <style scoped>
-.is-standalone {
-  padding: 0.35rem 0.15rem 2rem;
-  color: var(--ink);
-}
-
 .game-platform+.game-platform {
   margin-top: 2.75rem;
 }
@@ -252,10 +241,6 @@ const errorMessage = computed(() => {
 }
 
 @media (max-width: 480px) {
-  .is-standalone {
-    padding-inline: 0;
-  }
-
   .psn-game-list a {
     grid-template-columns: 3.25rem minmax(0, 1fr) auto;
     gap: 0.65rem;

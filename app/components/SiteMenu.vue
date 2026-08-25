@@ -8,7 +8,6 @@ const menuItems = [
   { label: '三闲', to: '/sanxian' },
   { label: '彷徨', to: '/wandering' },
   { label: '南腔', to: '/nanqiang' },
-  { label: '北调', to: '/beidiao' },
   { label: '热风', to: '/douban' },
   { label: '关于', to: '/about' }
 ]

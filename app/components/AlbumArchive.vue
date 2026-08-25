@@ -12,7 +12,7 @@ const markCoverUnavailable = (artist: string, name: string) => {
 </script>
 
 <template>
-  <section class="album-section" aria-labelledby="albums-heading">
+  <section class="album-section sanxian-section" aria-labelledby="albums-heading">
     <PageHeading id="albums-heading" title="Albums" />
 
     <ol class="album-list">
@@ -49,18 +49,6 @@ const markCoverUnavailable = (artist: string, name: string) => {
 </template>
 
 <style scoped>
-.album-section {
-  --profile-rule: color-mix(in srgb, var(--paper-rule) 72%, transparent);
-
-  padding: 0.35rem 0.15rem 2rem;
-  color: var(--ink);
-  font-size: var(--content-font-size);
-}
-
-.album-list time {
-  font-variant-numeric: tabular-nums;
-}
-
 .album-list {
   margin: 0;
   padding: 0;
@@ -124,9 +112,10 @@ const markCoverUnavailable = (artist: string, name: string) => {
 }
 
 .album-list time {
+  justify-self: start;
   color: var(--ink-muted);
   font-size: 0.68rem;
-  justify-self: start;
+  font-variant-numeric: tabular-nums;
   line-height: 1.35;
 }
 
@@ -144,6 +133,12 @@ const markCoverUnavailable = (artist: string, name: string) => {
 
   .album-list a:hover .album-arrow {
     transform: translate(0.12rem, -0.12rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .album-arrow {
+    transition: none;
   }
 }
 

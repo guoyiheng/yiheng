@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { readingBooks } from '~/data/books'
-
 interface Project {
   name: string
   description: string
@@ -96,25 +94,6 @@ const useSiteIcon = (event: Event) => {
         </li>
       </ul>
     </section>
-
-    <section class="fuzao-section books-section" aria-labelledby="books-heading">
-      <PageHeading id="books-heading" title="Books" />
-      <ul class="book-list">
-        <li v-for="book in readingBooks" :key="book.title">
-          <a :href="book.wikipediaUrl" target="_blank" rel="noopener noreferrer">
-            <span class="book-cover-frame" aria-hidden="true">
-              <img v-if="book.coverUrl" :src="book.coverUrl" alt="" width="42" height="56" loading="lazy"
-                decoding="async" referrerpolicy="no-referrer">
-            </span>
-            <span class="book-copy">
-              <strong>{{ book.title }}</strong>
-              <small v-if="book.author">{{ book.author }}</small>
-            </span>
-            <span class="book-arrow" aria-hidden="true">↗</span>
-          </a>
-        </li>
-      </ul>
-    </section>
   </div>
 </template>
 
@@ -125,10 +104,6 @@ const useSiteIcon = (event: Event) => {
   padding: 0.35rem 0.15rem 2rem;
   color: var(--ink);
   font-size: var(--content-font-size);
-}
-
-.fuzao-section+.fuzao-section {
-  margin-top: 4rem;
 }
 
 .project-list {
@@ -209,83 +184,12 @@ const useSiteIcon = (event: Event) => {
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.book-list {
-  margin: 0;
-  padding: 0;
-  border-top: 1px dashed var(--profile-rule);
-  list-style: none;
-}
-
-.book-list li {
-  border-bottom: 1px dashed var(--profile-rule);
-}
-
-.book-list a {
-  display: grid;
-  min-height: 4.75rem;
-  grid-template-columns: 2.625rem minmax(0, 1fr) 1rem;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 0.6rem 0.25rem;
-  color: inherit;
-  text-decoration: none;
-}
-
-.book-cover-frame {
-  display: block;
-  width: 2.625rem;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-  border: 1px solid var(--profile-rule);
-  border-radius: 2px;
-  background: var(--paper-fill);
-}
-
-.book-cover-frame img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.book-copy {
-  display: grid;
-  min-width: 0;
-  gap: 0.15rem;
-}
-
-.book-copy strong {
-  color: var(--ink-strong);
-  font-size: var(--content-font-size);
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
-
-.book-copy small,
-.book-arrow {
-  color: var(--ink-muted);
-  font-size: 0.7rem;
-  line-height: 1.35;
-}
-
-.book-arrow {
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
 @media (hover: hover) {
   .project-list a:hover .project-copy strong {
     color: var(--ink-link);
   }
 
   .project-list a:hover .project-arrow {
-    transform: translate(0.15rem, -0.15rem);
-  }
-
-  .book-list a:hover .book-copy strong {
-    color: var(--ink-link);
-  }
-
-  .book-list a:hover .book-arrow {
     transform: translate(0.15rem, -0.15rem);
   }
 }
@@ -296,9 +200,7 @@ const useSiteIcon = (event: Event) => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
-  .project-arrow,
-  .book-arrow {
+  .project-arrow {
     transition: none;
   }
 }
@@ -309,10 +211,6 @@ const useSiteIcon = (event: Event) => {
     padding-inline: 0;
   }
 
-  .fuzao-section+.fuzao-section {
-    margin-top: 3.25rem;
-  }
-
   .project-list a {
     grid-template-columns: 2.25rem minmax(0, 1fr) 1rem;
     gap: 0.7rem;
@@ -320,11 +218,6 @@ const useSiteIcon = (event: Event) => {
 
   .project-destination {
     display: none;
-  }
-
-  .book-list a {
-    grid-template-columns: 2.625rem minmax(0, 1fr) 1rem;
-    gap: 0.65rem;
   }
 }
 </style>
