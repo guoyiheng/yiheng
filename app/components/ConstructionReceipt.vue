@@ -5,6 +5,7 @@ const props = defineProps<{
   scrollKey?: string
 }>()
 
+const { copyrightYear } = useAppConfig()
 const route = useRoute()
 const router = useRouter()
 const { request, consumePrintRequest } = usePrinterNavigation()
@@ -284,7 +285,7 @@ onBeforeUnmount(() => {
     </div>
 
     <footer class="site-copyright">
-      © 2026 yiheng
+      © {{ copyrightYear }} yiheng
     </footer>
   </main>
 </template>
