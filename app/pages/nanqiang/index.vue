@@ -8,7 +8,7 @@ useSeoMeta({ title: '南腔 · yiheng' })
 </script>
 
 <template>
-  <ConstructionReceipt title="南腔" scroll-key="/nanqiang-beidiao">
+  <ConstructionReceipt title="南腔" scroll-key="/nanqiang">
     <NanqiangArchive :items="items" />
   </ConstructionReceipt>
 </template>

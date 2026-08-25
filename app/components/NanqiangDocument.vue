@@ -203,7 +203,7 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
     <div class="nanqiang-actions">
       <NuxtLink
         class="nanqiang-back"
-        to="/nanqiang-beidiao"
+        to="/nanqiang"
         aria-label="返回上一级"
         title="返回上一级"
       >

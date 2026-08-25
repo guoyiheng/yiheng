@@ -5,7 +5,7 @@ const isMenuOpen = ref(false)
 
 const menuItems = [
   { label: '浮躁', to: '/' },
-  { label: '南腔', to: '/nanqiang-beidiao' },
+  { label: '南腔', to: '/nanqiang' },
   { label: '北调', to: '/beidiao' },
   { label: '彷徨', to: '/wandering' },
   { label: '关于', to: '/about' }

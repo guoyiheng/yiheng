@@ -5,7 +5,7 @@ defineProps<{
   items: NanqiangIndexItem[]
 }>()
 
-const documentHref = (id: string) => `/nanqiang-beidiao/${encodeURIComponent(id)}`
+const documentHref = (id: string) => `/nanqiang/${encodeURIComponent(id)}`
 </script>
 
 <template>
