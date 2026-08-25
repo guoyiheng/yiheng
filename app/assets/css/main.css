@@ -647,7 +647,7 @@ a:focus-visible {
     top: -14px;
     left: 12px;
     width: 104px;
-    height: 92px;
+    height: 46px;
     align-items: center;
     padding: 8px;
     font-size: 1rem;
@@ -745,8 +745,7 @@ a:focus-visible {
   }
 
   .site-copyright {
-    bottom: max(0.6rem, env(safe-area-inset-bottom));
-    left: max(0.75rem, env(safe-area-inset-left));
+    display: none;
   }
 }
 
