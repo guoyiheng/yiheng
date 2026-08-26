@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "yiheng",
+  "pages_build_output_dir": "./.output/public",
+  "compatibility_date": "2026-08-26",
+  "kv_namespaces": [
+    {
+      "binding": "YIHENG_DOUBAN_WATCHED",
+      "id": "4a787017abad46d29a8b2fdc81c1a512"
+    }
+  ]
+}

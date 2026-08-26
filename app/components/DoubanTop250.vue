@@ -36,6 +36,9 @@ const showUnwatchedOnly = ref(false)
 const watchedIds = ref<Set<string>>(new Set())
 const hidingMovieIds = ref<Set<string>>(new Set())
 const hasLoadedWatched = ref(false)
+const isAuthenticated = ref(false)
+const watchedError = ref('')
+const isSavingWatched = ref(false)
 const watchedStorageKey = 'yiheng-douban-watched'
 const loadMoreTarget = ref<HTMLElement | null>(null)
 const hidingTimers = new Map<string, ReturnType<typeof setTimeout>>()
@@ -103,17 +106,95 @@ const startHidingMovie = (id: string) => {
   hidingTimers.set(id, setTimeout(() => finishHidingMovie(id), fallbackDelay))
 }
 
-const toggleWatched = (movie: Movie) => {
-  const next = new Set(watchedIds.value)
+const legacyWatchedIds = () => {
+  if (!import.meta.client) return new Set<string>()
+
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(watchedStorageKey) ?? 'null')
+    if (stored && typeof stored === 'object' && 'version' in stored && 'ids' in stored) {
+      const record = stored as { version?: unknown, ids?: unknown }
+      if (record.version === 2 && Array.isArray(record.ids)) {
+        return new Set(record.ids.filter((id): id is string => typeof id === 'string'))
+      }
+    }
+
+    if (Array.isArray(stored)) {
+      const moviesByRank = new Map(movies.value.map(movie => [movie.rank, movie.id]))
+      return new Set(stored.flatMap((rank) => {
+        const id = Number.isInteger(rank) ? moviesByRank.get(rank) : undefined
+        return id ? [id] : []
+      }))
+    }
+  } catch {
+    return new Set<string>()
+  }
+
+  return new Set<string>()
+}
+
+const loadWatched = async () => {
+  try {
+    const remote = await $fetch<{ ids: string[] }>('/api/douban/watched')
+    const remoteIds = new Set(remote.ids)
+    const legacyIds = legacyWatchedIds()
+
+    if (!remoteIds.size && legacyIds.size) {
+      const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
+        method: 'PUT',
+        body: { ids: [...legacyIds] }
+      })
+      watchedIds.value = new Set(migrated.ids)
+    } else {
+      watchedIds.value = remoteIds
+    }
+
+    localStorage.removeItem(watchedStorageKey)
+    isAuthenticated.value = true
+  } catch (error: unknown) {
+    const fetchError = error as { statusCode?: number }
+    if (fetchError.statusCode !== 401) watchedError.value = '观影记录暂时无法读取。'
+    isAuthenticated.value = false
+  } finally {
+    hasLoadedWatched.value = true
+  }
+}
+
+const toggleWatched = async (movie: Movie) => {
+  if (!isAuthenticated.value || isSavingWatched.value) return
+
+  const previous = new Set(watchedIds.value)
+  const next = new Set(previous)
   const isMarkingWatched = !next.has(movie.id)
   if (isMarkingWatched) next.add(movie.id)
   else next.delete(movie.id)
 
   if (isMarkingWatched && showUnwatchedOnly.value) startHidingMovie(movie.id)
   watchedIds.value = next
-  if (import.meta.client) {
-    localStorage.setItem(watchedStorageKey, JSON.stringify({ version: 2, ids: [...next] }))
+
+  isSavingWatched.value = true
+  try {
+    const saved = await $fetch<{ ids: string[] }>('/api/douban/watched', {
+      method: 'PUT',
+      body: { ids: [...next] }
+    })
+    watchedIds.value = new Set(saved.ids)
+  } catch (error: unknown) {
+    const fetchError = error as { statusCode?: number }
+    watchedIds.value = previous
+    if (isMarkingWatched) finishHidingMovie(movie.id)
+    if (fetchError.statusCode === 401) isAuthenticated.value = false
+    watchedError.value = '观影记录暂时无法保存。'
+  } finally {
+    isSavingWatched.value = false
   }
+}
+
+const logout = async () => {
+  await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
+  isAuthenticated.value = false
+  watchedIds.value = new Set()
+  showUnwatchedOnly.value = false
+  clearHidingMovies()
 }
 
 const posterSrc = (movie: Movie) => {
@@ -132,27 +213,7 @@ const toggleUnwatchedFilter = () => {
 }
 
 onMounted(() => {
-  try {
-    const stored: unknown = JSON.parse(localStorage.getItem(watchedStorageKey) ?? 'null')
-
-    if (stored && typeof stored === 'object' && 'version' in stored && 'ids' in stored) {
-      const record = stored as { version?: unknown, ids?: unknown }
-      if (record.version === 2 && Array.isArray(record.ids)) {
-        watchedIds.value = new Set(record.ids.filter((id): id is string => typeof id === 'string'))
-      }
-    } else if (Array.isArray(stored)) {
-      const moviesByRank = new Map(movies.value.map(movie => [movie.rank, movie.id]))
-      watchedIds.value = new Set(stored.flatMap((rank) => {
-        const id = Number.isInteger(rank) ? moviesByRank.get(rank) : undefined
-        return id ? [id] : []
-      }))
-      localStorage.setItem(watchedStorageKey, JSON.stringify({ version: 2, ids: [...watchedIds.value] }))
-    }
-  } catch {
-    watchedIds.value = new Set()
-  } finally {
-    hasLoadedWatched.value = true
-  }
+  void loadWatched()
   observer = new IntersectionObserver((entries) => {
     if (entries.some(entry => entry.isIntersecting)) loadMore()
   }, {
@@ -174,6 +235,7 @@ onBeforeUnmount(() => {
       <template #aside>
         <div class="douban-heading-actions">
           <button
+            v-if="isAuthenticated"
             class="douban-filter-toggle"
             :class="{ 'is-active': showUnwatchedOnly }"
             type="button"
@@ -183,7 +245,9 @@ onBeforeUnmount(() => {
             <span aria-hidden="true">{{ showUnwatchedOnly ? '●' : '○' }}</span>
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
-          <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+          <span v-if="isAuthenticated && hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+          <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
+          <NuxtLink v-else class="douban-admin-link" to="/douban/admin">管理员入口</NuxtLink>
         </div>
       </template>
     </PageHeading>
@@ -196,7 +260,8 @@ onBeforeUnmount(() => {
     <div v-else-if="!filteredMovies.length" class="douban-state" role="status">
       {{ showUnwatchedOnly ? '当前没有未看的电影' : '榜单暂无内容' }}
     </div>
-    <ol v-else class="douban-list">
+    <p v-if="watchedError" class="douban-watched-error" role="status">{{ watchedError }}</p>
+    <ol v-if="filteredMovies.length" class="douban-list">
       <template v-for="movie in visibleMovies" :key="`${movie.listStatus}-${movie.id}`">
         <li
           v-if="movie.listStatus === 'departed' && movie.id === firstVisibleDepartedId"
@@ -240,9 +305,9 @@ onBeforeUnmount(() => {
             <p class="douban-rating"><b>{{ movie.rating.toFixed(1) }}</b><span>{{ formatVotes(movie.votes) }}</span></p>
             <p v-if="movie.quote" class="douban-quote">“{{ movie.quote }}”</p>
           </div>
-          <button class="douban-watched" type="button"
+          <button v-if="isAuthenticated" class="douban-watched" type="button"
             :aria-label="watchedIds.has(movie.id) ? `取消标记《${movie.title}》` : `标记《${movie.title}》已看过`"
-            :aria-pressed="watchedIds.has(movie.id)" :disabled="hidingMovieIds.has(movie.id)"
+            :aria-pressed="watchedIds.has(movie.id)" :disabled="hidingMovieIds.has(movie.id) || isSavingWatched"
             @click="toggleWatched(movie)">
             <span class="douban-check" aria-hidden="true">{{ watchedIds.has(movie.id) ? '✓' : '○' }}</span>
             <span>{{ watchedIds.has(movie.id) ? '已看' : '标记' }}</span>
@@ -271,6 +336,37 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 0.65rem;
+}
+
+.douban-admin-link,
+.douban-logout {
+  color: var(--ink-link);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.douban-admin-link {
+  text-decoration: none;
+}
+
+.douban-logout {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.douban-admin-link:focus-visible,
+.douban-logout:focus-visible {
+  outline: 2px solid var(--ink-link);
+  outline-offset: 2px;
+}
+
+.douban-watched-error {
+  margin: 0.75rem 0;
+  color: var(--ink-link);
+  font-size: 0.7rem;
 }
 
 .douban-filter-toggle {
