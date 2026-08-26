@@ -1,8 +1,9 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "yiheng",
-  "pages_build_output_dir": "./.output/public",
+  "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-08-26",
+  "compatibility_flags": ["nodejs_compat"],
   "kv_namespaces": [
     {
       "binding": "YIHENG_DOUBAN_WATCHED",

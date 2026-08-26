@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   devtools: { enabled: false },
   nitro: {
+    preset: 'cloudflare-pages',
     storage: {
       douban: {
         driver: 'fs',
