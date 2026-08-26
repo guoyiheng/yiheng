@@ -1,23 +1,18 @@
 <script setup lang="ts">
+import { siteMenuItems } from '~/data/site-menu'
+
 const route = useRoute()
 const { requestPrint } = usePrinterNavigation()
 const isMenuOpen = ref(false)
 
-const menuItems = [
-  { label: '热风', to: '/refeng' },
-  { label: '三闲', to: '/sanxian' },
-  { label: '南腔', to: '/nanqiang' },
-  { label: '彷徨', to: '/panghuang' },
-  { label: '而已', to: '/eryi' }
-]
-const menuGridStyle = { '--site-menu-item-count': menuItems.length }
+const menuGridStyle = { '--site-menu-item-count': siteMenuItems.length }
 
 const isItemActive = (path: string) => {
   return route.path === path || route.path.startsWith(`${path}/`)
 }
 
 const activeMenuItem = computed(() => {
-  return menuItems.find(item => isItemActive(item.to)) ?? menuItems[0]!
+  return siteMenuItems.find(item => isItemActive(item.to)) ?? siteMenuItems[0]
 })
 
 const handleMenuClick = (path: string) => {
@@ -40,7 +35,7 @@ watch(() => route.fullPath, () => {
     </button>
 
     <div id="site-menu-links" class="site-menu-links" :style="menuGridStyle">
-      <NuxtLink v-for="item in menuItems" :key="item.to" :to="item.to"
+      <NuxtLink v-for="item in siteMenuItems" :key="item.to" :to="item.to"
         :class="['site-menu-link', { 'is-active': isItemActive(item.to) }]"
         :aria-current="isItemActive(item.to) ? 'page' : undefined" @click="handleMenuClick(item.to)">
         {{ item.label }}
