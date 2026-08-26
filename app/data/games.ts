@@ -179,5 +179,59 @@ export const games: GameEntry[] = [
     genres: ['银河战士恶魔城', '动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/05/Silksong.jpg',
     sourceUrl: 'https://en.wikipedia.org/wiki/Hollow_Knight:_Silksong'
+  },
+  {
+    id: 'brotato',
+    nameZh: '土豆兄弟',
+    nameEn: 'Brotato',
+    releaseDate: '2023-06-23',
+    genres: ['Roguelike', '竞技场射击'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1942280/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/1942280/Brotato/'
+  },
+  {
+    id: 'just-go',
+    nameZh: '棋弈无限：围棋',
+    nameEn: 'Just Go',
+    releaseDate: '2022-04-20',
+    genres: ['棋牌', '策略', '模拟'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1862520/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/1862520/Just_Go/'
+  },
+  {
+    id: 'ender-lilies',
+    nameZh: '终焉之莉莉：骑士寂夜',
+    nameEn: 'ENDER LILIES: Quietus of the Knights',
+    releaseDate: '2021-06-22',
+    genres: ['银河战士恶魔城', '动作角色扮演'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1369630/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/1369630/ENDER_LILIES_Quietus_of_the_Knights/'
+  },
+  {
+    id: 'bloodstained-ritual-of-the-night',
+    nameZh: '赤痕：夜之仪式',
+    nameEn: 'Bloodstained: Ritual of the Night',
+    releaseDate: '2019-06-18',
+    genres: ['银河战士恶魔城', '动作角色扮演'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/692850/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/692850/Bloodstained_Ritual_of_the_Night/'
+  },
+  {
+    id: 'rusty-lake',
+    nameZh: '绣湖系列',
+    nameEn: 'Rusty Lake Series',
+    releaseDate: '2015-05-04',
+    genres: ['解谜', '点击', '冒险'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/431700/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/developer/rustylake'
+  },
+  {
+    id: 'euro-truck-simulator-2',
+    nameZh: '欧洲卡车模拟 2',
+    nameEn: 'Euro Truck Simulator 2',
+    releaseDate: '2012-10-19',
+    genres: ['驾驶模拟'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/227300/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/227300/Euro_Truck_Simulator_2/'
   }
 ].sort((left, right) => right.releaseDate.localeCompare(left.releaseDate))
