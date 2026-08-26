@@ -1,7 +1,6 @@
 import {
   getDoubanWatchedStore,
   proxyRemoteDoubanApi,
-  requireDoubanAdmin,
   shouldUseRemoteDoubanApi
 } from '../../utils/douban-auth'
 
@@ -24,7 +23,6 @@ const isWatchedRecord = (value: unknown): value is WatchedRecord => {
 export default defineEventHandler(async (event) => {
   if (shouldUseRemoteDoubanApi()) return proxyRemoteDoubanApi(event)
 
-  await requireDoubanAdmin(event)
   const store = getDoubanWatchedStore(event)
   if (!store) {
     throw createError({ statusCode: 503, message: '观影记录服务尚未配置' })
@@ -35,6 +33,6 @@ export default defineEventHandler(async (event) => {
     ? record
     : { version: 1 as const, ids: [], updatedAt: '' }
 
-  setResponseHeader(event, 'Cache-Control', 'private, no-store')
+  setResponseHeader(event, 'Cache-Control', 'no-store')
   return watched
 })

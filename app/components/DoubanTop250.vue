@@ -134,29 +134,39 @@ const legacyWatchedIds = () => {
 
 const loadWatched = async () => {
   try {
-    const remote = await $fetch<{ ids: string[] }>('/api/douban/watched')
+    const [remote, admin] = await Promise.all([
+      $fetch<{ ids: string[] }>('/api/douban/watched'),
+      $fetch<{ authenticated: boolean }>('/api/douban/admin/status')
+        .catch(() => ({ authenticated: false }))
+    ])
     const remoteIds = new Set(remote.ids)
-    const legacyIds = legacyWatchedIds()
-    const mergedIds = new Set([...remoteIds, ...legacyIds])
-
-    if (mergedIds.size > remoteIds.size) {
-      const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
-        method: 'PUT',
-        body: { ids: [...mergedIds] }
-      })
-      watchedIds.value = new Set(migrated.ids)
-    } else {
-      watchedIds.value = remoteIds
-    }
-
-    localStorage.removeItem(watchedStorageKey)
-    isAuthenticated.value = true
-  } catch (error: unknown) {
-    const fetchError = error as { statusCode?: number }
-    if (fetchError.statusCode !== 401) watchedError.value = '观影记录暂时无法读取。'
-    isAuthenticated.value = false
-  } finally {
+    isAuthenticated.value = admin.authenticated
+    watchedIds.value = remoteIds
     hasLoadedWatched.value = true
+
+    if (isAuthenticated.value) {
+      const legacyIds = legacyWatchedIds()
+      const mergedIds = new Set([...remoteIds, ...legacyIds])
+
+      try {
+        if (mergedIds.size > remoteIds.size) {
+          const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
+            method: 'PUT',
+            body: { ids: [...mergedIds] }
+          })
+          watchedIds.value = new Set(migrated.ids)
+        }
+
+        localStorage.removeItem(watchedStorageKey)
+      } catch (error: unknown) {
+        const fetchError = error as { statusCode?: number }
+        if (fetchError.statusCode === 401) isAuthenticated.value = false
+        watchedError.value = '本地观影记录暂时无法同步。'
+      }
+    }
+  } catch {
+    watchedError.value = '观影记录暂时无法读取。'
+    isAuthenticated.value = false
   }
 }
 
@@ -193,8 +203,6 @@ const toggleWatched = async (movie: Movie) => {
 const logout = async () => {
   await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
   isAuthenticated.value = false
-  watchedIds.value = new Set()
-  showUnwatchedOnly.value = false
   clearHidingMovies()
 }
 
@@ -236,7 +244,7 @@ onBeforeUnmount(() => {
       <template #aside>
         <div class="douban-heading-actions">
           <button
-            v-if="isAuthenticated"
+            v-if="hasLoadedWatched"
             class="douban-filter-toggle"
             :class="{ 'is-active': showUnwatchedOnly }"
             type="button"
@@ -246,7 +254,7 @@ onBeforeUnmount(() => {
             <span aria-hidden="true">{{ showUnwatchedOnly ? '●' : '○' }}</span>
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
-          <span v-if="isAuthenticated && hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
+          <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
           <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
         </div>
       </template>
@@ -312,6 +320,10 @@ onBeforeUnmount(() => {
             <span class="douban-check" aria-hidden="true">{{ watchedIds.has(movie.id) ? '✓' : '○' }}</span>
             <span>{{ watchedIds.has(movie.id) ? '已看' : '标记' }}</span>
           </button>
+          <span v-else-if="watchedIds.has(movie.id)" class="douban-watched-status">
+            <span aria-hidden="true">✓</span>
+            已看
+          </span>
         </li>
       </template>
       <li v-if="hasMore" ref="loadMoreTarget" class="douban-load-more" aria-live="polite">继续下滑加载更多</li>
@@ -565,6 +577,15 @@ onBeforeUnmount(() => {
   color: var(--ink-star);
 }
 
+.douban-watched-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18rem;
+  color: var(--ink-star);
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+
 .douban-check {
   font-size: 0.8rem;
   line-height: 1;
@@ -684,10 +705,14 @@ onBeforeUnmount(() => {
     width: 3.65rem;
   }
 
-  .douban-watched {
+  .douban-watched,
+  .douban-watched-status {
     grid-column: 3;
     justify-self: start;
     margin-top: -0.1rem;
+  }
+
+  .douban-watched {
     padding-block: 0.25rem;
   }
 
