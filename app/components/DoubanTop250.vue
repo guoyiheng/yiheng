@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
           <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
-          <NuxtLink v-if="isAuthenticated" class="douban-admin-settings" to="/panghuang/admin">
+          <NuxtLink v-if="isAuthenticated" class="douban-admin-settings" to="/admin">
             修改密钥
           </NuxtLink>
           <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>

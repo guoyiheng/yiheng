@@ -1,15 +1,14 @@
 <script setup lang="ts">
+const props = defineProps<{
+  mode: 'login' | 'change'
+}>()
+
 const key = ref('')
 const newKey = ref('')
 const isAuthenticated = ref(false)
 const status = ref<'idle' | 'checking' | 'submitting' | 'changing' | 'error' | 'success'>('checking')
 const errorMessage = ref('')
 const successMessage = ref('')
-
-useSeoMeta({
-  title: '管理员入口 · 豆瓣 · yiheng',
-  description: '豆瓣观影清单管理员入口。'
-})
 
 const submit = async () => {
   if (!key.value || status.value === 'submitting') return
@@ -75,50 +74,38 @@ onMounted(async () => {
 </script>
 
 <template>
-  <ConstructionReceipt title="彷徨" scroll-key="/panghuang/admin">
-    <section class="douban-admin" aria-labelledby="douban-admin-heading">
-      <PageHeading id="douban-admin-heading" title="管理员入口">
-        <template #aside>
-          <NuxtLink class="douban-admin-back" to="/panghuang">返回榜单</NuxtLink>
-        </template>
-      </PageHeading>
-      <div v-if="status === 'checking'" class="douban-admin-loading" role="status">正在读取登录状态</div>
-      <form v-else-if="!isAuthenticated" class="douban-admin-form" @submit.prevent="submit">
-        <label for="douban-admin-key">访问密钥</label>
-        <input id="douban-admin-key" v-model="key" type="password" autocomplete="current-password"
-          placeholder="输入密钥" required :disabled="status === 'submitting'">
-        <button type="submit" :disabled="status === 'submitting'">
-          {{ status === 'submitting' ? '正在验证' : '进入观影清单' }}
-        </button>
-        <p v-if="errorMessage" class="douban-admin-error" role="alert">{{ errorMessage }}</p>
-      </form>
-      <form v-else class="douban-admin-form" @submit.prevent="changeKey">
-        <label for="douban-new-key">更改访问密钥</label>
-        <input id="douban-new-key" v-model="newKey" type="password" autocomplete="new-password"
-          placeholder="输入新密钥（至少 8 个字符）" minlength="8" maxlength="256" required
-          :disabled="status === 'changing'">
-        <button type="submit" :disabled="status === 'changing'">
-          {{ status === 'changing' ? '正在保存' : '保存新密钥' }}
-        </button>
-        <p v-if="successMessage" class="douban-admin-success" role="status">{{ successMessage }}</p>
-        <p v-if="errorMessage" class="douban-admin-error" role="alert">{{ errorMessage }}</p>
-      </form>
-    </section>
-  </ConstructionReceipt>
+  <div v-if="status === 'checking'" class="douban-admin-loading" role="status">正在读取登录状态</div>
+  <form v-else-if="props.mode === 'login' && !isAuthenticated" class="douban-admin-form" @submit.prevent="submit">
+    <label for="douban-admin-key">访问密钥</label>
+    <input id="douban-admin-key" v-model="key" type="password" autocomplete="current-password"
+      placeholder="输入密钥" required :disabled="status === 'submitting'">
+    <button type="submit" :disabled="status === 'submitting'">
+      {{ status === 'submitting' ? '正在验证' : '进入观影清单' }}
+    </button>
+    <p v-if="errorMessage" class="douban-admin-error" role="alert">{{ errorMessage }}</p>
+  </form>
+  <form v-else-if="props.mode === 'change' && isAuthenticated" class="douban-admin-form" @submit.prevent="changeKey">
+    <label for="douban-new-key">更改访问密钥</label>
+    <input id="douban-new-key" v-model="newKey" type="password" autocomplete="new-password"
+      placeholder="输入新密钥（至少 8 个字符）" minlength="8" maxlength="256" required
+      :disabled="status === 'changing'">
+    <button type="submit" :disabled="status === 'changing'">
+      {{ status === 'changing' ? '正在保存' : '保存新密钥' }}
+    </button>
+    <p v-if="successMessage" class="douban-admin-success" role="status">{{ successMessage }}</p>
+    <p v-if="errorMessage" class="douban-admin-error" role="alert">{{ errorMessage }}</p>
+  </form>
+  <div v-else-if="props.mode === 'change'" class="douban-admin-message" role="status">
+    <p>请先登录管理员入口。</p>
+    <NuxtLink class="douban-admin-link" to="/panghuang/edit">进入管理员入口</NuxtLink>
+  </div>
+  <div v-else class="douban-admin-message" role="status">
+    <p>当前已登录管理员账号。</p>
+    <NuxtLink class="douban-admin-link" to="/admin">修改密钥</NuxtLink>
+  </div>
 </template>
 
 <style scoped>
-.douban-admin {
-  padding: 0.35rem 0.15rem 2rem;
-  color: var(--ink);
-}
-
-.douban-admin-back {
-  color: var(--ink-link);
-  font-size: 0.72rem;
-  text-decoration: none;
-}
-
 .douban-admin-form {
   display: grid;
   max-width: 28rem;
@@ -156,7 +143,7 @@ onMounted(async () => {
 
 .douban-admin-form input:focus-visible,
 .douban-admin-form button:focus-visible,
-.douban-admin-back:focus-visible {
+.douban-admin-link:focus-visible {
   outline: 2px solid var(--ink-link);
   outline-offset: 2px;
 }
@@ -173,15 +160,32 @@ onMounted(async () => {
   opacity: 0.6;
 }
 
-.douban-admin-error {
-  margin: 0.2rem 0 0;
+.douban-admin-message {
+  padding: 2.5rem 0.15rem;
+  color: var(--ink-muted);
+  font-size: 0.72rem;
+}
+
+.douban-admin-message p {
+  margin: 0 0 0.8rem;
+}
+
+.douban-admin-link {
   color: var(--ink-link);
+  text-decoration: none;
+}
+
+.douban-admin-error,
+.douban-admin-success {
+  margin: 0.2rem 0 0;
   font-size: 0.7rem;
 }
 
+.douban-admin-error {
+  color: var(--ink-link);
+}
+
 .douban-admin-success {
-  margin: 0.2rem 0 0;
   color: var(--ink-star);
-  font-size: 0.7rem;
 }
 </style>
