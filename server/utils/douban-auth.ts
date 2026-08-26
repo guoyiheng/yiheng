@@ -2,6 +2,7 @@ import { getRequestProtocol, type H3Event } from 'h3'
 
 const SESSION_COOKIE = 'douban_admin_session'
 const SESSION_PAYLOAD = 'yiheng-douban-admin'
+const ADMIN_KEY_STORAGE_KEY = 'douban:admin-key'
 
 interface DoubanCloudflareEnv {
   DOUBAN_ADMIN_KEY?: string
@@ -10,6 +11,7 @@ interface DoubanCloudflareEnv {
 
 export interface DoubanWatchedStore {
   get<T = unknown>(key: string, type: 'json'): Promise<T | null>
+  get<T = unknown>(key: string, type: 'text'): Promise<T | null>
   put(key: string, value: string): Promise<void>
 }
 
@@ -18,8 +20,19 @@ const cloudflareEnvFrom = (event: H3Event): DoubanCloudflareEnv => {
   return context.cloudflare?.env ?? {}
 }
 
-export const getDoubanAdminKey = (event: H3Event) => {
-  return cloudflareEnvFrom(event).DOUBAN_ADMIN_KEY ?? process.env.DOUBAN_ADMIN_KEY ?? ''
+export const getDoubanAdminKey = async (event: H3Event) => {
+  const env = cloudflareEnvFrom(event)
+  const fallback = env.DOUBAN_ADMIN_KEY ?? process.env.DOUBAN_ADMIN_KEY ?? ''
+  const store = env.YIHENG_DOUBAN_WATCHED
+
+  if (!store) return fallback
+
+  try {
+    const configured = await store.get<string>(ADMIN_KEY_STORAGE_KEY, 'text')
+    return typeof configured === 'string' && configured ? configured : fallback
+  } catch {
+    return fallback
+  }
 }
 
 export const getDoubanWatchedStore = (event: H3Event) => {
@@ -40,7 +53,7 @@ const sessionTokenFrom = async (adminKey: string) => {
 }
 
 export const setDoubanAdminSession = async (event: H3Event) => {
-  const token = await sessionTokenFrom(getDoubanAdminKey(event))
+  const token = await sessionTokenFrom(await getDoubanAdminKey(event))
   setCookie(event, SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -55,7 +68,7 @@ export const clearDoubanAdminSession = (event: H3Event) => {
 }
 
 export const isDoubanAdminAuthenticated = async (event: H3Event) => {
-  const adminKey = getDoubanAdminKey(event)
+  const adminKey = await getDoubanAdminKey(event)
   if (!adminKey) return false
 
   const token = getCookie(event, SESSION_COOKIE)

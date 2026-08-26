@@ -1,7 +1,7 @@
 import { getDoubanAdminKey, setDoubanAdminSession } from '../../../utils/douban-auth'
 
 export default defineEventHandler(async (event) => {
-  const adminKey = getDoubanAdminKey(event)
+  const adminKey = await getDoubanAdminKey(event)
   if (!adminKey) {
     throw createError({ statusCode: 503, message: '管理员入口尚未配置' })
   }
