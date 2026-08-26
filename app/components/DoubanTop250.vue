@@ -246,9 +246,7 @@ onBeforeUnmount(() => {
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
           <span v-if="isAuthenticated && hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
-          <NuxtLink v-if="isAuthenticated" class="douban-admin-link" to="/panghuang/admin">更改密钥</NuxtLink>
           <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
-          <NuxtLink v-else class="douban-admin-link" to="/panghuang/admin">管理员入口</NuxtLink>
         </div>
       </template>
     </PageHeading>
@@ -339,15 +337,10 @@ onBeforeUnmount(() => {
   gap: 0.65rem;
 }
 
-.douban-admin-link,
 .douban-logout {
   color: var(--ink-link);
   font-size: 0.68rem;
   white-space: nowrap;
-}
-
-.douban-admin-link {
-  text-decoration: none;
 }
 
 .douban-logout {
@@ -358,7 +351,6 @@ onBeforeUnmount(() => {
   font-family: inherit;
 }
 
-.douban-admin-link:focus-visible,
 .douban-logout:focus-visible {
   outline: 2px solid var(--ink-link);
   outline-offset: 2px;

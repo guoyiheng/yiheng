@@ -22,7 +22,8 @@ const cloudflareEnvFrom = (event: H3Event): DoubanCloudflareEnv => {
 
 export const getDoubanAdminKey = async (event: H3Event) => {
   const env = cloudflareEnvFrom(event)
-  const fallback = env.DOUBAN_ADMIN_KEY ?? process.env.DOUBAN_ADMIN_KEY ?? ''
+  const configuredKey = env.DOUBAN_ADMIN_KEY ?? process.env.DOUBAN_ADMIN_KEY
+  const fallback = configuredKey || (import.meta.dev ? 'yiheng-local-admin' : '')
   const store = env.YIHENG_DOUBAN_WATCHED
 
   if (!store) return fallback
