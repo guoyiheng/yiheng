@@ -137,11 +137,12 @@ const loadWatched = async () => {
     const remote = await $fetch<{ ids: string[] }>('/api/douban/watched')
     const remoteIds = new Set(remote.ids)
     const legacyIds = legacyWatchedIds()
+    const mergedIds = new Set([...remoteIds, ...legacyIds])
 
-    if (!remoteIds.size && legacyIds.size) {
+    if (mergedIds.size > remoteIds.size) {
       const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
         method: 'PUT',
-        body: { ids: [...legacyIds] }
+        body: { ids: [...mergedIds] }
       })
       watchedIds.value = new Set(migrated.ids)
     } else {

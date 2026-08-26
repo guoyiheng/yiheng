@@ -1,10 +1,17 @@
-import { getDoubanWatchedStore, requireDoubanAdmin } from '../../utils/douban-auth'
+import {
+  getDoubanWatchedStore,
+  proxyRemoteDoubanApi,
+  requireDoubanAdmin,
+  shouldUseRemoteDoubanApi
+} from '../../utils/douban-auth'
 
 const WATCHED_KEY = 'douban:watched'
 const MOVIE_ID_PATTERN = /^\d+$/
 const MAX_WATCHED_IDS = 500
 
 export default defineEventHandler(async (event) => {
+  if (shouldUseRemoteDoubanApi()) return proxyRemoteDoubanApi(event)
+
   await requireDoubanAdmin(event)
   const store = getDoubanWatchedStore(event)
   if (!store) {

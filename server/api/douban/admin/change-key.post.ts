@@ -1,10 +1,22 @@
-import { getDoubanWatchedStore, requireDoubanAdmin, clearDoubanAdminSession } from '../../../utils/douban-auth'
+import {
+  getDoubanWatchedStore,
+  requireDoubanAdmin,
+  clearDoubanAdminSession,
+  proxyRemoteDoubanApi,
+  shouldUseRemoteDoubanApi
+} from '../../../utils/douban-auth'
 
 const ADMIN_KEY_STORAGE_KEY = 'douban:admin-key'
 const MIN_KEY_LENGTH = 8
 const MAX_KEY_LENGTH = 256
 
 export default defineEventHandler(async (event) => {
+  if (shouldUseRemoteDoubanApi()) {
+    const response = await proxyRemoteDoubanApi(event)
+    clearDoubanAdminSession(event)
+    return response
+  }
+
   await requireDoubanAdmin(event)
   const store = getDoubanWatchedStore(event)
   if (!store) {

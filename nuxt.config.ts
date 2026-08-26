@@ -2,6 +2,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-08-06',
   css: ['~/assets/css/main.css'],
   devtools: { enabled: false },
+  runtimeConfig: {
+    doubanRemoteOrigin: process.env.DOUBAN_REMOTE_ORIGIN || 'https://yiheng.run'
+  },
   nitro: {
     preset: 'cloudflare-pages',
     storage: {

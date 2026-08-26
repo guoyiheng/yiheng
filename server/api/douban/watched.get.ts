@@ -1,4 +1,9 @@
-import { getDoubanWatchedStore, requireDoubanAdmin } from '../../utils/douban-auth'
+import {
+  getDoubanWatchedStore,
+  proxyRemoteDoubanApi,
+  requireDoubanAdmin,
+  shouldUseRemoteDoubanApi
+} from '../../utils/douban-auth'
 
 const WATCHED_KEY = 'douban:watched'
 
@@ -17,6 +22,8 @@ const isWatchedRecord = (value: unknown): value is WatchedRecord => {
 }
 
 export default defineEventHandler(async (event) => {
+  if (shouldUseRemoteDoubanApi()) return proxyRemoteDoubanApi(event)
+
   await requireDoubanAdmin(event)
   const store = getDoubanWatchedStore(event)
   if (!store) {

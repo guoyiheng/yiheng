@@ -1,4 +1,4 @@
-import { getRequestProtocol, type H3Event } from 'h3'
+import { getRequestProtocol, getRequestURL, proxyRequest, type H3Event } from 'h3'
 
 const SESSION_COOKIE = 'douban_admin_session'
 const SESSION_PAYLOAD = 'yiheng-douban-admin'
@@ -18,6 +18,34 @@ export interface DoubanWatchedStore {
 const cloudflareEnvFrom = (event: H3Event): DoubanCloudflareEnv => {
   const context = event.context as { cloudflare?: { env?: DoubanCloudflareEnv } }
   return context.cloudflare?.env ?? {}
+}
+
+export const shouldUseRemoteDoubanApi = () => import.meta.dev
+
+const remoteDoubanUrl = (event: H3Event) => {
+  const origin = useRuntimeConfig(event).doubanRemoteOrigin
+  const requestUrl = getRequestURL(event)
+  return new URL(`${requestUrl.pathname}${requestUrl.search}`, origin).toString()
+}
+
+export const proxyRemoteDoubanApi = (event: H3Event) => {
+  return proxyRequest(event, remoteDoubanUrl(event))
+}
+
+export const verifyRemoteDoubanAdminKey = async (event: H3Event, key: string) => {
+  const response = await fetch(remoteDoubanUrl(event), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key })
+  })
+
+  if (response.ok) return
+
+  const body = await response.json().catch(() => null) as { message?: string } | null
+  throw createError({
+    statusCode: response.status,
+    message: body?.message || (response.status === 401 ? '密钥不正确' : '管理员入口暂时不可用')
+  })
 }
 
 export const getDoubanAdminKey = async (event: H3Event) => {
@@ -53,8 +81,8 @@ const sessionTokenFrom = async (adminKey: string) => {
   return base64UrlFrom(digest)
 }
 
-export const setDoubanAdminSession = async (event: H3Event) => {
-  const token = await sessionTokenFrom(await getDoubanAdminKey(event))
+export const setDoubanAdminSessionFromKey = async (event: H3Event, adminKey: string) => {
+  const token = await sessionTokenFrom(adminKey)
   setCookie(event, SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
@@ -62,6 +90,10 @@ export const setDoubanAdminSession = async (event: H3Event) => {
     maxAge: 60 * 60 * 24 * 30,
     path: '/'
   })
+}
+
+export const setDoubanAdminSession = async (event: H3Event) => {
+  await setDoubanAdminSessionFromKey(event, await getDoubanAdminKey(event))
 }
 
 export const clearDoubanAdminSession = (event: H3Event) => {
