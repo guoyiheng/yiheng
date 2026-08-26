@@ -3,6 +3,10 @@ const props = defineProps<{
   mode: 'login' | 'change'
 }>()
 
+const emit = defineEmits<{
+  authenticated: []
+}>()
+
 const key = ref('')
 const newKey = ref('')
 const isAuthenticated = ref(false)
@@ -21,7 +25,8 @@ const submit = async () => {
       method: 'POST',
       body: { key: key.value }
     })
-    await navigateTo('/panghuang')
+    isAuthenticated.value = true
+    emit('authenticated')
   } catch (error: unknown) {
     status.value = 'error'
     const fetchError = error as { statusCode?: number }
@@ -65,6 +70,7 @@ onMounted(async () => {
   try {
     const result = await $fetch<{ authenticated: boolean }>('/api/douban/admin/status')
     isAuthenticated.value = result.authenticated
+    if (props.mode === 'login' && result.authenticated) emit('authenticated')
   } catch {
     isAuthenticated.value = false
   } finally {

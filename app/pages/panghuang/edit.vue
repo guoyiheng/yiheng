@@ -1,20 +1,23 @@
 <script setup lang="ts">
+const isAuthenticated = ref(false)
+
 useSeoMeta({
-  title: '管理员入口 · 豆瓣 · yiheng',
-  description: '豆瓣观影清单管理员入口。'
+  title: '编辑观影记录 · 豆瓣 · yiheng',
+  description: '搜索并编辑豆瓣 Top250 观影记录。'
 })
 </script>
 
 <template>
   <ConstructionReceipt title="彷徨" scroll-key="/panghuang/edit">
-    <section class="douban-admin" aria-labelledby="douban-admin-heading">
+    <section v-if="!isAuthenticated" class="douban-admin" aria-labelledby="douban-admin-heading">
       <PageHeading id="douban-admin-heading" title="管理员入口">
         <template #aside>
           <NuxtLink class="douban-admin-back" to="/panghuang">返回榜单</NuxtLink>
         </template>
       </PageHeading>
-      <DoubanAdminPanel mode="login" />
+      <DoubanAdminPanel mode="login" @authenticated="isAuthenticated = true" />
     </section>
+    <DoubanTop250 v-else editable @logged-out="isAuthenticated = false" />
   </ConstructionReceipt>
 </template>
 

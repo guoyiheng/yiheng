@@ -1,4 +1,14 @@
 <script setup lang="ts">
+const props = withDefaults(defineProps<{
+  editable?: boolean
+}>(), {
+  editable: false
+})
+
+const emit = defineEmits<{
+  loggedOut: []
+}>()
+
 interface Movie {
   id: string
   rank: number
@@ -33,6 +43,7 @@ const pageSize = 10
 const watchedFadeDuration = 480
 const visibleCount = ref(pageSize)
 const showUnwatchedOnly = ref(false)
+const searchQuery = ref('')
 const watchedIds = ref<Set<string>>(new Set())
 const hidingMovieIds = ref<Set<string>>(new Set())
 const hasLoadedWatched = ref(false)
@@ -56,12 +67,28 @@ const { data, status, error, refresh } = await useFetch<Top250Data>('/api/douban
 const movies = computed(() => data.value?.items ?? [])
 const departedMovies = computed(() => data.value?.departedItems ?? [])
 const newEntryIds = computed(() => new Set(data.value?.newEntryIds ?? []))
+const normalizedSearchQuery = computed(() => searchQuery.value.trim().toLocaleLowerCase('zh-CN'))
+const matchesSearch = (movie: Movie) => {
+  if (!normalizedSearchQuery.value) return true
+
+  return [
+    movie.title,
+    movie.originalTitle,
+    movie.year,
+    movie.countries,
+    movie.genres,
+    movie.quote,
+    String(movie.rank)
+  ].join(' ').toLocaleLowerCase('zh-CN').includes(normalizedSearchQuery.value)
+}
 const shouldShowMovie = (movie: Movie) => !showUnwatchedOnly.value
   || !watchedIds.value.has(movie.id)
   || hidingMovieIds.value.has(movie.id)
 const filteredMovies = computed<DisplayMovie[]>(() => [
-  ...movies.value.filter(shouldShowMovie).map(movie => ({ ...movie, listStatus: 'current' as const })),
-  ...departedMovies.value.filter(shouldShowMovie).map(movie => ({ ...movie, listStatus: 'departed' as const }))
+  ...movies.value.filter(movie => shouldShowMovie(movie) && matchesSearch(movie))
+    .map(movie => ({ ...movie, listStatus: 'current' as const })),
+  ...departedMovies.value.filter(movie => shouldShowMovie(movie) && matchesSearch(movie))
+    .map(movie => ({ ...movie, listStatus: 'departed' as const }))
 ])
 const visibleMovies = computed(() => filteredMovies.value.slice(0, visibleCount.value))
 const hasMore = computed(() => visibleCount.value < filteredMovies.value.length)
@@ -204,6 +231,7 @@ const logout = async () => {
   await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
   isAuthenticated.value = false
   clearHidingMovies()
+  emit('loggedOut')
 }
 
 const posterSrc = (movie: Movie) => {
@@ -220,6 +248,15 @@ const toggleUnwatchedFilter = () => {
   if (!showUnwatchedOnly.value) clearHidingMovies()
   visibleCount.value = pageSize
 }
+
+watch(searchQuery, () => {
+  visibleCount.value = pageSize
+})
+
+watch(loadMoreTarget, (target, previousTarget) => {
+  if (previousTarget) observer?.unobserve(previousTarget)
+  if (target) observer?.observe(target)
+})
 
 onMounted(() => {
   void loadWatched()
@@ -255,13 +292,28 @@ onBeforeUnmount(() => {
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
           <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
-          <NuxtLink v-if="isAuthenticated" class="douban-admin-settings" to="/admin">
+          <NuxtLink v-if="props.editable && isAuthenticated" class="douban-admin-settings" to="/admin">
             修改密钥
           </NuxtLink>
-          <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
+          <button v-if="props.editable && isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
         </div>
       </template>
     </PageHeading>
+
+    <div class="douban-search">
+      <label for="douban-movie-search">搜索影片</label>
+      <input
+        id="douban-movie-search"
+        v-model="searchQuery"
+        type="search"
+        inputmode="search"
+        autocomplete="off"
+        placeholder="片名、年份、地区或类型"
+      >
+      <span v-if="normalizedSearchQuery" class="douban-search-count" role="status">
+        {{ filteredMovies.length }} 部
+      </span>
+    </div>
 
     <div v-if="status === 'pending'" class="douban-state" role="status">正在读取榜单</div>
     <div v-else-if="error" class="douban-state douban-state-error" role="alert">
@@ -269,7 +321,7 @@ onBeforeUnmount(() => {
       <button class="douban-retry" type="button" @click="refresh()">重新读取</button>
     </div>
     <div v-else-if="!filteredMovies.length" class="douban-state" role="status">
-      {{ showUnwatchedOnly ? '当前没有未看的电影' : '榜单暂无内容' }}
+      {{ normalizedSearchQuery ? `没有找到“${searchQuery.trim()}”` : showUnwatchedOnly ? '当前没有未看的电影' : '榜单暂无内容' }}
     </div>
     <p v-if="watchedError" class="douban-watched-error" role="status">{{ watchedError }}</p>
     <ol v-if="filteredMovies.length" class="douban-list">
@@ -316,7 +368,7 @@ onBeforeUnmount(() => {
             <p class="douban-rating"><b>{{ movie.rating.toFixed(1) }}</b><span>{{ formatVotes(movie.votes) }}</span></p>
             <p v-if="movie.quote" class="douban-quote">“{{ movie.quote }}”</p>
           </div>
-          <button v-if="isAuthenticated" class="douban-watched" type="button"
+          <button v-if="props.editable && isAuthenticated" class="douban-watched" type="button"
             :aria-label="watchedIds.has(movie.id) ? `取消标记《${movie.title}》` : `标记《${movie.title}》已看过`"
             :aria-pressed="watchedIds.has(movie.id)" :disabled="hidingMovieIds.has(movie.id) || isSavingWatched"
             @click="toggleWatched(movie)">
@@ -374,6 +426,48 @@ onBeforeUnmount(() => {
 
 .douban-admin-settings:focus-visible,
 .douban-logout:focus-visible {
+  outline: 2px solid var(--ink-link);
+  outline-offset: 2px;
+}
+
+.douban-search {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 0.2rem 0 1rem;
+  padding: 0.65rem 0.15rem;
+  border-top: 1px dashed var(--paper-rule);
+  border-bottom: 1px dashed var(--paper-rule);
+}
+
+.douban-search label,
+.douban-search-count {
+  color: var(--ink-muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.douban-search input {
+  width: 100%;
+  min-height: 2.15rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  outline: 0;
+  background: transparent;
+  color: var(--ink-strong);
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.douban-search input::placeholder {
+  color: var(--ink-muted);
+  opacity: 0.72;
+}
+
+.douban-search input:focus-visible {
+  border-color: var(--ink-link);
   outline: 2px solid var(--ink-link);
   outline-offset: 2px;
 }
@@ -702,6 +796,15 @@ onBeforeUnmount(() => {
     align-items: start;
     flex-direction: column;
     gap: 0.7rem;
+  }
+
+  .douban-search {
+    grid-template-columns: 1fr auto;
+    gap: 0.4rem;
+  }
+
+  .douban-search label {
+    grid-column: 1 / -1;
   }
 
   .douban-entry {
