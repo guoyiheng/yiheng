@@ -233,5 +233,41 @@ export const games: GameEntry[] = [
     genres: ['驾驶模拟'],
     coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/227300/library_600x900.jpg',
     sourceUrl: 'https://store.steampowered.com/app/227300/Euro_Truck_Simulator_2/'
+  },
+  {
+    id: 'super-mario-bros-wonder',
+    nameZh: '超级马力欧兄弟 惊奇',
+    nameEn: 'Super Mario Bros. Wonder',
+    releaseDate: '2023-10-20',
+    genres: ['平台', '动作冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Mariowonder.png',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_Bros._Wonder'
+  },
+  {
+    id: 'super-mario-3d-world',
+    nameZh: '超级马力欧 3D世界',
+    nameEn: 'Super Mario 3D World',
+    releaseDate: '2021-02-12',
+    genres: ['平台', '动作冒险'],
+    coverUrl: 'https://upload.wikimedia.org/wikipedia/en/5/5e/Super_Mario_3D_World_box_art.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_3D_World'
+  },
+  {
+    id: 'fifa-21',
+    nameZh: 'FIFA 21',
+    nameEn: 'FIFA 21',
+    releaseDate: '2020-10-09',
+    genres: ['体育', '竞技'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313860/library_600x900.jpg',
+    sourceUrl: 'https://en.wikipedia.org/wiki/FIFA_21'
+  },
+  {
+    id: 'eleven-table-tennis',
+    nameZh: 'Eleven Table Tennis',
+    nameEn: 'Eleven Table Tennis VR',
+    releaseDate: '2020-02-27',
+    genres: ['VR', '体育', '模拟'],
+    coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/488310/library_600x900.jpg',
+    sourceUrl: 'https://store.steampowered.com/app/488310/Eleven_Table_Tennis/'
   }
 ].sort((left, right) => right.releaseDate.localeCompare(left.releaseDate))
