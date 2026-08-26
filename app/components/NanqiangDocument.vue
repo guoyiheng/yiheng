@@ -245,6 +245,9 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
         @click.self="closeInspector"
         @keydown.esc="closeInspector"
         @wheel="handleInspectorWheel"
+        @copy.prevent
+        @selectstart.prevent
+        @contextmenu.prevent
       >
         <div class="nanqiang-inspector-scrim" aria-hidden="true" @click="closeInspector" />
         <div class="nanqiang-inspector-stage">
@@ -257,6 +260,9 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
             @pointermove="moveInspector"
             @pointerup="endInspectorDrag"
             @pointercancel="endInspectorDrag"
+            @copy.prevent
+            @selectstart.prevent
+            @contextmenu.prevent
           >
             <div ref="inspectorContent" class="receipt-content inspector-content">
               <PageHeading
@@ -371,6 +377,10 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   overflow: hidden;
   background: color-mix(in srgb, var(--canvas) 86%, transparent);
   isolation: isolate;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }
 
 .nanqiang-inspector-scrim {
@@ -404,6 +414,10 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   will-change: transform;
   cursor: grab;
   touch-action: none;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }
 
 .inspector-paper.is-dragging {
@@ -412,8 +426,13 @@ onBeforeUnmount(() => setBodyInspectionLock(false))
   transition: none;
 }
 
-.inspector-content {
+.inspector-content,
+.inspector-content :deep(*) {
   overscroll-behavior: contain;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
 }
 
 .nanqiang-inspector-toolbar {

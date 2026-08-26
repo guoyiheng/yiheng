@@ -264,6 +264,10 @@ a:focus-visible {
   font-family: var(--site-font);
   font-size: var(--content-font-size);
   font-weight: 400;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .receipt::before,
@@ -318,6 +322,10 @@ a:focus-visible {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   -webkit-overflow-scrolling: touch;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 .receipt-content *,
