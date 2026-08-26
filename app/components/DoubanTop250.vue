@@ -246,9 +246,9 @@ onBeforeUnmount(() => {
             {{ showUnwatchedOnly ? '仅未看' : '只看未看' }}
           </button>
           <span v-if="isAuthenticated && hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
-          <NuxtLink v-if="isAuthenticated" class="douban-admin-link" to="/douban/admin">更改密钥</NuxtLink>
+          <NuxtLink v-if="isAuthenticated" class="douban-admin-link" to="/panghuang/admin">更改密钥</NuxtLink>
           <button v-if="isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
-          <NuxtLink v-else class="douban-admin-link" to="/douban/admin">管理员入口</NuxtLink>
+          <NuxtLink v-else class="douban-admin-link" to="/panghuang/admin">管理员入口</NuxtLink>
         </div>
       </template>
     </PageHeading>

@@ -1,12 +1,3 @@
 <script setup lang="ts">
-useSeoMeta({
-  title: '热风 · yiheng',
-  description: 'yiheng 的作品与随笔。'
-})
+await navigateTo('/refeng', { redirectCode: 301 })
 </script>
-
-<template>
-  <ConstructionReceipt title="热风">
-    <FuzaoProfile />
-  </ConstructionReceipt>
-</template>

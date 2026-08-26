@@ -1,12 +1,3 @@
 <script setup lang="ts">
-useSeoMeta({
-  title: '彷徨 · yiheng',
-  description: '彷徨：豆瓣电影 Top250 观影清单。'
-})
+await navigateTo('/panghuang', { redirectCode: 301 })
 </script>
-
-<template>
-  <ConstructionReceipt title="彷徨" scroll-key="/douban">
-    <DoubanTop250 />
-  </ConstructionReceipt>
-</template>
