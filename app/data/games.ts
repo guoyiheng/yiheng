@@ -16,7 +16,7 @@ export const games: GameEntry[] = [
     releaseDate: '2018-07-13',
     genres: ['日式角色扮演'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/3/34/Octopath_Traveler.jpg',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/歧路旅人'
+    sourceUrl: 'https://store.steampowered.com/app/990080/OCTOPATH_TRAVELER/'
   },
   {
     id: 'skyward-sword-hd',
@@ -43,7 +43,7 @@ export const games: GameEntry[] = [
     releaseDate: '2020-09-17',
     genres: ['Roguelike', '动作角色扮演'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/cc/Hades_cover_art.jpg',
-    sourceUrl: 'https://zh.wikipedia.org/wiki/黑帝斯_(遊戲)'
+    sourceUrl: 'https://store.steampowered.com/app/1145360/Hades/'
   },
   {
     id: 'katana-zero',
@@ -52,7 +52,7 @@ export const games: GameEntry[] = [
     releaseDate: '2019-04-18',
     genres: ['动作平台', '砍杀'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/d/da/Katana_Zero_cover.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Katana_Zero'
+    sourceUrl: 'https://store.steampowered.com/app/460950/Katana_ZERO/'
   },
   {
     id: 'breath-of-the-wild',
@@ -70,7 +70,7 @@ export const games: GameEntry[] = [
     releaseDate: '2020-03-23',
     genres: ['VR', '第一人称射击'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/4/49/Half-Life_Alyx_Cover_Art.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Half-Life:_Alyx'
+    sourceUrl: 'https://store.steampowered.com/app/546560/HalfLife_Alyx/'
   },
   {
     id: 'elven-assassin',
@@ -79,7 +79,7 @@ export const games: GameEntry[] = [
     releaseDate: '2016-09-10',
     genres: ['VR', '动作'],
     coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/503770/library_600x900.jpg',
-    sourceUrl: 'https://en.wikipedia.org/w/index.php?search=Elven+Assassin'
+    sourceUrl: 'https://store.steampowered.com/app/503770/Elven_Assassin/'
   },
   {
     id: 'the-stanley-parable',
@@ -88,7 +88,7 @@ export const games: GameEntry[] = [
     releaseDate: '2013-10-17',
     genres: ['冒险', '互动叙事'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/c/ce/Stanley_parable_cover.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/The_Stanley_Parable'
+    sourceUrl: 'https://store.steampowered.com/app/221910/The_Stanley_Parable/'
   },
   {
     id: 'tale-of-immortal',
@@ -97,7 +97,7 @@ export const games: GameEntry[] = [
     releaseDate: '2023-05-26',
     genres: ['动作角色扮演', '沙盒'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/d/d9/Tale_of_Immortal_Steam_header_2026.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Tale_of_Immortal'
+    sourceUrl: 'https://store.steampowered.com/app/1468810/Tale_of_Immortal/'
   },
   {
     id: 'animal-crossing-new-horizons',
@@ -106,7 +106,7 @@ export const games: GameEntry[] = [
     releaseDate: '2020-03-20',
     genres: ['生活模拟'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/1/1f/Animal_Crossing_New_Horizons.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Animal_Crossing:_New_Horizons'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/集合啦！動物森友會'
   },
   {
     id: 'cyberpunk-2077',
@@ -115,7 +115,7 @@ export const games: GameEntry[] = [
     releaseDate: '2020-12-10',
     genres: ['动作角色扮演', '开放世界'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Cyberpunk_2077'
+    sourceUrl: 'https://store.steampowered.com/app/1091500/Cyberpunk_2077/'
   },
   {
     id: 'super-mario-odyssey',
@@ -124,7 +124,7 @@ export const games: GameEntry[] = [
     releaseDate: '2017-10-27',
     genres: ['平台', '动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_Odyssey'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/超级马力欧_奥德赛'
   },
   {
     id: 'celeste',
@@ -133,7 +133,7 @@ export const games: GameEntry[] = [
     releaseDate: '2018-01-25',
     genres: ['平台'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0f/Celeste_box_art_full.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Celeste_(video_game)'
+    sourceUrl: 'https://store.steampowered.com/app/504230/Celeste/'
   },
   {
     id: 'tears-of-the-kingdom',
@@ -142,7 +142,7 @@ export const games: GameEntry[] = [
     releaseDate: '2023-05-12',
     genres: ['动作冒险', '开放世界'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/f/fb/The_Legend_of_Zelda_Tears_of_the_Kingdom_cover.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Tears_of_the_Kingdom'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/塞尔达传说_王国之泪'
   },
   {
     id: 'the-legend-of-tianding',
@@ -151,7 +151,7 @@ export const games: GameEntry[] = [
     releaseDate: '2021-11-01',
     genres: ['横向卷轴', '动作'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/3/37/The_Legend_of_Tianding_cover_art.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Tianding'
+    sourceUrl: 'https://store.steampowered.com/app/1406850/The_Legend_of_Tianding/'
   },
   {
     id: 'black-myth-wukong',
@@ -160,7 +160,7 @@ export const games: GameEntry[] = [
     releaseDate: '2024-08-20',
     genres: ['动作角色扮演'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a6/Black_Myth_Wukong_cover_art.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Black_Myth:_Wukong'
+    sourceUrl: 'https://store.steampowered.com/app/2358720/Black_Myth_Wukong/'
   },
   {
     id: 'the-minish-cap',
@@ -169,7 +169,7 @@ export const games: GameEntry[] = [
     releaseDate: '2004-11-04',
     genres: ['动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/0a/TLOZ-_Minish_Cap_NA_Box_art.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_The_Minish_Cap'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/薩爾達傳說_縮小帽'
   },
   {
     id: 'hollow-knight-silksong',
@@ -178,7 +178,7 @@ export const games: GameEntry[] = [
     releaseDate: '2025-09-04',
     genres: ['银河战士恶魔城', '动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/0/05/Silksong.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Hollow_Knight:_Silksong'
+    sourceUrl: 'https://store.steampowered.com/app/1030300/Hollow_Knight_Silksong/'
   },
   {
     id: 'brotato',
@@ -241,7 +241,7 @@ export const games: GameEntry[] = [
     releaseDate: '2023-10-20',
     genres: ['平台', '动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Mariowonder.png',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_Bros._Wonder'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/超級瑪利歐兄弟_驚奇'
   },
   {
     id: 'super-mario-3d-world',
@@ -250,7 +250,7 @@ export const games: GameEntry[] = [
     releaseDate: '2021-02-12',
     genres: ['平台', '动作冒险'],
     coverUrl: 'https://upload.wikimedia.org/wikipedia/en/5/5e/Super_Mario_3D_World_box_art.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/Super_Mario_3D_World'
+    sourceUrl: 'https://zh.wikipedia.org/wiki/超级马力欧3D世界'
   },
   {
     id: 'fifa-21',
@@ -259,7 +259,7 @@ export const games: GameEntry[] = [
     releaseDate: '2020-10-09',
     genres: ['体育', '竞技'],
     coverUrl: 'https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1313860/library_600x900.jpg',
-    sourceUrl: 'https://en.wikipedia.org/wiki/FIFA_21'
+    sourceUrl: 'https://store.steampowered.com/app/1313860/FIFA_21/'
   },
   {
     id: 'eleven-table-tennis',

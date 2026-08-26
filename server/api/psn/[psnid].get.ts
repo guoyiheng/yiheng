@@ -250,9 +250,17 @@ const parseGameRows = (root: HTMLElement) => {
     const imageUrl = row.querySelector('img.imgbgnb')?.getAttribute('src') ?? ''
     const trophyValues = row.querySelectorAll('small span').map(node => text(node.textContent))
 
+    const gameTitle = canonicalGameTitle(text(titleLink.textContent))
+    const psnStoreUrl = gameTitle
+      ? `https://store.playstation.com/zh-hans-cn/search/${encodeURIComponent(gameTitle)}`
+      : ''
+    const wikipediaFallbackUrl = gameTitle
+      ? `https://zh.wikipedia.org/w/index.php?search=${encodeURIComponent(gameTitle)}`
+      : 'https://zh.wikipedia.org/'
+
     return [{
       id: href.match(/\/psngame\/(\d+)/)?.[1] ?? href,
-      title: canonicalGameTitle(text(titleLink.textContent)),
+      title: gameTitle,
       platform: text(row.querySelector('td:nth-child(2) > span')?.textContent),
       updatedAt: text(row.querySelector('td:nth-child(2) small')?.textContent),
       duration,
@@ -260,7 +268,7 @@ const parseGameRows = (root: HTMLElement) => {
       progress,
       image: safeImageUrl(imageUrl),
       trophies: parseTrophies(trophyValues),
-      url: `https://zh.wikipedia.org/w/index.php?search=${encodeURIComponent(text(titleLink.textContent))}`
+      url: psnStoreUrl || wikipediaFallbackUrl
     }]
   })
 }
