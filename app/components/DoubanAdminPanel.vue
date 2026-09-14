@@ -1,7 +1,10 @@
 <script setup lang="ts">
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   mode: 'login' | 'change'
-}>()
+  submitText?: string
+}>(), {
+  submitText: '进入观影清单'
+})
 
 const emit = defineEmits<{
   authenticated: []
@@ -86,7 +89,7 @@ onMounted(async () => {
     <input id="douban-admin-key" v-model="key" type="password" autocomplete="current-password"
       placeholder="输入密钥" required :disabled="status === 'submitting'">
     <button type="submit" :disabled="status === 'submitting'">
-      {{ status === 'submitting' ? '正在验证' : '进入观影清单' }}
+      {{ status === 'submitting' ? '正在验证' : props.submitText }}
     </button>
     <p v-if="errorMessage" class="douban-admin-error" role="alert">{{ errorMessage }}</p>
   </form>

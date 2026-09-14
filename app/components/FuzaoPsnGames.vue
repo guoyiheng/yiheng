@@ -1,9 +1,19 @@
 <!--
-  PSN 数据在服务端最多缓存 7 天，于北京时间每周日 23:59 统一过期并更新。
+  PSN 游戏记录支持手动同步进度。
   最近 7 天游玩的游戏直接展示；其余游戏需同时满足游玩至少 5 天、进度至少 9%。
   多页记录按 PSN 游戏 ID 合并去重后再筛选。
 -->
 <script setup lang="ts">
+const props = withDefaults(defineProps<{
+  editable?: boolean
+}>(), {
+  editable: false
+})
+
+const emit = defineEmits<{
+  loggedOut: []
+}>()
+
 interface TrophyCounts {
   platinum: number
   gold: number
@@ -35,6 +45,67 @@ const { data: profile, status, error } = await useFetch<PsnProfile>(
   { key: `psn-profile-${PSN_ID}` }
 )
 
+const isAuthenticated = ref(false)
+const isSyncing = ref(false)
+const syncFeedback = ref('')
+const syncFeedbackType = ref<'success' | 'error'>('success')
+let syncFeedbackTimer: ReturnType<typeof setTimeout> | undefined
+
+const logout = async () => {
+  await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
+  isAuthenticated.value = false
+  emit('loggedOut')
+}
+
+const handleSync = async () => {
+  if (isSyncing.value) return
+
+  isSyncing.value = true
+  syncFeedback.value = ''
+  if (syncFeedbackTimer) clearTimeout(syncFeedbackTimer)
+
+  try {
+    const updated = await $fetch<PsnProfile>(`/api/psn/${PSN_ID}/sync`, {
+      method: 'POST'
+    })
+    profile.value = updated
+    syncFeedback.value = '进度已同步'
+    syncFeedbackType.value = 'success'
+    syncFeedbackTimer = setTimeout(() => {
+      syncFeedback.value = ''
+    }, 4000)
+  } catch (error: unknown) {
+    const fetchError = error as { statusCode?: number }
+    if (fetchError.statusCode === 401) {
+      isAuthenticated.value = false
+      emit('loggedOut')
+    } else {
+      syncFeedback.value = '同步失败，请稍后重试'
+      syncFeedbackType.value = 'error'
+      syncFeedbackTimer = setTimeout(() => {
+        syncFeedback.value = ''
+      }, 4000)
+    }
+  } finally {
+    isSyncing.value = false
+  }
+}
+
+onMounted(async () => {
+  if (props.editable) {
+    try {
+      const result = await $fetch<{ authenticated: boolean }>('/api/douban/admin/status')
+      isAuthenticated.value = result.authenticated
+    } catch {
+      isAuthenticated.value = false
+    }
+  }
+})
+
+onBeforeUnmount(() => {
+  if (syncFeedbackTimer) clearTimeout(syncFeedbackTimer)
+})
+
 const errorMessage = computed(() => {
   if (!error.value) return ''
 
@@ -54,16 +125,38 @@ const errorMessage = computed(() => {
 
 <template>
   <section class="psn-section sanxian-section" aria-labelledby="games-heading">
-    <PageHeading id="games-heading" title="Games" />
+    <PageHeading id="games-heading" title="Games">
+      <template v-if="props.editable && isAuthenticated" #aside>
+        <div class="psn-heading-actions">
+          <NuxtLink class="psn-admin-settings" to="/admin">修改密钥</NuxtLink>
+          <button class="psn-logout" type="button" @click="logout">退出</button>
+        </div>
+      </template>
+    </PageHeading>
 
     <section class="game-platform" aria-labelledby="ps-games-heading">
       <header class="platform-heading">
         <h2 id="ps-games-heading">PS</h2>
-        <span v-if="profile" class="platinum-count">
-          <img class="platinum-trophy" src="/images/playstation-platinum.png" alt="" width="18" height="18">
-          <span>白金 {{ profile.trophies.platinum }}</span>
-        </span>
+        <div class="ps-header-actions">
+          <button
+            v-if="props.editable && isAuthenticated"
+            class="psn-sync-button"
+            type="button"
+            :disabled="isSyncing"
+            @click="handleSync"
+          >
+            {{ isSyncing ? '正在同步…' : '同步进度' }}
+          </button>
+          <span v-if="profile" class="platinum-count">
+            <img class="platinum-trophy" src="/images/playstation-platinum.png" alt="" width="18" height="18">
+            <span>白金 {{ profile.trophies.platinum }}</span>
+          </span>
+        </div>
       </header>
+
+      <p v-if="syncFeedback" :class="['psn-sync-feedback', `is-${syncFeedbackType}`]" role="status">
+        {{ syncFeedback }}
+      </p>
 
       <p v-if="status === 'pending'" class="psn-feedback" aria-live="polite">
         正在读取 PS 档案…
@@ -121,6 +214,84 @@ const errorMessage = computed(() => {
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.psn-heading-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.psn-admin-settings,
+.psn-logout {
+  color: var(--ink-link);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+
+.psn-admin-settings {
+  text-decoration: none;
+}
+
+.psn-admin-settings:focus-visible,
+.psn-logout:focus-visible,
+.psn-sync-button:focus-visible {
+  outline: 2px solid var(--ink-link);
+  outline-offset: 2px;
+}
+
+.psn-logout {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ps-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.psn-sync-button {
+  display: inline-flex;
+  min-height: 1.6rem;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.55rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink-strong);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.68rem;
+  line-height: 1;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.psn-sync-button:hover:not(:disabled) {
+  border-color: var(--ink-link);
+  color: var(--ink-link);
+}
+
+.psn-sync-button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.psn-sync-feedback {
+  margin: 0 0 0.65rem;
+  font-size: 0.7rem;
+}
+
+.psn-sync-feedback.is-success {
+  color: var(--ink-star);
+}
+
+.psn-sync-feedback.is-error {
+  color: var(--ink-link);
 }
 
 .platinum-count {

@@ -1,6 +1,18 @@
+<script setup lang="ts">
+const props = withDefaults(defineProps<{
+  editable?: boolean
+}>(), {
+  editable: false
+})
+
+const emit = defineEmits<{
+  loggedOut: []
+}>()
+</script>
+
 <template>
   <div class="sanxian-profile">
-    <FuzaoPsnGames />
+    <FuzaoPsnGames :editable="props.editable" @logged-out="emit('loggedOut')" />
     <BookArchive />
     <AlbumArchive />
   </div>
