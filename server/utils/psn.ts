@@ -32,9 +32,8 @@ export interface PsnProfile {
 
 export const PSN_ID_PATTERN = /^[a-z][a-z0-9_-]{2,15}$/i
 const PSNINE_ORIGIN = 'https://psnine.com'
-const MINIMUM_DURATION_DAYS = 5
-const MINIMUM_PROGRESS = 9
-const RECENT_PLAYED_DAYS_WITHOUT_FILTER = 7
+const MINIMUM_PROGRESS = 10
+const RECENT_PLAYED_DAYS_WITHOUT_FILTER = 14
 const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000
 const PSN_STORAGE_KEY_PREFIX = 'psn:profile:'
 
@@ -406,15 +405,27 @@ export const fetchPsnProfile = async (psnId: string): Promise<PsnProfile> => {
     })
   )
 
-  const gamesById = new Map<string, ReturnType<typeof parseGameRows>[number]>()
+  const rawGames: ReturnType<typeof parseGameRows>[number][] = []
   for (const root of [firstGamesRoot, ...remainingPages.map(html => parse(html))]) {
-    for (const game of parseGameRows(root)) gamesById.set(game.id, game)
+    for (const game of parseGameRows(root)) rawGames.push(game)
   }
 
-  const games = [...gamesById.values()].filter((game, index) => {
-    if (index === 0) return true
-    if (wasPlayedRecently(game.updatedAt)) return true
-    return game.durationDays >= MINIMUM_DURATION_DAYS && game.progress >= MINIMUM_PROGRESS
+  // 按游戏标题去重，优先保留进度更高或获得白金的版本
+  const gamesByTitle = new Map<string, ReturnType<typeof parseGameRows>[number]>()
+  for (const game of rawGames) {
+    const existing = gamesByTitle.get(game.title)
+    if (!existing) {
+      gamesByTitle.set(game.title, game)
+    } else if (game.progress > existing.progress || game.trophies.platinum > existing.trophies.platinum) {
+      gamesByTitle.set(game.title, game)
+    }
+  }
+
+  const games = [...gamesByTitle.values()].filter((game, index) => {
+    // 有在玩：最新游玩的第一部，或者最近14天内游玩过
+    if (index === 0 || wasPlayedRecently(game.updatedAt)) return true
+    // 玩通关或深度游玩：有白金奖杯，或者进度达到 10% 以上（排除仅随便尝试的游玩）
+    return game.trophies.platinum > 0 || game.progress >= MINIMUM_PROGRESS
   })
 
   return {
