@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   setResponseHeader(
     event,
     'Cache-Control',
-    'public, max-age=300, s-maxage=86400, stale-while-revalidate=86400, stale-if-error=604800'
+    'public, max-age=60, stale-while-revalidate=300'
   )
 
   return profile

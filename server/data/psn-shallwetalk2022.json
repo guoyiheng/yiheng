@@ -1,7 +1,7 @@
 {
   "id": "shallwetalk2022",
   "trophies": {
-    "platinum": 21,
+    "platinum": 25,
     "gold": 111,
     "silver": 292,
     "bronze": 823
@@ -11,16 +11,16 @@
       "id": "22764",
       "title": "终焉之莉莉：骑士寂夜",
       "platform": "PS4",
-      "updatedAt": "6天前 22:03",
+      "updatedAt": "6天前 23:17",
       "duration": "3天",
       "durationDays": 3,
-      "progress": 59,
+      "progress": 100,
       "image": "https://image.api.playstation.com/trophy/np/NPWR22764_00_006DE7078AD6A72B45D3C72816A4F31F826C349010/10CE23EFA4D046CCCDC53E8D903782B6AE82E3B7.PNG",
       "trophies": {
-        "platinum": 0,
-        "gold": 0,
-        "silver": 9,
-        "bronze": 21
+        "platinum": 1,
+        "gold": 3,
+        "silver": 13,
+        "bronze": 22
       },
       "url": "https://store.steampowered.com/app/1369630/ENDER_LILIES_Quietus_of_the_Knights/"
     },
@@ -107,7 +107,7 @@
         "silver": 9,
         "bronze": 39
       },
-      "url": "https://zh.wikipedia.org/w/index.php?search=%E6%B5%AA%E4%BA%BA%E5%B4%9B%E8%B5%B7"
+      "url": "https://store.steampowered.com/"
     },
     {
       "id": "36570",
@@ -345,7 +345,7 @@
         "silver": 18,
         "bronze": 32
       },
-      "url": "https://zh.wikipedia.org/w/index.php?search=%E5%AE%87%E5%AE%99%E6%9C%BA%E5%99%A8%E4%BA%BA"
+      "url": "https://www.playstation.com/"
     },
     {
       "id": "21647",
@@ -549,7 +549,7 @@
         "silver": 7,
         "bronze": 20
       },
-      "url": "https://zh.wikipedia.org/w/index.php?search=%E8%A1%80%E6%BA%90%E8%AF%85%E5%92%92"
+      "url": "https://www.playstation.com/"
     },
     {
       "id": "24698",
@@ -600,7 +600,7 @@
         "silver": 13,
         "bronze": 27
       },
-      "url": "https://zh.wikipedia.org/w/index.php?search=%E5%AE%87%E5%AE%99%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%97%A0%E7%BA%BF%E6%8E%A7%E5%88%B6%E5%99%A8%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"
+      "url": "https://www.playstation.com/"
     },
     {
       "id": "22459",
@@ -668,7 +668,7 @@
         "silver": 9,
         "bronze": 22
       },
-      "url": "https://zh.wikipedia.org/w/index.php?search=%E6%81%B6%E9%AD%94%E4%B9%8B%E9%AD%82"
+      "url": "https://www.playstation.com/"
     },
     {
       "id": "13872",
@@ -772,6 +772,5 @@
       },
       "url": "https://store.steampowered.com/app/2215430/"
     }
-  ],
-  "updatedAt": "2026-09-14T07:28:50.453Z"
+  ]
 }

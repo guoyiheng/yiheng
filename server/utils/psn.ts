@@ -316,14 +316,25 @@ const safeImageUrl = (value?: string) => {
 const fetchPage = async (url: string) => {
   let response: Response
 
+  const sep = url.includes('?') ? '&' : '?'
+  const urlWithCacheBuster = `${url}${sep}_t=${Date.now()}`
+
   try {
-    response = await fetch(url, {
+    const fetchOptions: RequestInit = {
       headers: {
         accept: 'text/html,application/xhtml+xml',
-        'user-agent': 'yiheng.run/1.0'
+        'user-agent': 'yiheng.run/1.0',
+        'cache-control': 'no-cache, no-store, must-revalidate',
+        pragma: 'no-cache'
       },
-      signal: AbortSignal.timeout(8000)
-    })
+      cache: 'no-store',
+      signal: AbortSignal.timeout(10000)
+    }
+    // Cloudflare Workers 子请求防缓存
+    // @ts-ignore
+    fetchOptions.cf = { cacheTtl: 0, cacheEverything: false }
+
+    response = await fetch(urlWithCacheBuster, fetchOptions)
   } catch {
     throw createError({ statusCode: 502, message: '账号资料暂时无法读取' })
   }
@@ -428,11 +439,18 @@ export const fetchPsnProfile = async (psnId: string): Promise<PsnProfile> => {
     return game.trophies.platinum > 0 || game.progress >= MINIMUM_PROGRESS
   })
 
+  const profileTrophies = parseTrophies(
+    profileRoot.querySelectorAll('.psntrophy span').map(node => text(node.textContent))
+  )
+  const platinumFromGames = games.filter(game => game.trophies.platinum > 0).length
+  const trophies: TrophyCounts = {
+    ...profileTrophies,
+    platinum: Math.max(profileTrophies.platinum, platinumFromGames)
+  }
+
   return {
     id: profileName,
-    trophies: parseTrophies(
-      profileRoot.querySelectorAll('.psntrophy span').map(node => text(node.textContent))
-    ),
+    trophies,
     games,
     updatedAt: new Date().toISOString()
   }

@@ -70,6 +70,7 @@ const handleSync = async () => {
     const updated = await $fetch<PsnProfile>(`/api/psn/${PSN_ID}/sync`, {
       method: 'POST'
     })
+    clearNuxtData(`psn-profile-${PSN_ID}`)
     profile.value = updated
     syncFeedback.value = '进度已同步'
     syncFeedbackType.value = 'success'
