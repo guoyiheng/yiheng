@@ -60,6 +60,7 @@ const parseTrophies = (values: string[]): TrophyCounts => ({
 })
 
 const GAME_TITLE_OVERRIDES: Record<string, string> = {
+  '终焉之莉莉 骑士寂夜': '终焉之莉莉：骑士寂夜',
   '天国 拯救': '天国：拯救',
   '明末 渊虚之羽': '明末：渊虚之羽',
   '卧龙 苍天陨落': '卧龙：苍天陨落',
@@ -109,6 +110,8 @@ const GAME_TITLE_OVERRIDES: Record<string, string> = {
 const canonicalGameTitle = (title: string) => GAME_TITLE_OVERRIDES[title] ?? title
 
 const STEAM_GAME_URLS: Record<string, string> = {
+  '终焉之莉莉：骑士寂夜': 'https://store.steampowered.com/app/1369630/ENDER_LILIES_Quietus_of_the_Knights/',
+  '终焉之莉莉 骑士寂夜': 'https://store.steampowered.com/app/1369630/ENDER_LILIES_Quietus_of_the_Knights/',
   '女神异闻录5 皇家版': 'https://store.steampowered.com/app/1687950/',
   '堕落之主': 'https://store.steampowered.com/app/1501750/',
   '天国：拯救': 'https://store.steampowered.com/app/379430/',
@@ -211,6 +214,21 @@ const playedAtFrom = (value: string, now = new Date()) => {
   const time = value.match(/(\d{1,2}):(\d{2})/)
   const hour = Number(time?.[1] ?? 0)
   const minute = Number(time?.[2] ?? 0)
+
+  if (value.includes('刚刚')) {
+    return now
+  }
+
+  const minutesAgoMatch = value.match(/(\d+)\s*分钟前/)
+  if (minutesAgoMatch) {
+    return new Date(now.getTime() - Number(minutesAgoMatch[1]) * 60 * 1000)
+  }
+
+  const hoursAgoMatch = value.match(/(\d+)\s*小时前/)
+  if (hoursAgoMatch) {
+    return new Date(now.getTime() - Number(hoursAgoMatch[1]) * 60 * 60 * 1000)
+  }
+
   const relativeDay = value.startsWith('今天')
     ? 0
     : value.startsWith('昨天')
@@ -224,6 +242,17 @@ const playedAtFrom = (value: string, now = new Date()) => {
       currentYear,
       currentMonth - 1,
       currentDay - relativeDay,
+      hour - 8,
+      minute
+    ))
+  }
+
+  const daysAgoMatch = value.match(/(\d+)\s*天前/)
+  if (daysAgoMatch) {
+    return new Date(Date.UTC(
+      currentYear,
+      currentMonth - 1,
+      currentDay - Number(daysAgoMatch[1]),
       hour - 8,
       minute
     ))
@@ -261,7 +290,7 @@ const wasPlayedRecently = (value: string, now = new Date()) => {
   if (!playedAt || Number.isNaN(playedAt.getTime())) return false
 
   const elapsed = now.getTime() - playedAt.getTime()
-  return elapsed >= 0 && elapsed <= RECENT_PLAYED_DAYS_WITHOUT_FILTER * DAY_IN_MILLISECONDS
+  return elapsed >= -DAY_IN_MILLISECONDS && elapsed <= RECENT_PLAYED_DAYS_WITHOUT_FILTER * DAY_IN_MILLISECONDS
 }
 
 const pageFrom = (value?: string) => {
@@ -382,7 +411,8 @@ export const fetchPsnProfile = async (psnId: string): Promise<PsnProfile> => {
     for (const game of parseGameRows(root)) gamesById.set(game.id, game)
   }
 
-  const games = [...gamesById.values()].filter((game) => {
+  const games = [...gamesById.values()].filter((game, index) => {
+    if (index === 0) return true
     if (wasPlayedRecently(game.updatedAt)) return true
     return game.durationDays >= MINIMUM_DURATION_DAYS && game.progress >= MINIMUM_PROGRESS
   })

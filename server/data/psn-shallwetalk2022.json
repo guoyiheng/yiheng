@@ -8,6 +8,23 @@
   },
   "games": [
     {
+      "id": "22764",
+      "title": "终焉之莉莉：骑士寂夜",
+      "platform": "PS4",
+      "updatedAt": "6天前 22:03",
+      "duration": "3天",
+      "durationDays": 3,
+      "progress": 59,
+      "image": "https://image.api.playstation.com/trophy/np/NPWR22764_00_006DE7078AD6A72B45D3C72816A4F31F826C349010/10CE23EFA4D046CCCDC53E8D903782B6AE82E3B7.PNG",
+      "trophies": {
+        "platinum": 0,
+        "gold": 0,
+        "silver": 9,
+        "bronze": 21
+      },
+      "url": "https://store.steampowered.com/app/1369630/ENDER_LILIES_Quietus_of_the_Knights/"
+    },
+    {
       "id": "25017",
       "title": "女神异闻录5 皇家版",
       "platform": "PS5",
@@ -687,5 +704,6 @@
       },
       "url": "https://store.steampowered.com/app/2215430/"
     }
-  ]
+  ],
+  "updatedAt": "2026-09-14T07:09:50.719Z"
 }
