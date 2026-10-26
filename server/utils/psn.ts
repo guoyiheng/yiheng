@@ -330,12 +330,12 @@ const fetchPage = async (url: string) => {
       cache: 'no-store',
       signal: AbortSignal.timeout(10000)
     }
-    // Cloudflare Workers 子请求防缓存
-    // @ts-ignore
-    fetchOptions.cf = { cacheTtl: 0, cacheEverything: false }
 
     response = await fetch(urlWithCacheBuster, fetchOptions)
-  } catch {
+  } catch (error) {
+    // Cloudflare Workers 不允许 cache: 'no-store' 与 cf.cacheTtl 同时出现，
+    // 这里统一记录底层错误，避免同步时只看到笼统的失败提示。
+    console.error(`PSN fetch failed: ${urlWithCacheBuster}`, error)
     throw createError({ statusCode: 502, message: '账号资料暂时无法读取' })
   }
 
