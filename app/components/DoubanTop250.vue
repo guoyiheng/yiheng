@@ -47,7 +47,7 @@ const searchQuery = ref('')
 const watchedIds = ref<Set<string>>(new Set())
 const hidingMovieIds = ref<Set<string>>(new Set())
 const hasLoadedWatched = ref(false)
-const isAuthenticated = ref(false)
+const { isAuthenticated, authHeaders, clear: clearAdminSession, verify: verifyAdmin, logout: signOutAdmin } = useAdminSession()
 const watchedError = ref('')
 const isSavingWatched = ref(false)
 const watchedStorageKey = 'yiheng-douban-watched'
@@ -161,39 +161,37 @@ const legacyWatchedIds = () => {
 
 const loadWatched = async () => {
   try {
-    const [remote, admin] = await Promise.all([
-      $fetch<{ ids: string[] }>('/api/douban/watched'),
-      $fetch<{ authenticated: boolean }>('/api/douban/admin/status')
-        .catch(() => ({ authenticated: false }))
-    ])
+    const remote = await $fetch<{ ids: string[] }>('/api/douban/watched')
     const remoteIds = new Set(remote.ids)
-    isAuthenticated.value = admin.authenticated
     watchedIds.value = remoteIds
     hasLoadedWatched.value = true
 
-    if (isAuthenticated.value) {
-      const legacyIds = legacyWatchedIds()
-      const mergedIds = new Set([...remoteIds, ...legacyIds])
+    if (!props.editable) return
 
-      try {
-        if (mergedIds.size > remoteIds.size) {
-          const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
-            method: 'PUT',
-            body: { ids: [...mergedIds] }
-          })
-          watchedIds.value = new Set(migrated.ids)
-        }
+    const authenticated = await verifyAdmin()
+    if (!authenticated) return
 
-        localStorage.removeItem(watchedStorageKey)
-      } catch (error: unknown) {
-        const fetchError = error as { statusCode?: number }
-        if (fetchError.statusCode === 401) isAuthenticated.value = false
-        watchedError.value = '本地观影记录暂时无法同步。'
+    const legacyIds = legacyWatchedIds()
+    const mergedIds = new Set([...remoteIds, ...legacyIds])
+
+    try {
+      if (mergedIds.size > remoteIds.size) {
+        const migrated = await $fetch<{ ids: string[] }>('/api/douban/watched', {
+          method: 'PUT',
+          headers: authHeaders.value,
+          body: { ids: [...mergedIds] }
+        })
+        watchedIds.value = new Set(migrated.ids)
       }
+
+      localStorage.removeItem(watchedStorageKey)
+    } catch (error: unknown) {
+      const fetchError = error as { statusCode?: number }
+      if (fetchError.statusCode === 401) clearAdminSession()
+      watchedError.value = '本地观影记录暂时无法同步。'
     }
   } catch {
     watchedError.value = '观影记录暂时无法读取。'
-    isAuthenticated.value = false
   }
 }
 
@@ -213,6 +211,7 @@ const toggleWatched = async (movie: Movie) => {
   try {
     const saved = await $fetch<{ ids: string[] }>('/api/douban/watched', {
       method: 'PUT',
+      headers: authHeaders.value,
       body: { ids: [...next] }
     })
     watchedIds.value = new Set(saved.ids)
@@ -220,7 +219,7 @@ const toggleWatched = async (movie: Movie) => {
     const fetchError = error as { statusCode?: number }
     watchedIds.value = previous
     if (isMarkingWatched) finishHidingMovie(movie.id)
-    if (fetchError.statusCode === 401) isAuthenticated.value = false
+    if (fetchError.statusCode === 401) clearAdminSession()
     watchedError.value = '观影记录暂时无法保存。'
   } finally {
     isSavingWatched.value = false
@@ -228,8 +227,7 @@ const toggleWatched = async (movie: Movie) => {
 }
 
 const logout = async () => {
-  await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
-  isAuthenticated.value = false
+  await signOutAdmin()
   clearHidingMovies()
   emit('loggedOut')
 }
@@ -293,7 +291,7 @@ onBeforeUnmount(() => {
           </button>
           <span v-if="hasLoadedWatched" class="douban-progress">已看 {{ watchedCount }} / {{ movies.length }}</span>
           <NuxtLink v-if="props.editable && isAuthenticated" class="douban-admin-settings" to="/admin">
-            修改密钥
+            管理后台
           </NuxtLink>
           <button v-if="props.editable && isAuthenticated" class="douban-logout" type="button" @click="logout">退出</button>
         </div>

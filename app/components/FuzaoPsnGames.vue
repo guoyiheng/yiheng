@@ -47,15 +47,14 @@ const { data: profile, status, error } = await useFetch<PsnProfile>(
   { key: `psn-profile-${PSN_ID}` }
 )
 
-const isAuthenticated = ref(false)
+const { isAuthenticated, authHeaders, clear: clearAdminSession, verify: verifyAdmin, logout: signOutAdmin } = useAdminSession()
 const isSyncing = ref(false)
 const syncFeedback = ref('')
 const syncFeedbackType = ref<'success' | 'error'>('success')
 let syncFeedbackTimer: ReturnType<typeof setTimeout> | undefined
 
 const logout = async () => {
-  await $fetch('/api/douban/admin/logout', { method: 'POST' }).catch(() => undefined)
-  isAuthenticated.value = false
+  await signOutAdmin()
   emit('loggedOut')
 }
 
@@ -68,7 +67,8 @@ const handleSync = async () => {
 
   try {
     const updated = await $fetch<PsnProfile>(`/api/psn/${PSN_ID}/sync`, {
-      method: 'POST'
+      method: 'POST',
+      headers: authHeaders.value
     })
     clearNuxtData(`psn-profile-${PSN_ID}`)
     profile.value = updated
@@ -80,7 +80,7 @@ const handleSync = async () => {
   } catch (error: unknown) {
     const fetchError = error as { statusCode?: number }
     if (fetchError.statusCode === 401) {
-      isAuthenticated.value = false
+      clearAdminSession()
       emit('loggedOut')
     } else {
       syncFeedback.value = '同步失败，请稍后重试'
@@ -95,14 +95,7 @@ const handleSync = async () => {
 }
 
 onMounted(async () => {
-  if (props.editable) {
-    try {
-      const result = await $fetch<{ authenticated: boolean }>('/api/douban/admin/status')
-      isAuthenticated.value = result.authenticated
-    } catch {
-      isAuthenticated.value = false
-    }
-  }
+  if (props.editable) await verifyAdmin()
 })
 
 onBeforeUnmount(() => {
@@ -131,7 +124,7 @@ const errorMessage = computed(() => {
     <PageHeading id="games-heading" title="Games">
       <template v-if="props.editable && isAuthenticated" #aside>
         <div class="psn-heading-actions">
-          <NuxtLink class="psn-admin-settings" to="/admin">修改密钥</NuxtLink>
+          <NuxtLink class="psn-admin-settings" to="/admin">管理后台</NuxtLink>
           <button class="psn-logout" type="button" @click="logout">退出</button>
         </div>
       </template>

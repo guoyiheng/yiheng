@@ -3,4 +3,5 @@ dist/
 .nuxt/
 .output/
 .data/
+.wrangler/
 .DS_Store

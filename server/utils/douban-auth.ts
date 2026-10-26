@@ -1,8 +1,7 @@
-import { getRequestProtocol, getRequestURL, proxyRequest, type H3Event } from 'h3'
+import { getRequestURL, proxyRequest, type H3Event } from 'h3'
 
-const SESSION_COOKIE = 'douban_admin_session'
-const SESSION_PAYLOAD = 'yiheng-douban-admin'
 const ADMIN_KEY_STORAGE_KEY = 'douban:admin-key'
+const ADMIN_KEY_HEADER = 'x-admin-key'
 
 interface DoubanCloudflareEnv {
   DOUBAN_ADMIN_KEY?: string
@@ -68,44 +67,28 @@ export const getDoubanWatchedStore = (event: H3Event) => {
   return cloudflareEnvFrom(event).YIHENG_DOUBAN_WATCHED
 }
 
-const base64UrlFrom = (value: ArrayBuffer) => {
-  const bytes = new Uint8Array(value)
-  let binary = ''
-  bytes.forEach(byte => { binary += String.fromCharCode(byte) })
-  return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
+const timingSafeEqual = (left: string, right: string) => {
+  if (left.length !== right.length) return false
+
+  let mismatch = 0
+  for (let index = 0; index < left.length; index += 1) {
+    mismatch |= left.charCodeAt(index) ^ right.charCodeAt(index)
+  }
+  return mismatch === 0
 }
 
-const sessionTokenFrom = async (adminKey: string) => {
-  const data = new TextEncoder().encode(`${SESSION_PAYLOAD}:${adminKey}`)
-  const digest = await crypto.subtle.digest('SHA-256', data)
-  return base64UrlFrom(digest)
-}
-
-export const setDoubanAdminSessionFromKey = async (event: H3Event, adminKey: string) => {
-  const token = await sessionTokenFrom(adminKey)
-  setCookie(event, SESSION_COOKIE, token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: getRequestProtocol(event) === 'https',
-    maxAge: 60 * 60 * 24 * 30,
-    path: '/'
-  })
-}
-
-export const setDoubanAdminSession = async (event: H3Event) => {
-  await setDoubanAdminSessionFromKey(event, await getDoubanAdminKey(event))
-}
-
-export const clearDoubanAdminSession = (event: H3Event) => {
-  deleteCookie(event, SESSION_COOKIE, { path: '/' })
+// 前端把管理员密钥保存在 sessionStorage，并通过请求头携带。
+export const getRequestAdminKey = (event: H3Event) => {
+  const header = getHeader(event, ADMIN_KEY_HEADER)
+  return typeof header === 'string' ? header.trim() : ''
 }
 
 export const isDoubanAdminAuthenticated = async (event: H3Event) => {
   const adminKey = await getDoubanAdminKey(event)
   if (!adminKey) return false
 
-  const token = getCookie(event, SESSION_COOKIE)
-  return token === await sessionTokenFrom(adminKey)
+  const requestKey = getRequestAdminKey(event)
+  return Boolean(requestKey) && timingSafeEqual(requestKey, adminKey)
 }
 
 export const requireDoubanAdmin = async (event: H3Event) => {
