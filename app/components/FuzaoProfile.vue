@@ -19,6 +19,14 @@ const projects: Project[] = [
     since: '2026-10-20'
   },
   {
+    name: 'Web Shelf',
+    description: '网页书签收藏与整理',
+    href: 'https://shelf.yiheng.run',
+    linkLabel: 'shelf.yiheng.run',
+    icon: 'https://shelf.yiheng.run/favicon.svg',
+    since: '2026-08-27'
+  },
+  {
     name: 'Lossless Merge',
     description: '视频无损合并自动脚本',
     href: 'https://github.com/guoyiheng/lossless-merge',
