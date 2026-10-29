@@ -5,66 +5,84 @@ interface Project {
   href: string
   linkLabel: string
   icon: string
+  /** 项目创建时间，作品按此从新到旧排列 */
+  since: string
 }
 
 const projects: Project[] = [
   {
-    name: 'Nova',
-    description: '用自然语言或 SQL 查询数据库',
-    href: 'https://nova.yiheng.run',
-    linkLabel: 'nova.yiheng.run',
-    icon: 'https://nova.yiheng.run/favicon.svg'
-  },
-  {
-    name: 'Typura',
-    description: '在线语言学习与打字练习',
-    href: 'https://typura.yiheng.run',
-    linkLabel: 'typura.yiheng.run',
-    icon: 'https://typura.yiheng.run/typura-mark.svg'
-  },
-  {
-    name: 'Relay Lab',
-    description: '测试中转站的模型表现',
-    href: 'https://relay.yiheng.run',
-    linkLabel: 'relay.yiheng.run',
-    icon: 'https://relay.yiheng.run/favicon.svg'
-  },
-  {
-    name: 'Voca',
-    description: '48个英语音标的发音指南',
-    href: 'https://voca.yiheng.run',
-    linkLabel: 'voca.yiheng.run',
-    icon: 'https://voca.yiheng.run/favicon.svg'
+    name: 'Retell',
+    description: 'BBC 英语节目复述笔记',
+    href: 'https://retell.yiheng.run',
+    linkLabel: 'retell.yiheng.run',
+    icon: 'https://retell.yiheng.run/favicon.svg',
+    since: '2026-10-20'
   },
   {
     name: 'Lossless Merge',
     description: '视频无损合并自动脚本',
     href: 'https://github.com/guoyiheng/lossless-merge',
     linkLabel: 'github.com',
-    icon: 'https://github.com/favicon.ico'
+    icon: 'https://github.com/favicon.ico',
+    since: '2026-07-31'
+  },
+  {
+    name: 'Nova',
+    description: '用自然语言或 SQL 查询数据库',
+    href: 'https://nova.yiheng.run',
+    linkLabel: 'nova.yiheng.run',
+    icon: 'https://nova.yiheng.run/favicon.svg',
+    since: '2026-07-28'
+  },
+  {
+    name: 'Typura',
+    description: '在线语言学习与打字练习',
+    href: 'https://typura.yiheng.run',
+    linkLabel: 'typura.yiheng.run',
+    icon: 'https://typura.yiheng.run/typura-mark.svg',
+    since: '2026-07-24'
+  },
+  {
+    name: 'Relay Lab',
+    description: '测试中转站的模型表现',
+    href: 'https://relay.yiheng.run',
+    linkLabel: 'relay.yiheng.run',
+    icon: 'https://relay.yiheng.run/favicon.svg',
+    since: '2026-07-01'
+  },
+  {
+    name: 'Voca',
+    description: '48个英语音标的发音指南',
+    href: 'https://voca.yiheng.run',
+    linkLabel: 'voca.yiheng.run',
+    icon: 'https://voca.yiheng.run/favicon.svg',
+    since: '2026-06-02'
   },
   {
     name: 'Design',
     description: '设计规范与实践',
     href: 'https://design.yiheng.run',
     linkLabel: 'design.yiheng.run',
-    icon: 'https://api.iconify.design/carbon:ibm-engineering-systems-design-rhapsody.svg'
-  },
-  {
-    name: 'Handle',
-    description: '自定义题目的汉字 Wordle',
-    href: 'https://handle.yiheng.run',
-    linkLabel: 'handle.yiheng.run',
-    icon: 'https://handle.yiheng.run/favicon.svg'
+    icon: 'https://api.iconify.design/carbon:ibm-engineering-systems-design-rhapsody.svg',
+    since: '2026-04-03'
   },
   {
     name: 'Pronunciation Corrector',
     description: '常用单词易错英语发音校正',
     href: 'https://pronunciation.yiheng.run',
     linkLabel: 'pronunciation.yiheng.run',
-    icon: 'https://pronunciation.yiheng.run/favicon.svg'
+    icon: 'https://pronunciation.yiheng.run/favicon.svg',
+    since: '2022-06-06'
+  },
+  {
+    name: 'Handle',
+    description: '自定义题目的汉字 Wordle',
+    href: 'https://handle.yiheng.run',
+    linkLabel: 'handle.yiheng.run',
+    icon: 'https://handle.yiheng.run/favicon.svg',
+    since: '2022-01-28'
   }
-]
+].sort((a, b) => b.since.localeCompare(a.since))
 
 const useSiteIcon = (event: Event) => {
   const image = event.currentTarget as HTMLImageElement
